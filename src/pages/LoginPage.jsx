@@ -1,4 +1,5 @@
-import React from "react";
+import { login } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,16 +8,38 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = { email, password, rememberMe };
-    console.log("Login attempt:", formData);
-    // TODO: call your API or handle login here
+    try {
+      const response = await login(email, password);
+
+      // Save token and role
+      localStorage.setItem("token", response.data.access_token);
+      console.log("Access Token:", response.data.access_token);
+      localStorage.setItem("role", response.data.role);
+      console.log("Role:", response.data.role);
+
+      // Redirect based on role
+      if (response.data.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (response.data.role === "committee") {
+        navigate("/committee/dashboard");
+      } else if (response.data.role === "advisor") {
+        navigate("/advisor/dashboard");
+      } else {
+        navigate("/student/dashboard");
+      }
+    } catch (err) {
+      console.error("Login Failed:", err.response?.data);
+      alert("Invalid login credentials");
+    }
   };
 
   return (
