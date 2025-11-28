@@ -17,6 +17,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting button clicked");
     try {
       const response = await login(email, password);
 
