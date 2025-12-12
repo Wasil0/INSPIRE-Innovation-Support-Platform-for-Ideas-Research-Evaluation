@@ -6,6 +6,11 @@ import path from "path"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: 5173,
+    allowedHosts: [
+      '3b7d3ad7a50f.ngrok-free.app', 
+    ],},
   
   // 2. Add the resolve block
   resolve: {
