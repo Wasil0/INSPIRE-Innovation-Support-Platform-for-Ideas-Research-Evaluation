@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./pages/faculty/admin/AdminDashboard";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import AdvisorDashboard from "./pages/faculty/advisor/AdvisorDashboard";
+import FydpProgress from "./pages/student/FydpProgress";
+import GroupFormation from "./pages/student/GroupFormation";
 // import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
@@ -36,6 +38,22 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/fydp-progress"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <FydpProgress />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/group-formation"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <GroupFormation />
           </ProtectedRoute>
         }
       />

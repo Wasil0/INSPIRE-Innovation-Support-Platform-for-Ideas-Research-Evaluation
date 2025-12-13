@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Settings,
-  Bell,
-  LogOut,
-  User,
-  GraduationCap,
-  Users,
-  Briefcase,
-  Lightbulb,
   Edit,
   Mail,
   Calendar,
   BookOpen,
   ChevronRight,
+  GraduationCap,
+  Users,
+  Briefcase,
+  Lightbulb,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,18 +21,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/Navbar";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -98,11 +86,6 @@ const StudentDashboard = () => {
     ],
   };
 
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/");
-  };
 
   const getInitials = (name) => {
     return name
@@ -116,74 +99,7 @@ const StudentDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Glassmorphic Navbar */}
-      <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo/Title */}
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-sm">
-                <GraduationCap className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <a
-                href="/student/dashboard"
-                className="text-xl font-semibold text-foreground transition-colors hover:text-primary"
-              >
-                FYDP Portal
-              </a>
-            </div>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-2">
-              {/* Settings Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-9 w-9 transition-colors"
-                  >
-                    <Settings className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    Profile Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Preferences
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Notifications */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative h-9 w-9 transition-colors"
-              >
-                <Bell className="h-5 w-5" />
-                {notifications > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-destructive-foreground">
-                    {notifications}
-                  </span>
-                )}
-              </Button>
-
-              {/* Sign Out */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSignOut}
-                className="h-9 w-9 transition-colors hover:text-destructive"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -191,7 +107,10 @@ const StudentDashboard = () => {
           {/* Main Content Area - Left Side (2 columns on desktop) */}
           <div className="lg:col-span-2 space-y-6">
             {/* FYDP Progress Card */}
-            <Card className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu">
+            <Card
+              className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer"
+              onClick={() => navigate("/student/fydp-progress")}
+            >
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -308,9 +227,7 @@ const StudentDashboard = () => {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="font-semibold text-sm">
-                            {job.title}
-                          </h4>
+                          <h4 className="font-semibold text-sm">{job.title}</h4>
                           <p className="text-xs text-muted-foreground mt-1">
                             {job.company}
                           </p>
@@ -436,7 +353,9 @@ const StudentDashboard = () => {
                   <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">Batch Year</p>
-                    <p className="text-sm font-medium">{studentData.batchYear}</p>
+                    <p className="text-sm font-medium">
+                      {studentData.batchYear}
+                    </p>
                   </div>
                 </div>
 
@@ -444,7 +363,9 @@ const StudentDashboard = () => {
                 <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-card p-3">
                   <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div className="flex-1">
-                    <p className="text-xs text-muted-foreground">Current Year</p>
+                    <p className="text-xs text-muted-foreground">
+                      Current Year
+                    </p>
                     <Badge className="bg-primary text-primary-foreground mt-1">
                       {studentData.currentYear} Year
                     </Badge>
