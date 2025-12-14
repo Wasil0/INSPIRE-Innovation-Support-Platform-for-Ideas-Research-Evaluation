@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth
+from routers import auth, profiles, advisors, fydp_ideas_by_advisor
+
 
 app = FastAPI()
 origins = [
@@ -16,6 +17,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(auth.router)
+app.include_router(profiles.router)
+app.include_router(advisors.router)
+app.include_router(fydp_ideas_by_advisor.router)
 
 
 
