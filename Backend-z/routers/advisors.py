@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from bson import ObjectId
 from bson.errors import InvalidId
-from database import db  # Import your MongoDB db object
+from db.db import db  # Import your MongoDB db object
 from schemas.advisors import AdvisorCreate
 
 

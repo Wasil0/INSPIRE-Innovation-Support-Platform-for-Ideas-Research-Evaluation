@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import gridfs
 
 load_dotenv()
 
@@ -11,3 +12,9 @@ if not MONGO_URI:
 
 client = MongoClient(MONGO_URI)
 db = client["project_portal"]
+
+users_col = db["users"]
+profiles_col = db["profiles"]
+
+# GridFS for file storage
+fs = gridfs.GridFS(db)

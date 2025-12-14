@@ -3,7 +3,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from typing import Optional
 from schemas.fydp_ideas_by_advisor import FypIdeaByAdvisor
-from database import db, fs
+from db.db import db, fs
 
 router = APIRouter()
 advisor_ideas_col = db["Advisor_ideas"]

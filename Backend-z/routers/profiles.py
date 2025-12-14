@@ -4,7 +4,7 @@ from bson.errors import InvalidId
 from fastapi.responses import StreamingResponse
 from typing import Optional
 from schemas.profiles import ProfileCreate, ProfileResponse, ProfileSummaryResponse
-from database import users_col, profiles_col, fs
+from db.db import users_col, profiles_col, fs
 
 router = APIRouter()
 

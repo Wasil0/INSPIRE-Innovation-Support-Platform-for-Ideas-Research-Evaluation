@@ -217,7 +217,10 @@ const FydpProgress = () => {
         {/* Additional Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Past FYDP Ideas Card */}
-          <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer">
+          <Card 
+            className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer"
+            onClick={() => navigate("/student/past-ideas")}
+          >
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
@@ -236,7 +239,14 @@ const FydpProgress = () => {
                 Explore a collection of successful FYDP projects from previous
                 years to get ideas and understand project requirements.
               </p>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/student/past-ideas");
+                }}
+              >
                 View Past Projects
                 <ArrowLeft className="ml-2 h-4 w-4 rotate-180" />
               </Button>
