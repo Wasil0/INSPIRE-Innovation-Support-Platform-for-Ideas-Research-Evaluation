@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Settings,
   Bell,
@@ -19,6 +19,7 @@ import { getAdvisorInfo } from "@/api/advisors";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [notifications] = React.useState(3); // Placeholder for notification count
   const [isCommitteeMember, setIsCommitteeMember] = useState(false);
   const [loadingCommitteeStatus, setLoadingCommitteeStatus] = useState(true);
@@ -71,17 +72,35 @@ const Navbar = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Switch to Committee Member View Button - Only show for advisors who are committee members */}
-            {role === "advisor" && !loadingCommitteeStatus && isCommitteeMember && (
-              <Button
-                variant="ghost"
-                onClick={() => navigate("/faculty/committee/CommitteeDashboard")}
-                className="h-9 transition-colors"
-              >
-                <Users className="mr-2 h-4 w-4" />
-                Switch to Committee Member View
-              </Button>
-            )}
+            {/* Switch to Committee Member View Button - Only show for advisors who are committee members, but not when already on committee pages */}
+            {role === "advisor" && 
+              !loadingCommitteeStatus && 
+              isCommitteeMember && 
+              !location.pathname.includes("/faculty/committee") && (
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate("/faculty/committee/CommitteeDashboard")}
+                  className="h-9 transition-colors"
+                >
+                  <Users className="mr-2 h-4 w-4" />
+                  Switch to Committee Member View
+                </Button>
+              )}
+            
+            {/* Switch to Advisor View Button - Only show when on committee dashboard */}
+            {role === "advisor" &&
+              !loadingCommitteeStatus &&
+              isCommitteeMember &&
+              location.pathname.includes("/faculty/committee") && (
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate("/advisor/dashboard")}
+                  className="h-9 transition-colors"
+                >
+                  <Users className="mr-2 h-4 w-4" />
+                  Switch to Advisor View
+                </Button>
+              )}
             
             {/* Settings Dropdown */}
             <DropdownMenu>

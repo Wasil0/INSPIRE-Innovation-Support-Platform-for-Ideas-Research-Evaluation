@@ -23,7 +23,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Navbar from "@/components/Navbar";
-import { getAdvisorInfo } from "@/api/advisors";
+import { getAdvisorInfo, getTop3InterestedTeams } from "@/api/advisors";
+import { Loader2 } from "lucide-react";
 
 const AdvisorDashboard = () => {
   const navigate = useNavigate();
@@ -35,6 +36,10 @@ const AdvisorDashboard = () => {
     committee_member: false,
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // State for interested groups
+  const [interestedGroups, setInterestedGroups] = useState([]);
+  const [loadingInterestedGroups, setLoadingInterestedGroups] = useState(true);
 
   // Fetch advisor info from API
   useEffect(() => {
@@ -67,30 +72,23 @@ const AdvisorDashboard = () => {
     fetchAdvisorInfo();
   }, []);
 
-  // demo data, replace with API response
-  const interestedGroups = [
-    {
-      id: 1,
-      teamName: "AI Vision Team",
-      members: ["Sarah Ali", "Ahmed Khan", "Fatima Ahmed"],
-      ideaTitle: "Computer Vision for Medical Diagnosis",
-      interestDate: "2024-01-15",
-    },
-    {
-      id: 2,
-      teamName: "Blockchain Innovators",
-      members: ["Mohamed Ibrahim", "Zainab Hassan"],
-      ideaTitle: "Decentralized Voting System",
-      interestDate: "2024-01-12",
-    },
-    {
-      id: 3,
-      teamName: "IoT Solutions",
-      members: ["Ali Raza", "Ayesha Malik", "Hassan Ali"],
-      ideaTitle: "Smart Home Automation",
-      interestDate: "2024-01-10",
-    },
-  ];
+  // Fetch top 3 interested teams
+  useEffect(() => {
+    const fetchInterestedGroups = async () => {
+      try {
+        setLoadingInterestedGroups(true);
+        const data = await getTop3InterestedTeams();
+        setInterestedGroups(data || []);
+      } catch (error) {
+        console.error("Failed to fetch interested groups:", error);
+        setInterestedGroups([]);
+      } finally {
+        setLoadingInterestedGroups(false);
+      }
+    };
+
+    fetchInterestedGroups();
+  }, []);
 
   // demo data, replace with API response
   const selectedGroups = [
@@ -176,50 +174,52 @@ const AdvisorDashboard = () => {
             {/* Interested Student Groups Card */}
             <Card className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu">
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-                      <Users className="h-6 w-6 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <CardTitle>Interested Student Groups</CardTitle>
-                      <CardDescription>
-                        Groups that have shown interest in your ideas
-                      </CardDescription>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
+                    <Users className="h-6 w-6 text-primary-foreground" />
                   </div>
-                  <Badge className="bg-primary text-primary-foreground">
-                    {interestedGroups.length} Groups
-                  </Badge>
+                  <div>
+                    <CardTitle>Interested Student Groups</CardTitle>
+                    <CardDescription>
+                      Groups that have shown interest in your ideas
+                    </CardDescription>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {interestedGroups.length > 0 ? (
+                {loadingInterestedGroups ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  </div>
+                ) : interestedGroups.length > 0 ? (
                   <>
                     <div className="space-y-3">
-                      {interestedGroups.slice(0, 3).map((group) => (
+                      {interestedGroups.map((group, groupIdx) => (
                         <div
-                          key={group.id}
+                          key={`${group.team_id}-${group.project_id}-${groupIdx}`}
                           className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-sm mb-1">
-                                {group.teamName}
-                              </h4>
                               <p className="text-xs text-muted-foreground mb-2">
-                                Interested in: {group.ideaTitle}
+                                Interested in: {group.project_title || "Unknown Project"}
                               </p>
                               <div className="flex flex-wrap gap-1.5">
-                                {group.members.map((member, idx) => (
-                                  <Badge
-                                    key={idx}
-                                    variant="secondary"
-                                    className="text-xs"
-                                  >
-                                    {member}
-                                  </Badge>
-                                ))}
+                                {group.members && group.members.length > 0 ? (
+                                  group.members.map((member, idx) => (
+                                    <Badge
+                                      key={idx}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {member.name || `Member ${idx + 1}`}
+                                    </Badge>
+                                  ))
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">
+                                    No members available
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>

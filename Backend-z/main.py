@@ -7,6 +7,7 @@ from routers import profiles
 from routers import projects
 from routers import industry_idea
 from routers import industry_job
+from routers import industry_profile
 from routers import invites
 from routers import advisor_ideas_scoring
 from routers import chat
@@ -39,7 +40,7 @@ app.include_router(profiles.router)
 app.include_router(projects.router)
 app.include_router(industry_idea.router)
 app.include_router(industry_job.router)
-app.include_router(industry_idea.router)
+app.include_router(industry_profile.router)
 app.include_router(invites.router)
 app.include_router(advisor_ideas_scoring.router)
 app.include_router(chat.router)

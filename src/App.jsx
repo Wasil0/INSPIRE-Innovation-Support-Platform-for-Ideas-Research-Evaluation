@@ -9,11 +9,17 @@ import ViewIdeas from "./pages/faculty/advisor/ViewIdeas";
 import InterestedGroups from "./pages/faculty/advisor/InterestedGroups";
 import SelectedGroups from "./pages/faculty/advisor/SelectedGroups";
 import CommitteeDashboard from "./pages/faculty/committee/CommitteeDashboard";
+import StudentsOverview from "./pages/faculty/committee/StudentsOverview";
+import GroupsOverview from "./pages/faculty/committee/GroupsOverview";
+import IndustryManagement from "./pages/faculty/committee/IndustryManagement";
 import FydpProgress from "./pages/student/FydpProgress";
 import GroupFormation from "./pages/student/GroupFormation";
 import PastIdeas from "./pages/student/PastIdeas";
 import FydpAdvisorIdeas from "./pages/student/FydpAdvisorIdeas";
 import AiChat from "./pages/student/AiChat";
+import IndustryDashboard from "./pages/industry/IndustryDashboard";
+import PostIndustryIdea from "./pages/industry/PostIndustryIdea";
+import PostIndustryJob from "./pages/industry/PostIndustryJob";
 // import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
@@ -82,6 +88,30 @@ function App() {
         }
       />
       <Route
+        path="/faculty/committee/students"
+        element={
+          <ProtectedRoute allowedRoles={["advisor", "committee"]}>
+            <StudentsOverview />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/committee/groups"
+        element={
+          <ProtectedRoute allowedRoles={["advisor", "committee"]}>
+            <GroupsOverview />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/committee/industry-management"
+        element={
+          <ProtectedRoute allowedRoles={["advisor", "committee"]}>
+            <IndustryManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/student/dashboard"
         element={
           <ProtectedRoute allowedRoles={["student"]}>
@@ -126,6 +156,57 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <AiChat />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/industry/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <IndustryDashboard />
+          </ProtectedRoute>
+        }
+      />
+      {/* Industry routes */}
+      <Route
+        path="/industry/post-idea"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <PostIndustryIdea />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/industry/post-job"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <PostIndustryJob />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/industry/my-ideas"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold mb-2">My Ideas</h1>
+                <p className="text-muted-foreground">This page is under construction.</p>
+              </div>
+            </div>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/industry/my-jobs"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold mb-2">My Jobs</h1>
+                <p className="text-muted-foreground">This page is under construction.</p>
+              </div>
+            </div>
           </ProtectedRoute>
         }
       />

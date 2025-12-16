@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  Upload,
   X,
   CheckCircle2,
   Loader2,
@@ -15,17 +14,14 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
-import { getAdvisorInfo, postAdvisorIdea } from "@/api/advisors";
-import { SOFTWARE_DOMAINS } from "@/assets/domains";
-import { TECHNICAL_SKILLS } from "@/assets/technicalSkills";
+import { postIndustryIdea } from "@/api/industry";
+import { INDUSTRY_DOMAINS } from "@/assets/industry_domains";
+import { INDUSTRY_SKILLS } from "@/assets/industry_skills";
 
-const PostIdea = () => {
+const PostIndustryIdea = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
   const domainDropdownRef = useRef(null);
   const skillsDropdownRef = useRef(null);
-  const [advisorId, setAdvisorId] = useState("");
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -34,14 +30,7 @@ const PostIdea = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    flow_explanation: "",
-    domain: "",
-    skills_required: "",
   });
-
-  // Source type state
-  const [sourceType, setSourceType] = useState("advisor");
-  const [industryName, setIndustryName] = useState("");
 
   // Selected values for multi-select
   const [selectedDomains, setSelectedDomains] = useState([]);
@@ -54,28 +43,6 @@ const PostIdea = () => {
   // Dropdown visibility
   const [showDomainDropdown, setShowDomainDropdown] = useState(false);
   const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
-
-  // Image state
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-
-  // Fetch advisor ID on mount
-  useEffect(() => {
-    const fetchAdvisorId = async () => {
-      try {
-        setLoading(true);
-        const advisor = await getAdvisorInfo();
-        setAdvisorId(advisor.advisor_id || "");
-      } catch (error) {
-        console.error("Failed to fetch advisor info:", error);
-        setError("Failed to load advisor information. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAdvisorId();
-  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -101,12 +68,12 @@ const PostIdea = () => {
   }, []);
 
   // Filter domains based on search
-  const filteredDomains = SOFTWARE_DOMAINS.filter((domain) =>
+  const filteredDomains = INDUSTRY_DOMAINS.filter((domain) =>
     domain.toLowerCase().includes(domainSearch.toLowerCase())
   );
 
   // Filter skills based on search
-  const filteredSkills = TECHNICAL_SKILLS.filter((skill) =>
+  const filteredSkills = INDUSTRY_SKILLS.filter((skill) =>
     skill.toLowerCase().includes(skillsSearch.toLowerCase())
   );
 
@@ -128,40 +95,6 @@ const PostIdea = () => {
     );
   };
 
-  // Handle image selection
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.match(/^image\/(png|jpeg|jpg)$/)) {
-        setError("Only PNG or JPG images are allowed.");
-        return;
-      }
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Image size must be less than 5MB.");
-        return;
-      }
-      setImageFile(file);
-      setError("");
-      // Create preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Remove image
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -177,24 +110,12 @@ const PostIdea = () => {
       setError("Description is required.");
       return;
     }
-    if (!formData.flow_explanation.trim()) {
-      setError("Flow explanation is required.");
-      return;
-    }
     if (selectedDomains.length === 0) {
-      setError("At least one domain must be selected.");
+      setError("At least one technology stack item must be selected.");
       return;
     }
     if (selectedSkills.length === 0) {
-      setError("At least one technical skill must be selected.");
-      return;
-    }
-    if (sourceType === "advisor" && !advisorId) {
-      setError("Advisor ID not found. Please refresh the page.");
-      return;
-    }
-    if (sourceType === "industry" && !industryName.trim()) {
-      setError("Industry name is required when source type is industry.");
+      setError("At least one expected skill must be selected.");
       return;
     }
 
@@ -205,29 +126,35 @@ const PostIdea = () => {
       const ideaData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
-        flow_explanation: formData.flow_explanation.trim(),
-        domain: selectedDomains.join(", "),
-        skills_required: selectedSkills.join(", "),
-        source_type: sourceType,
-        advisor_id: sourceType === "advisor" ? advisorId : null,
-        industry_name: sourceType === "industry" ? industryName.trim() : null,
+        technology_stack: selectedDomains,
+        expected_skills: selectedSkills,
       };
 
       // Submit to API
-      const response = await postAdvisorIdea(ideaData, imageFile);
-      
+      await postIndustryIdea(ideaData);
+
       setSuccess(true);
-      setError(""); // Clear any previous errors
-      
-      // Navigate to advisor dashboard immediately after successful submission
-      navigate("/advisor/dashboard");
+      setError("");
+
+      // Clear form
+      setFormData({
+        title: "",
+        description: "",
+      });
+      setSelectedDomains([]);
+      setSelectedSkills([]);
+
+      // Navigate to dashboard after a short delay
+      setTimeout(() => {
+        navigate("/industry/dashboard");
+      }, 2000);
     } catch (error) {
       console.error("Error submitting idea:", error);
-      const errorMessage = 
+      const errorMessage =
         error.response?.data?.detail ||
         error.response?.data?.message ||
-        (Array.isArray(error.response?.data) 
-          ? error.response.data.map(e => e.msg || e.message).join(", ")
+        (Array.isArray(error.response?.data)
+          ? error.response.data.map((e) => e.msg || e.message).join(", ")
           : null) ||
         error.message ||
         "Failed to submit idea. Please try again.";
@@ -238,19 +165,6 @@ const PostIdea = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -258,7 +172,7 @@ const PostIdea = () => {
         {/* Back Button */}
         <Button
           variant="ghost"
-          onClick={() => navigate("/advisor/dashboard")}
+          onClick={() => navigate("/industry/dashboard")}
           className="mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -272,7 +186,7 @@ const PostIdea = () => {
           </h1>
           <p className="text-muted-foreground">
             Share your project idea with students. Fill in all required fields
-            to submit.
+            to submit. Your idea will be pending approval.
           </p>
         </div>
 
@@ -309,71 +223,6 @@ const PostIdea = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Source Type Selection */}
-              <div className="space-y-2">
-                <Label>
-                  Source Type <span className="text-red-500">*</span>
-                </Label>
-                <div className="flex gap-6">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      id="source_advisor"
-                      name="source_type"
-                      value="advisor"
-                      checked={sourceType === "advisor"}
-                      onChange={(e) => {
-                        setSourceType(e.target.value);
-                        setIndustryName(""); // Clear industry name when switching
-                      }}
-                      className="h-4 w-4 text-primary focus:ring-primary"
-                    />
-                    <Label
-                      htmlFor="source_advisor"
-                      className="font-normal cursor-pointer"
-                    >
-                      Advisor
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      id="source_industry"
-                      name="source_type"
-                      value="industry"
-                      checked={sourceType === "industry"}
-                      onChange={(e) => {
-                        setSourceType(e.target.value);
-                      }}
-                      className="h-4 w-4 text-primary focus:ring-primary"
-                    />
-                    <Label
-                      htmlFor="source_industry"
-                      className="font-normal cursor-pointer"
-                    >
-                      Industry
-                    </Label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Industry Name - Conditional */}
-              {sourceType === "industry" && (
-                <div className="space-y-2">
-                  <Label htmlFor="industry_name">
-                    Industry Name <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="industry_name"
-                    value={industryName}
-                    onChange={(e) => setIndustryName(e.target.value)}
-                    placeholder="Enter the industry name"
-                    required
-                    className="bg-background"
-                  />
-                </div>
-              )}
-
               {/* Title */}
               <div className="space-y-2">
                 <Label htmlFor="title">
@@ -388,6 +237,7 @@ const PostIdea = () => {
                   placeholder="Enter a descriptive title for your FYDP idea"
                   required
                   className="bg-background"
+                  disabled={submitting}
                 />
               </div>
 
@@ -405,40 +255,23 @@ const PostIdea = () => {
                   placeholder="Provide a detailed description of your FYDP idea (100-150 words recommended)"
                   required
                   rows={5}
+                  disabled={submitting}
                   className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
                 />
               </div>
 
-              {/* Flow Explanation */}
-              <div className="space-y-2">
-                <Label htmlFor="flow_explanation">
-                  Flow Explanation <span className="text-red-500">*</span>
-                </Label>
-                <textarea
-                  id="flow_explanation"
-                  value={formData.flow_explanation}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      flow_explanation: e.target.value,
-                    })
-                  }
-                  placeholder="Explain the workflow and process of your idea"
-                  required
-                  rows={5}
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
-                />
-              </div>
-
-              {/* Domain Selection */}
+              {/* Technology Stack Selection */}
               <div className="space-y-2">
                 <Label>
-                  Domain(s) <span className="text-red-500">*</span>
+                  Technology Stack <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative" ref={domainDropdownRef}>
                   <div
-                    className="flex min-h-[40px] w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent"
-                    onClick={() => setShowDomainDropdown(!showDomainDropdown)}
+                    className="flex min-h-[40px] w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={() =>
+                      !submitting &&
+                      setShowDomainDropdown(!showDomainDropdown)
+                    }
                   >
                     <div className="flex flex-wrap gap-2 flex-1">
                       {selectedDomains.length > 0 ? (
@@ -453,9 +286,10 @@ const PostIdea = () => {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDomainToggle(domain);
+                                if (!submitting) handleDomainToggle(domain);
                               }}
                               className="ml-2 hover:text-destructive"
+                              disabled={submitting}
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -463,18 +297,18 @@ const PostIdea = () => {
                         ))
                       ) : (
                         <span className="text-muted-foreground">
-                          Select domain(s)...
+                          Select technology stack...
                         </span>
                       )}
                     </div>
                     <Search className="h-4 w-4 text-muted-foreground" />
                   </div>
 
-                  {showDomainDropdown && (
+                  {showDomainDropdown && !submitting && (
                     <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
                       <div className="p-2">
                         <Input
-                          placeholder="Search domains..."
+                          placeholder="Search technology stack..."
                           value={domainSearch}
                           onChange={(e) => setDomainSearch(e.target.value)}
                           className="mb-2"
@@ -503,7 +337,7 @@ const PostIdea = () => {
                             ))
                           ) : (
                             <div className="p-2 text-sm text-muted-foreground text-center">
-                              No domains found
+                              No items found
                             </div>
                           )}
                         </div>
@@ -513,16 +347,17 @@ const PostIdea = () => {
                 </div>
               </div>
 
-              {/* Skills Selection */}
+              {/* Expected Skills Selection */}
               <div className="space-y-2">
                 <Label>
-                  Technical Skills Required{" "}
-                  <span className="text-red-500">*</span>
+                  Expected Skills <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative" ref={skillsDropdownRef}>
                   <div
-                    className="flex min-h-[40px] w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent"
-                    onClick={() => setShowSkillsDropdown(!showSkillsDropdown)}
+                    className="flex min-h-[40px] w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={() =>
+                      !submitting && setShowSkillsDropdown(!showSkillsDropdown)
+                    }
                   >
                     <div className="flex flex-wrap gap-2 flex-1">
                       {selectedSkills.length > 0 ? (
@@ -537,9 +372,10 @@ const PostIdea = () => {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleSkillToggle(skill);
+                                if (!submitting) handleSkillToggle(skill);
                               }}
                               className="ml-2 hover:text-destructive"
+                              disabled={submitting}
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -547,14 +383,14 @@ const PostIdea = () => {
                         ))
                       ) : (
                         <span className="text-muted-foreground">
-                          Select technical skill(s)...
+                          Select expected skills...
                         </span>
                       )}
                     </div>
                     <Search className="h-4 w-4 text-muted-foreground" />
                   </div>
 
-                  {showSkillsDropdown && (
+                  {showSkillsDropdown && !submitting && (
                     <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
                       <div className="p-2">
                         <Input
@@ -597,57 +433,6 @@ const PostIdea = () => {
                 </div>
               </div>
 
-              {/* Image Upload */}
-              <div className="space-y-2">
-                <Label htmlFor="flowchart_image">
-                  Flowchart Image (Optional)
-                </Label>
-                {imagePreview ? (
-                  <div className="space-y-2">
-                    <div className="relative inline-block">
-                      <img
-                        src={imagePreview}
-                        alt="Flowchart preview"
-                        className="max-w-full max-h-64 rounded-md border"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2"
-                        onClick={handleRemoveImage}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {imageFile?.name} ({(imageFile?.size / 1024).toFixed(2)} KB)
-                    </p>
-                  </div>
-                ) : (
-                  <div
-                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      Click to upload flowchart image
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      PNG or JPG (max 5MB)
-                    </p>
-                  </div>
-                )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  id="flowchart_image"
-                  accept="image/png,image/jpeg,image/jpg"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </div>
-
               {/* Submit Button */}
               <div className="flex gap-4 pt-4">
                 <Button
@@ -667,7 +452,7 @@ const PostIdea = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/advisor/dashboard")}
+                  onClick={() => navigate("/industry/dashboard")}
                   disabled={submitting}
                 >
                   Cancel
@@ -681,4 +466,5 @@ const PostIdea = () => {
   );
 };
 
-export default PostIdea;
+export default PostIndustryIdea;
+

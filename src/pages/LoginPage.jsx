@@ -34,6 +34,8 @@ const LoginPage = () => {
         navigate("/committee/dashboard");
       } else if (response.data.role === "advisor") {
         navigate("/advisor/dashboard");
+      } else if (response.data.role === "industry") {
+        navigate("/industry/dashboard");
       } else {
         navigate("/student/dashboard");
       }

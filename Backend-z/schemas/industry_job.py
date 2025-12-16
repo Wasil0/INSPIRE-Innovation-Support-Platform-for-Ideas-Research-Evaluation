@@ -6,10 +6,7 @@ from typing import Literal
 class IndustryJobPosting(BaseModel):
     title: str
     description: str
-    industry_name: str
-    contact_email: EmailStr
     job_type: Literal["full-time", "part-time", "internship", "training"]
-    location: Optional[str] = None
     amount: Optional[str] = None
     duration: Optional[str] = None
     technology_stack: Optional[List[str]] = None
@@ -18,3 +15,22 @@ class IndustryJobPosting(BaseModel):
 
 class IndustryJobStatusUpdate(BaseModel):
    status: Literal["approved", "rejected"]
+   
+   
+class IndustryJobResponse(BaseModel):
+    job_id: str
+    title: str
+    description: str
+    job_type: str
+    amount: Optional[str] = None
+    duration: Optional[str] = None
+    technology_stack: List[str]
+    expected_skills: List[str]
+    # Industry profile fields
+    company_name: str
+    gmail: Optional[str] = None 
+    company_type: str
+    industry_domain: str
+    company_description: str
+    founded_year: int
+    location: str
