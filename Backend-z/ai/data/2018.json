@@ -1,0 +1,261 @@
+[
+  {
+    "title": "IOT BASED AIR QUALITY MONITORING & ALERT SYSTEM",
+    "team_members": ["Mariam Pierzada", "Zubia Fatima", "Khizrah Arshad", "Muhammad Mutaba Khan"],
+    "description": "This project develops a cost-effective IoT-based Air Quality Monitoring System (AQMS) to address the growing threat of air pollution. The system uses hardware components like NodeMCU-ESP8266, Arduino Uno, and MQ135 gas sensors to detect pollutants and measure air quality in real time. Readings are compared against threshold values, and alerts are provided through buzzers, lights, and an LCD display. The IoT connectivity allows users to monitor air quality remotely via a mobile application, enabling timely awareness and preventive measures. The project also integrates sound monitoring and provides hands-on experience in industrial data handling, software tools, and environmental sensing. By offering a low-cost, automated, and accessible solution, this system promotes healthier living, supports informed decision-making, and contributes to tackling pollution in urban areas effectively. It represents a practical step toward improving environmental quality and public health awareness.",
+    "advisor": "Dr. Syed Zaffar Qasim",
+    "batch": "2018"
+  },
+  {
+    "title": "Telepresence Robot",
+    "team_members": ["Hiba Sikander", "Muhammad Ashar Mehmood", "Muhammad Zain ul Abdin"],
+    "description": "This project introduces a telepresence robot to enhance remote communication beyond traditional video conferencing tools like Zoom and Google Meet. While conventional platforms allow visual interaction, they limit user autonomy and non-verbal communication. The telepresence robot is a wheeled, internet-connected device controlled remotely via a smartphone application, providing both video and audio capabilities. The system integrates backend server design, mobile app development, microcontroller interfacing, and robot chassis construction to enable seamless remote operation. Users can navigate the robot in distant locations, effectively extending their presence and improving interaction. Telepresence robots have applications in schools, hospitals, offices, and other organizations, offering benefits such as cost reduction, time and energy savings, and enhanced communication. By bridging physical distance, this project demonstrates a practical solution for remote engagement and presents the potential for widespread adoption across diverse environments.",
+    "advisor": "Dr. Urooj Amuddin",
+    "batch": "2018"
+  },
+  {
+    "title": "Behavioral Monitoring Using Vocal Sentiment Analysis",
+    "team_members": ["Shehroz Waseem", "Sukaina Asad", "Abaad Murtaza", "Aiman Nisar"],
+    "description": "This project focuses on analyzing human behavior through vocal sentiment analysis using speech data. Unlike traditional sentiment analysis that relies on text, facial expressions, or acoustic features, this system extracts emotions directly from audio, enabling computers to understand the speaker's mindset and mood. A mobile application is developed to provide real-time insights into human behavior across different situations. The project includes the creation of an Urdu-language speech dataset, which is pre-processed and augmented to improve model performance. Key features, such as Mel Frequency Cepstral Coefficients (MFCCs), are extracted from the audio data. A convolutional neural network (CNN) is employed to classify and predict sentiments with high accuracy. By leveraging voice data, the system captures a wide range of emotions, from joy and laughter to sadness and rigidity, offering a powerful tool to study human behavior and enhance applications in social, psychological, and interactive systems.",
+    "advisor": "Dr. Urooj Ainuddin",
+    "batch": "2018"
+  },
+  {
+    "title": "Automation & Tracking of Inventory",
+    "team_members": ["Simrah Adil", "Ezna Hafeez", "Syeda Haima Batool Naqvi", "Syeda Malika Haider"],
+    "description": "This project digitizes and automates inventory management for CIS labs, transitioning from years of hardcopy records to a computerized system. The solution enables comprehensive tracking of every item, providing visibility, analysis, and easier access to inventory data. A web-based application is developed using PHP, HTML, and popular databases like MySQL or Microsoft SQL Server. Each item is assigned a unique identification number and a scannable barcode, allowing real-time tracking of its movement and status. The system also incorporates a graphical user interface and data analytics using K-Means clustering to identify trends, clean data, and visualize insights. By centralizing inventory records and making them searchable and analyzable, the project enhances departmental awareness, improves resource management, reduces manual effort, and increases overall efficiency. This digital solution ensures accurate, organized, and actionable inventory data across all labs.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2018"
+  },
+  {
+    "title": "Smart Library Assistant Robot",
+    "team_members": ["Aima Baig", "Zainab Zaki", "Mahan Zaki", "Jehangir Adil Vakil"],
+    "description": "This project develops a Library Management Assistant by integrating robotics with computer vision technologies. It combines a Library Management System (LMS), a robotic arm, and advanced computer vision techniques to automate book retrieval. The LMS allows users to search for books, and once a book is located, its accession number is identified. A robotic arm equipped with a camera scans the shelves, sending images to a computer system for processing. Using computer vision and OCR (Optical Character Recognition), accession numbers are detected and converted into machine-readable data. If the number matches the requested book, the robotic arm retrieves it via an Arduino UNO controller. The system is designed to support librarians, automate university library operations, and engage students, enhancing efficiency, accuracy, and timeliness while minimizing manual labor and operational costs. It provides a modern, intelligent solution for library management.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2018"
+  },
+  {
+    "title": "Agricultural Field Demarcation, Measurement and Crop Detection using Machine Learning Algorithms",
+    "team_members": ["Anna Javed", "Arbaz Khan", "Ateeq ur Rehman", "Umar Naveed"],
+    "description": "This project focuses on digital farming, which leverages modern technology to simplify data collection, storage, and management for farmers, reducing reliance on hardcopy records. By using devices such as computers and mobile apps, farmers can access timely and accurate information to manage logistics, finances, and marketplaces while minimizing human errors. A key objective of the project is to help farmers predict crop yields, allowing better planning of resources and preventing shortages or surpluses. The web application assists in identifying field boundaries through satellite imagery, calculating acreage, determining suitable crops, and assessing crop health. Using deep learning and semantic segmentation, the system accurately detects and outlines fields, presenting results as colored polygons for clarity. Overall, this solution empowers farmers with actionable insights, improves efficiency, enhances crop quality and yield, and reduces costs and waste in agricultural operations.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2018"
+  },
+  {
+    "title": "Point Pay (Track & pay on the go!)",
+    "team_members": ["Syed Maaz Hassan", "Musab Bin Javed", "Javeria Arif", "Faiza"],
+    "description": "The project 'PointPay' aims to modernize and streamline shuttle payment and tracking for university students and staff. Currently, students face delays in receiving shuttle cards, and manual records make it difficult for staff to track lost or duplicate cards. Additionally, the existing system does not provide live shuttle locations, causing uncertainty and missed rides. PointPay offers a one-tap digital payment solution and real-time shuttle tracking via mobile devices, ensuring faster, secure, and transparent transactions. The system allows university staff to monitor payments, generate point cards instantly, and track shuttles efficiently across routes. By simplifying shuttle management and providing live updates, PointPay encourages students to use university transportation, reducing reliance on personal vehicles, traffic congestion, and pollution. Overall, it creates a controlled, efficient, and user-friendly environment for both students and administrative staff.",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2018"
+  },
+  {
+    "title": "Software-Defined Camera for Outdoor Surveillance Applications",
+    "team_members": ["Soniya Shafi", "Iqra Irfan", "Misha Akram Baig", "Hoor Soomro"],
+    "description": "This project focuses on developing a smart camera system with adaptive image quality and automated pre-processing. Traditional cameras are limited by fixed internal architectures and cannot maintain consistent image quality across varying environments. The system uses a Raspberry Pi 3B+ with a Pi Camera and an OV5647 image sensor to capture images, which are analyzed in MATLAB to determine key parameters such as brightness, color, saturation, sharpness, and luminance. A Lux sensor (BH1750) is integrated to measure ambient light and automatically adjust camera parameters like brightness and contrast in real time. The camera generates live feeds and captures images at regular intervals, allowing comparison of images with and without sensor integration using PSNR values. This approach ensures optimal image quality, enhances pre-processing efficiency, and demonstrates the effectiveness of environment-aware camera systems in varying lighting conditions.",
+    "advisor": "Ms. Fakhra Afab",
+    "batch": "2018"
+  },
+  {
+    "title": "IoT Based Smart Medicine Dispenser",
+    "team_members": ["Shaikh Areeb", "Usman Zaman", "Amjad Ali", "Uzair Jamal"],
+    "description": "This project develops an IoT-based smart medication dispenser to improve patient safety and adherence to prescribed medication schedules. Medication errors, such as incorrect dosages or missed doses, are common, especially among elderly patients, causing confusion, dependency on caregivers, and serious health risks. The device automates medication administration, relieving users from the error-prone task of interpreting instructions. It incorporates an embedded system with microcontrollers or FPGAs, sensors, and a user-friendly interface with a display and keyboard. Caregivers are connected through a mobile application, which notifies them and the patient about scheduled doses. The dispenser ensures medications are taken at the correct time, prevents errors, and supports flexible scheduling. By combining automation, real-time alerts, and caregiver oversight, this system enhances compliance, reduces health risks, and empowers patients to manage their medication safely and independently.",
+    "advisor": "Syeda Ramish Fatima",
+    "batch": "2018"
+  },
+  {
+    "title": "S.I.G.N.A.L -- Smart Integrated and Guarded with Navigation Autonomous Luggage",
+    "team_members": ["Muhammad Bilal Asif", "Mazhar Uddin Abbasi", "Sumraiya Mahmood", "Syeda Nidaa Batool"],
+    "description": "The project 'S.I.G.N.A.L.' (Smart Integrated and Guarded with Navigation, Autonomous Luggage) aims to make travel easier, safer, and more efficient by developing a robotic luggage system. Traditional luggage requires manual effort, poses security risks, and is difficult to handle, especially for elderly travelers. SIGNAL addresses these issues by autonomously following its owner using a human-tracking algorithm powered by MobileNet SSD v1 and TensorFlow Lite. It incorporates obstacle detection and avoidance with AI and ultrasonic sensors, GPS tracking to prevent loss, and a pin code lock for security. The system is powered by a removable battery and controlled via a Raspberry Pi microcontroller. By integrating IoT notifications, the bag alerts the user if it is misplaced. SIGNAL eliminates the limitations of conventional luggage, offering convenience, enhanced security, and smarter travel solutions, making it a promising innovation for the evolving travel market.",
+    "advisor": "Miss Ibshar Ishrat",
+    "batch": "2018"
+  },
+  {
+    "title": "EYES N EARS: Smart Support for Physically Challenged People",
+    "team_members": ["Asad Saleem", "Muhammad Furqan", "Muhammad Sheerazuddin", "Ahmed Safeer Khan"],
+    "description": "In all methods of communication, Speech is considered one of the most essential ways of communication for human beings. Despite the technological advancement, we are still lacking behind in technology that can cater to the needs of people with hearing disabilities and the reason is the high cost of hardware components. Nowadays the use of smart assistants and smart home products with the help of the Sound classification method is increasing. Keeping that thing in mind we are optimistic that sound classification technology can be promising and has a lot of potentials that can be utilized in an application-based solution for deaf people. This study's technique entails gathering data, preprocessing it, creating a model, and training it.",
+    "advisor": "Miss Ibshar Ishrat",
+    "batch": "2018"
+  },
+  {
+    "title": "Textile Trade Intelligence",
+    "team_members": ["Tehreem Hasnain", "Hania Hafeez Khan", "Mariam Fatima", "Ruqayya Mustafa"],
+    "description": "The project focuses on enhancing decision-making in the textile and garment industry using business intelligence (BI) and data analytics. With increasing global competition and consumer demands, companies must optimize resources and improve efficiency across manufacturing and supply chains. The study develops a BI framework that incorporates data mining, process analysis, performance benchmarking, and predictive analytics to guide strategic decisions. Large and complex datasets were preprocessed, integrated, and segmented for analysis. Time series forecasting using ARIMA and sequence prediction using LSTM models were applied to identify trends, patterns, and future predictions. Data visualization through graphs, charts, and Power BI reports enabled clear interpretation of insights. The final system provides actionable intelligence, allowing textile and apparel companies to make data-driven decisions, optimize production processes, and anticipate market trends effectively.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2018"
+  },
+  {
+    "title": "AI-Based Event Coverage",
+    "team_members": ["Muhammad Mudassir Khan", "Syed Maroof Ali", "Kanwar Ammar Ali", "Shajq Ahmed"],
+    "description": "In typical event coverage, multiple personnel are required for tasks like video recording and picture capturing, which can be inefficient and tiring. This project proposes an autonomous drone system that uses hand gesture recognition to manage these tasks. The drone interprets user gestures to switch between modes and perform operations such as face recognition and tracking, surveillance, beacon and object detection, obstacle avoidance, live video coverage, and photo capturing. This system aims to reduce the need for human labor, streamline event management, and embrace modern technologies for smarter coverage.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2018"
+  },
+  {
+    "title": "DIGITAL OPD",
+    "team_members": ["Usaib Khan", "Syeda Insharah Naveed", "Esha Imran", "Shehzer Aurangzeb Abbasi"],
+    "description": "Due to Covid-19, people around the world faced major healthcare crises. In Karachi, OPD closures caused significant issues, including restricted hospital appointments, travel stress, and increased costs. To address these challenges, the project proposes a Digital OPD system using teleconsultation, AI, and remote diagnostics to deliver global healthcare access. The mobile application offers an interactive interface for users, enabling disease prediction through symptom and image input. The next development phase includes implementing doctor-patient meetings and E-prescriptions. Additionally, an Admin portal will be developed for managing outpatient departments, notifications, and chats---creating a complete hospital management system via a web app.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2018"
+  },
+  {
+    "title": "VisualrI: Image and Video Forensics Toolkit",
+    "team_members": ["Syed Saad Hasan Emad", "Syed Umair Hasan", "Muhammad Fahad Alam", "Muhammad Hamiz Habib"],
+    "description": "The project 'Visualri' is an advanced image and video forensics toolkit designed to assist in criminal investigations by analyzing digital media. It offers multiple tools for detecting absconders, verifying identities, identifying fake images, performing reverse image searches, and extracting metadata. The Absconder Detection System uses GAN-based techniques to generate datasets from a single image, enabling robust face recognition even with disguises, aging, or altered appearances. The Imposter Detection System employs residual neural networks trained on real and GAN-generated images to distinguish authentic from artificially created faces. Additional features include EXIF metadata extraction and image comparison using cloud computing to provide confidence scores for facial analysis. Visualri addresses the One-Shot Learning problem, improving recognition with minimal data. By detecting fake or manipulated digital assets, it enhances the credibility of digital evidence in criminal cases and supports the legal acceptance of mobile media as valid evidence.",
+    "advisor": "Prof. Dr. Abbas Ali",
+    "batch": "2018"
+  },
+  {
+    "title": "Virtual Reality Application for STEAM based Space Expedition",
+    "team_members": ["Maryum Raza", "Tarab Zehra", "Hareem Amin", "Laila Siddiqui"],
+    "description": "This project aims to promote space science education in Pakistan by developing an immersive Virtual Reality (VR) application for school students. With limited motivation and facilities for exploring space sciences, traditional learning methods are often costly and less engaging. The VR system allows students to explore space in a fully interactive environment, enhancing learning and exposing them to STEAM (Science, Technology, Engineering, Arts, and Mathematics) disciplines. The development process involves storyboarding, 3D asset modeling, VR environment creation, coding interactivity using C#, and thorough testing with student feedback. Findings indicate that VR can significantly improve learning outcomes when integrated effectively into the curriculum, though poorly designed applications may yield results similar to conventional methods. The project seeks to fill the educational gap in Pakistan by providing an engaging, cost-effective, and indigenous solution to encourage students toward space sciences as a professional pursuit.",
+    "advisor": "Dr. Majida Kazmi / Dr. Farmkh Anf",
+    "batch": "2018"
+  },
+  {
+    "title": "Automation and Recommendation of Logistics for Optimal Utilization of Resources",
+    "team_members": ["Laiba Fahim", "Maham Akhlaq", "Zubia Naeem", "Midha Sohail"],
+    "description": "The project addresses the lack of logistics automation in Pakistan's film manufacturing industry, where transportation issues require manual investigation and cause delays. Existing systems are limited due to non-real-time data entry, lack of recommendations, no costing mechanism, and no container planning. The proposed automated logistics system overcomes these bottlenecks by providing a user-friendly interface, real-time data capture, improved costing accuracy, better resource utilization, and customer feedback integration. Data from the company required preprocessing and cleaning before analysis. React.js was used to build an interactive and efficient interface, while visual statistics enabled faster decision-making. The system monitors driver performance, ensures timely deliveries, and supports management through automated reports and analytics. By incorporating customer feedback and real-time insights, the solution significantly improves operational efficiency and reliability within the logistics process.",
+    "advisor": "Kashif Asrar",
+    "batch": "2018"
+  },
+  {
+    "title": "Optimization And Real-Time Analysis of Big Transactional Data",
+    "team_members": ["Ahsan Ehtesham", "Hareem Shahid", "Maheen Mukhtar", "Ayesha Akhtar"],
+    "description": "Our project focuses on optimizing big data queries to establish a reliable benchmark for future users. We analyze the global challenge faced by organizations managing massive datasets, where inefficient configurations lead to higher costs, increased power consumption, and longer execution times. By proposing an economical infrastructure, we aim to identify the ideal system specifications required to handle large-scale data efficiently. Using Apache-based frameworks, we divide big data into clusters, process it, and gradually increase the data size to determine the point at which system performance begins to degrade. Based on these observations, we refine the system specifications until an optimal benchmark is achieved. The final outcome will include a real-time analytical dashboard and formal documentation to guide companies in configuring their systems more efficiently.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2018"
+  },
+  {
+    "title": "Production Process Optimization Using ML",
+    "team_members": ["Aqsa Saif", "Syeda Mahnoor Shah", "Areesha Afzal", "Neha Shariq"],
+    "description": "",
+    "advisor": "Mr Kashif Asrar",
+    "batch": "2018"
+  },
+  {
+    "title": "Data-Driven Analysis and Forecasting on Big Distributed Data File Systems",
+    "team_members": ["Javeria Tabassum", "Hiba Asad", "Bisma Ashraf", "Alishba Nasir"],
+    "description": "This project addresses Big Data challenges in the banking sector, where massive volumes of structured and unstructured data---from terabytes to petabytes daily---need efficient processing, analysis, and prediction. Traditional data-processing software is insufficient for these large-scale datasets, requiring advanced techniques for storage, extraction, and analytics. The project develops a platform capable of handling huge datasets, managing multiple functions and queries without downtime. Hadoop clusters are set up for distributed storage and processing, with data loaded onto HDFS. Predictive analytics and forecasting are performed using machine learning algorithms on various banking parameters. The system aims to optimize data analysis, enable accurate predictions, and provide insights for decision-making, demonstrating the practical application of Big Data technologies in financial services.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2018"
+  },
+  {
+    "title": "AI Enabled URDU OCR for Mobile devices",
+    "team_members": ["Mahnoor Asrar", "Suhaib Baleegh", "Syeda Ruba Zehra", "Sarim Ali Zuberi"],
+    "description": "This project develops a mobile Optical Character Recognition (OCR) system for Urdu, focusing on the cursive Nastaliq script, which has historically lacked efficient digital conversion tools. The absence of such technology has limited the digitization of printed Urdu texts, hindering preservation and accessibility of literature. The system employs a deep learning model to accurately recognize and predict scanned text. Data collected from UPTI underwent preprocessing, segmentation, ligature extraction, and feature extraction before classification and recognition. The trained model forms the core of an Android application that allows users to scan or upload images of Urdu text, converting them into editable digital formats. User accounts are integrated with a Firebase backend to securely store data. This solution provides a portable, user-friendly OCR tool, enabling Urdu enthusiasts to digitize, preserve, and interact with printed content efficiently, bridging the gap between traditional literature and modern technology.",
+    "advisor": "Miss Fauzia Yasir",
+    "batch": "2018"
+  },
+  {
+    "title": "Dynamic Chatbot",
+    "team_members": ["Syed Abdullah", "Dua Zehra", "Areeba Ayub", "Shehrose Arshad"],
+    "description": "This project focuses on developing a dynamic, AI-based FAQ chatbot capable of responding to user queries across multiple domains. Unlike task-specific chatbots, this conversational agent is designed to learn from user-provided Excel files containing questions and answers, making it adaptable to any field. Two datasets were used to validate the system: one from the NED University Admission Cell and another related to COVID-19. Data preprocessing was followed by word vector generation using Word2Vec, and models were trained with deep learning Seq2Seq and Skip-Gram approaches for optimal response accuracy. The final model is deployed through a web application built with Angular and Flask, allowing users to upload their datasets and instantly create customized chatbots without programming knowledge. This solution provides an accessible, scalable, and domain-independent platform for building dynamic FAQ chatbots, enhancing user interaction, personalization, and automation across education, healthcare, and other sectors.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2018"
+  },
+  {
+    "title": "SKETCH2CODE",
+    "team_members": ["Muhammad Huzaifa Abid", "Muhammad Ebadullah Khan", "Farah Yaqoob", "Muhammad Zain"],
+    "description": "This project develops a system that converts hand-drawn wireframe sketches of user interfaces directly into code, streamlining the design-to-development workflow. Traditionally, designers create wireframes on paper, which developers then manually translate into GUI code---a process that is time-consuming and costly. The proposed Sketch2Code solution leverages computer vision techniques, including TensorFlow Object Detection and YOLO algorithms, to identify interface components such as buttons, text boxes, and other elements in sketches. Data for training the model was collected manually and enhanced using data augmentation techniques. Additional computer vision methods detect colors and handwritten text to improve code accuracy. Users simply capture an image of their sketch and upload it to the application, which automatically generates downloadable code for the interface. This system reduces development time, simplifies the design-to-code process, and makes application prototyping more accessible and efficient for both designers and non-developers.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2018"
+  },
+  {
+    "title": "Intelligent Attendance Marking System",
+    "team_members": ["Numaira Zaib", "Iqra Saleem", "Majnoor Saghir"],
+    "description": "This project proposes an automated attendance system for educational institutions to reduce the time and effort required for manual attendance. The system captures images of students using a camera mounted near the classroom, then applies face detection and recognition algorithms to mark attendance automatically. Various techniques, including OpenCV, CNN, Haar Cascade, and Local Binary Patterns Histogram (LBPH), were evaluated for accuracy. The final model uses Haar Cascade for face detection and LBPH for face recognition, as this combination provides high accuracy and efficiency compared to SVM or CNN-based models. The system can detect and recognize multiple faces in a single image, enabling quick processing for entire classrooms. A user-friendly GUI was designed using PyQT to display attendance results. By automating the attendance process, the project saves time for teachers and students, reduces paperwork, and ensures accurate, reliable tracking of student presence.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2018"
+  },
+  {
+    "title": "Autocompleting Sentences in Urdu using Natural Language Processing",
+    "team_members": ["Syed Abid Raza Naqvi", "Syed Ali Mohsin", "Khalid Tariq", "Syed Affan Ahmed"],
+    "description": "This project aims to facilitate Urdu text generation and prediction to assist users in chatting, emailing, and document typing. Unlike English, Urdu is a resource-poor language, and existing NLP tools for sentence completion are limited. To address this, authentic Urdu text data was collected from newspapers and blogs to build a reliable dataset. Various models, including RNN, LSTM, GRU, and N-Gram, were evaluated, but deep learning models were unsuitable due to limited data availability. The N-Gram model, specifically Trigram, was selected for predicting and generating sentences based on the likelihood of word sequences. A user-friendly web interface was developed, allowing users to input incomplete sentences and receive accurate predictions or suggestions for completion. This tool streamlines Urdu typing tasks, improves efficiency, and promotes the use of the Urdu language in digital communication.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2018"
+  },
+  {
+    "title": "Recognition of Waste Material and Predictive Analysis of Rate of Disposals",
+    "team_members": ["Saweira Abdul Rauf", "Mehak Abdul Rehman", "Syed Mohammad Anjil Hussain Rizvi", "Nabeeha Ejaz"],
+    "description": "This project aims to enhance recycling processes by automating waste separation and predicting future disposal rates using machine learning. A dataset was collected at NED University by placing labeled trash bins across six categories: paper, plastic, glass, metal, disposable, and non-recyclable materials. Convolutional Neural Networks (CNN) and transfer learning using pre-trained VGG16 models were employed to classify waste accurately, reducing the cost and effort of manual recycling. For predicting disposal rates, time series analysis was conducted using Long Short-Term Memory (LSTM) models, as the data was non-stationary, making ARIMA unsuitable. By combining automated classification and predictive modeling, the system assists municipal services in efficiently managing waste disposal facilities. This approach not only optimizes recycling operations but also provides actionable insights for planning and resource allocation, contributing to a more sustainable and cost-effective waste management system.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2018"
+  },
+  {
+    "title": "Automated Quality Assurance System through E-TAMU for Hair Care Products",
+    "team_members": ["Syed Saad Peerzada", "Sara Fatima", "Ali Abbas", "Maheen Saleh"],
+    "description": "This project develops an automated visual inspection system to improve quality control in industrial manufacturing, focusing on Head & Shoulders shampoo plastic bottles. In Pakistan, quality inspection is still largely manual, consuming significant time, labor, and cost. By leveraging computer vision techniques, the system automates defect detection, enhancing efficiency and reducing human effort. The methodology combines classical image processing and AI models to identify multiple defects, including those in bottle caps, shape, and artwork. Classical techniques are effective for detecting cap-related defects in a controlled environment, while AI-based methods are better suited for subtle shape and artwork anomalies due to high similarity with the original design. An interactive dashboard allows visualization and analysis of results. The developed system demonstrates accurate detection of targeted defects and can be extended to cover additional product issues, providing a scalable, cost-effective solution for industrial quality assurance.",
+    "advisor": "Dr Majida Kazmi",
+    "batch": "2018"
+  },
+  {
+    "title": "AUTOMATED MALWARE HUNTING USING END POINT DETECTION & RESPONSE",
+    "team_members": ["Laiba Arshad", "Yaseera Irfan", "Samra Almas", "Syeda Bisma Ali"],
+    "description": "This project focuses on developing a malware detection and identification tool to enhance cybersecurity for organizational networks. With the rapid increase of malicious applications and adware, securing endpoint devices---critical entry points for attackers---has become essential. The proposed system, NCCS EDR (Endpoint Detection and Response), provides advanced security beyond traditional measures by continuously monitoring endpoint activities, storing relevant data, and offering detailed analysis and review capabilities. It effectively detects suspicious behavior, isolates threats, investigates malware activity, and mitigates potential damage to the network. Designed for both Windows and Linux platforms, NCCS EDR strengthens enterprise security by integrating real-time threat detection with automated response actions. By combining monitoring, analysis, and proactive threat mitigation, this tool ensures robust protection against cyber-attacks, reduces risk exposure, and safeguards critical digital assets across networked environments.",
+    "advisor": "Dr Asad Arfeen",
+    "batch": "2018"
+  },
+  {
+    "title": "ANOMALY BASED HYBRID CYBER THREAT DETECTION SYSTEM USING MACHINE LEARNING",
+    "team_members": ["Syeda Fatima Asim", "Syeda Fatima Ali", "Unsa Arif", "Areesha Mujahid"],
+    "description": "This project develops an AI- and machine learning-based system for detecting anomalous network traffic and cyber threats. Traditional detection methods cannot keep up with the rapid growth and sophistication of cyber attacks, making automated, intelligent solutions essential. The system addresses limitations of conventional ML approaches, such as false detections due to insufficient or inaccurate training data, by using Generative Adversarial Networks (GANs) to simulate diverse threat patterns. Network traffic is processed in two levels of classification: a first-level multi-classifier identifies attacks and categorizes them as DOS, PROBE, or R2L, while second-level binary classifiers validate the detection of each attack type. The NSL-KDD dataset is preprocessed using feature engineering to improve model accuracy. This hierarchical detection approach enables timely and accurate identification of disguised or altered cyber threats, enhancing network security and mitigating risks posed by increasingly sophisticated cybercriminal activities.",
+    "advisor": "Umar Iftikhar",
+    "batch": "2018"
+  },
+  {
+    "title": "AIR WRITING with finger detection",
+    "team_members": ["Insiyah Talib Hussain", "Arouba", "Raheen", "Saima Ali"],
+    "description": "This project develops an innovative air-writing and recognition system that allows users to write in the air and convert their handwritten words into digital text and speech. Using a webcam and MediaPipe, the system detects hand landmarks, tracks fingertip coordinates, and enables writing on a virtual canvas through OpenCV. Once writing is completed, the frame is captured and processed for prediction using a combination of a CNN model for simple handwriting and OCR via the Nanonets API for cursive text. Recognized text is displayed visually and converted into speech using a text-to-speech module, making the application accessible for visually impaired users. The system uses MNIST and EMNIST datasets for model training and is deployed as a web application built with HTML, CSS, jQuery, and Django. This project provides an efficient, eye-free writing solution that bridges accessibility and technology for enhanced communication.",
+    "advisor": "AR Umar Dhukar",
+    "batch": "2018"
+  },
+  {
+    "title": "AI Enable DR Diagnosis",
+    "team_members": ["Firdous Riaz", "Dua e Fatima", "Maham Noor", "Fasiha Shakil"],
+    "description": "This project aims to address diabetic retinopathy (DR) diagnosis in rural Pakistan, where access to professional ophthalmologists and advanced diagnostic machinery is limited. An offline, smartphone-based device is developed, integrated with an AI model capable of detecting DR stages without requiring internet connectivity. The device leverages the smartphone camera and a portable Vista View camera to capture retinal images, which are pre-processed, cleaned, and augmented to reduce dataset bias. The dataset is divided for training and testing to develop an accurate AI model for DR detection. A mobile application is created to interface with the device, providing an accessible and cost-effective solution for early detection of DR. This approach ensures timely diagnosis, reduces dependence on specialists, and improves healthcare access in underserved areas.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2018"
+  },
+  {
+    "title": "Offensive Speech Detection in Urdu using Automated Speech Recognition System",
+    "team_members": ["Yamna Tahir", "Syeda Hamna Javed", "Yusra Fatima", "Amber Asad"],
+    "description": "This project focuses on developing an end-to-end offensive speech detection system for Urdu using Automated Speech Recognition (ASR). Building on the historical evolution of ASR---from early systems like Audrey and IBM Shoebox to modern deep learning approaches---the system maps speech directly to text using neural networks. Audio data was collected manually, pre-processed, and fed into a deep speech model for transcription in Urdu. Natural Language Processing models, including fine-tuned MBERT, were applied to classify the intent and detect offensive content. The developed ASR achieved a word error rate of 40% and character error rate of 28.57%, while MBERT achieved 87% validation accuracy. The system outputs a transcript in Roman Urdu and identifies potentially harmful speech for enhanced content moderation.",
+    "advisor": "Dr Majida Kazmi",
+    "batch": "2018"
+  },
+  {
+    "title": "ENDURANCE: A Multi-Functional Unmanned Exploratory Rover",
+    "team_members": ["Huzaifa Ahmed", "Uneeb Hassan", "Syed Muhammad Umer"],
+    "description": "This project focuses on developing an autonomous Mars rover to improve the efficiency and reliability of planetary exploration. Unlike past rovers, which required manual control from Earth and faced data loss due to transmission delays, the autonomous rover can navigate and perform tasks independently. The rover integrates ten major components, including an Autonomous Driving Model, Rock Analysis Model, sensors, actuators, imaging devices, and data management systems. By enabling self-directed movement and data collection, the rover can explore Martian terrains, analyze rocks, and gather scientific information with minimal human intervention. This autonomy reduces communication delays, mitigates the risk of data loss, and allows continuous exploration in harsh Martian conditions. The project aims to enhance planetary research, improve sample collection efficiency, and pave the way for future Mars missions with intelligent, self-operating robotic explorers.",
+    "advisor": "Dr. Ali Ismail",
+    "batch": "2018"
+  },
+  {
+    "title": "Metaverse Virtual Conference Room",
+    "team_members": ["Sheikh Ishaq Kamran", "Muhammad Umar Naeem", "Syeda Fatima Kazmi", "Muhammad Kamil Jaffer"],
+    "description": "This project focuses on creating a Metaverse-based virtual conference room where users can communicate through 3D avatars without relying on webcams. Each attendee is represented by a customizable avatar capable of performing gestures and interacting naturally within the virtual space. 3D models are created using Blender, while the user interface is designed in Adobe Photoshop and Illustrator, and imported into Unity3D. Networking and multi-user interaction are implemented via Photon Unity Networking (PUN), and the application is tested using Oculus Quest VR headsets to ensure immersive and smooth functionality.The system aims to provide an interactive and realistic virtual environment, enabling users to attend meetings, collaborate, and socialize in a manner that mirrors real-life interactions. By bridging virtual identity with personal expression, this platform enhances engagement and communication, offering a sustainable and entertaining alternative to traditional video conferencing. It represents a step toward the broader adoption of immersive Metaverse experiences for professional, social, and recreational purposes.",
+    "advisor": "Miss Ibshar Ishrat",
+    "batch": "2018"
+  },
+  {
+    "title": "Qualitative Analysis of Hostility over Social Media using A.I",
+    "team_members": ["Shehryar Mallick", "Muhammad Saad Shaikh", "Muhammad Khalid", "Muhammad Umer"],
+    "description": "This project focuses on automating sentiment analysis of textual data using machine learning to overcome human limitations in processing large volumes of text quickly. Leveraging Natural Language Processing (NLP), the system extracts sentiments such as joy, anger, and sadness from social media content. A Twitter web scraper is used to collect real-time data, which is then analyzed using three machine learning techniques: Naïve Bayes, Logistic Regression, and Recurrent Neural Networks (RNN). The processed results are compiled into comprehensive reports, providing valuable insights and visualizations for users and administrators. Additionally, the system includes a website interface where admins can train and test models using newly acquired data, ensuring continuous improvement. This approach significantly saves time, enhances efficiency, and enables large-scale sentiment analysis in real time.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2018"
+  },
+  {
+    "title": "Cloud Based Inventory Management System",
+    "team_members": ["Abid Ullah", "Sana Ullah", "Muhammad Saad"],
+    "description": "This project presents a Cloud-based Automated Inventory System designed to streamline inventory management for businesses of all sizes. The system centralizes the tracking of all inventory items, enabling administrators to monitor stock levels, sales activities, and generate reports efficiently. By automating key processes such as updating stock, generating purchase orders, and providing real-time inventory insights, the system reduces manual effort and decision-making time. The platform ensures accurate and timely access to inventory data, supports effective planning, and enhances operational efficiency. Overall, this solution contributes to the digital transformation of business operations in Pakistan, providing a user-friendly and reliable tool for managing inventory with minimal human intervention.",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2018"
+  },
+  {
+    "title": "Care for All -- An IoT Enabled System for Hospital",
+    "team_members": ["Rubaisha Aslam", "Nasiha Faheem Ahmed Khan"],
+    "description": "This project proposes a cloud-based, IoT-powered smart hospital information management system aimed at enhancing healthcare services in Pakistan. By providing unique IDs for patients and doctors, the system streamlines appointments, medical history tracking, pathology and radiology referrals, room assignments, and pharmacy management. The workflow is organized across nine modules, including Admin, Doctor, Nurse, Pharmacy, Pathology, Radiology, Receptionist, and IoT hardware integration. Developed using the Waterfall model, the system emphasizes automation to improve patient care, reduce readmission times, and facilitate medicine delivery and home health monitoring. While IoT does not replace healthcare professionals, it supports them by providing real-time data, improving diagnosis, treatment efficiency, and overall patient outcomes in a user-friendly and accessible manner.",
+    "advisor": "Sir Kashif Asrar",
+    "batch": "2018"
+  }
+]

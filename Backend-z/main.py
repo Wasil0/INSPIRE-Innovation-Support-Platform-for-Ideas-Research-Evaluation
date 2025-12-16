@@ -9,6 +9,10 @@ from routers import industry_idea
 from routers import industry_job
 from routers import invites
 from routers import advisor_ideas_scoring
+from routers import chat
+from routers import stages_status
+from routers import team_members
+
 
 app = FastAPI()
 origins = [
@@ -38,4 +42,6 @@ app.include_router(industry_job.router)
 app.include_router(industry_idea.router)
 app.include_router(invites.router)
 app.include_router(advisor_ideas_scoring.router)
-
+app.include_router(chat.router)
+app.include_router(stages_status.router)
+app.include_router(team_members.router)

@@ -26,7 +26,13 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import Navbar from "@/components/Navbar";
-import { getTop3AdvisorIdeas, getStudentProfileSummary } from "@/api/student";
+import { 
+  getTop3AdvisorIdeas, 
+  getStudentProfileSummary,
+  getMyStages,
+  getGroupMembers,
+  getMyTeamMembers
+} from "@/api/student";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -44,18 +50,23 @@ const StudentDashboard = () => {
     skills: [],
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
-
-  const fydpProgress = {
-    completed: 3,
-    total: 6,
-    description: "Complete your project milestones to finish FYDP",
-  };
-
-  const groupMembers = [
-    { id: 1, name: "Sarah Ali", avatar: null },
-    { id: 2, name: "Mohamed Ibrahim", avatar: null },
-    { id: 3, name: "Fatima Ahmed", avatar: null },
-  ];
+  
+  // FYDP Progress state
+  const [stages, setStages] = useState({
+    stage1_completed: false,
+    stage2_completed: false,
+    stage3_completed: false,
+    stage4_completed: false,
+  });
+  const [loadingStages, setLoadingStages] = useState(true);
+  
+  // Group members state
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [loadingGroupMembers, setLoadingGroupMembers] = useState(true);
+  const [groupInfo, setGroupInfo] = useState({
+    isLocked: false,
+    isTemporary: true,
+  });
 
   const jobOpportunities = [
     {
@@ -120,6 +131,122 @@ const StudentDashboard = () => {
     fetchProfile();
   }, []);
 
+  // Fetch stages status on component mount
+  useEffect(() => {
+    const fetchStages = async () => {
+      try {
+        setLoadingStages(true);
+        const response = await getMyStages();
+        setStages(response.stages || {
+          stage1_completed: false,
+          stage2_completed: false,
+          stage3_completed: false,
+          stage4_completed: false,
+        });
+      } catch (error) {
+        console.error("Failed to fetch stages:", error);
+        // Keep default empty state on error
+        setStages({
+          stage1_completed: false,
+          stage2_completed: false,
+          stage3_completed: false,
+          stage4_completed: false,
+        });
+      } finally {
+        setLoadingStages(false);
+      }
+    };
+
+    fetchStages();
+  }, []);
+
+  // Fetch group members based on stage1_completed
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setLoadingGroupMembers(true);
+        
+        if (stages.stage1_completed) {
+          // Stage 1 completed - fetch permanent team members
+          try {
+            const response = await getMyTeamMembers();
+            setGroupMembers(
+              response.members?.map((m) => ({
+                id: m.user_id,
+                name: m.name,
+                avatar: null,
+              })) || []
+            );
+            setGroupInfo({
+              isLocked: true,
+              isTemporary: false,
+            });
+          } catch (error) {
+            // If stage1 is true but team not found, show empty
+            if (error.response?.status === 404 || error.response?.status === 403) {
+              setGroupMembers([]);
+              setGroupInfo({
+                isLocked: false,
+                isTemporary: false,
+              });
+            } else {
+              throw error;
+            }
+          }
+        } else {
+          // Stage 0 - fetch temporary group members
+          try {
+            const response = await getGroupMembers();
+            if (response.members && response.members.length > 0) {
+              setGroupMembers(
+                response.members.map((m) => ({
+                  id: m.user_id,
+                  name: m.name,
+                  avatar: null,
+                }))
+              );
+              setGroupInfo({
+                isLocked: response.is_locked || false,
+                isTemporary: !response.is_locked,
+              });
+            } else {
+              // No group members
+              setGroupMembers([]);
+              setGroupInfo({
+                isLocked: false,
+                isTemporary: true,
+              });
+            }
+          } catch (error) {
+            // If no group found, show empty
+            if (error.response?.status === 404) {
+              setGroupMembers([]);
+              setGroupInfo({
+                isLocked: false,
+                isTemporary: true,
+              });
+            } else {
+              throw error;
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch group members:", error);
+        setGroupMembers([]);
+        setGroupInfo({
+          isLocked: false,
+          isTemporary: true,
+        });
+      } finally {
+        setLoadingGroupMembers(false);
+      }
+    };
+
+    if (!loadingStages) {
+      fetchMembers();
+    }
+  }, [stages.stage1_completed, loadingStages]);
+
   // Industry ideas (hardcoded for now - can be replaced with API call later)
   const industryIdeas = [
     { id: 1, title: "IoT Home Automation" },
@@ -135,6 +262,24 @@ const StudentDashboard = () => {
       .toUpperCase()
       .slice(0, 2);
   };
+
+  // Calculate FYDP progress based on stages
+  const calculateProgress = () => {
+    const stageCount = [
+      stages.stage1_completed,
+      stages.stage2_completed,
+      stages.stage3_completed,
+      stages.stage4_completed,
+    ].filter(Boolean).length;
+    
+    return {
+      completed: stageCount,
+      total: 4,
+      percentage: (stageCount / 4) * 100,
+    };
+  };
+
+  const fydpProgress = calculateProgress();
 
   return (
     <div className="min-h-screen bg-background">
@@ -165,18 +310,31 @@ const StudentDashboard = () => {
                     </div>
                   </div>
                   <Badge className="bg-primary text-primary-foreground">
-                    {fydpProgress.completed}/{fydpProgress.total} Steps
+                    {loadingStages ? "..." : `${fydpProgress.completed}/${fydpProgress.total} Steps`}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Progress
-                  value={(fydpProgress.completed / fydpProgress.total) * 100}
-                  className="h-2 [&>div]:bg-primary"
-                />
-                <p className="text-sm text-muted-foreground">
-                  {fydpProgress.description}
-                </p>
+                {loadingStages ? (
+                  <div className="space-y-2">
+                    <div className="h-2 bg-muted rounded-full animate-pulse" />
+                    <p className="text-sm text-muted-foreground">Loading progress...</p>
+                  </div>
+                ) : (
+                  <>
+                    <Progress
+                      value={fydpProgress.percentage}
+                      className="h-2 [&>div]:bg-primary"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      {fydpProgress.completed === 0
+                        ? "Start your FYDP journey by completing Stage 1: Group Formation"
+                        : fydpProgress.completed === 4
+                        ? "Congratulations! You have completed all FYDP stages"
+                        : `Complete ${fydpProgress.total - fydpProgress.completed} more stage${fydpProgress.total - fydpProgress.completed !== 1 ? "s" : ""} to finish your FYDP`}
+                    </p>
+                  </>
+                )}
               </CardContent>
             </Card>
 
@@ -196,7 +354,11 @@ const StudentDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {groupMembers.length > 0 ? (
+                {loadingGroupMembers ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Loading group members...</p>
+                  </div>
+                ) : groupMembers.length > 0 ? (
                   <>
                     <div className="flex flex-wrap gap-3">
                       {groupMembers.map((member) => (
@@ -218,21 +380,49 @@ const StudentDashboard = () => {
                         </div>
                       ))}
                     </div>
-                    <Button variant="outline" className="w-full">
-                      <Users className="mr-2 h-4 w-4" />
-                      Manage Group
-                    </Button>
+                    {/* Show appropriate caption based on group status */}
+                    {stages.stage1_completed ? (
+                      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-foreground">Permanent Team:</span> Your group has been locked and finalized. This is your official FYDP team.
+                        </p>
+                      </div>
+                    ) : groupInfo.isLocked ? (
+                      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-foreground">Temporary Group (Locked):</span> All members have locked the group. Complete Stage 1 to make it permanent.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="rounded-lg border border-primary/20 bg-muted/50 p-3">
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-foreground">Temporary Group:</span> This is a temporary group. Lock the group with all members to proceed to Stage 1.
+                        </p>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="text-center py-8 space-y-4">
-                    <p className="text-muted-foreground">
-                      No group members yet. Create or join a group to get
-                      started.
-                    </p>
-                    <Button variant="default">
-                      <Users className="mr-2 h-4 w-4" />
-                      Create Group
-                    </Button>
+                    {stages.stage1_completed ? (
+                      <>
+                        <p className="text-muted-foreground">
+                          You are not in a permanent team yet. Contact your advisor for team assignment.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-muted-foreground">
+                          No group members yet. Create or join a group to get started with your FYDP project.
+                        </p>
+                        <Button 
+                          variant="default"
+                          onClick={() => navigate("/student/group-formation")}
+                        >
+                          <Users className="mr-2 h-4 w-4" />
+                          Form Group
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
               </CardContent>

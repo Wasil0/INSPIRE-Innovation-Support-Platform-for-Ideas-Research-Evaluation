@@ -4,6 +4,11 @@ import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./pages/faculty/admin/AdminDashboard";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import AdvisorDashboard from "./pages/faculty/advisor/AdvisorDashboard";
+import PostIdea from "./pages/faculty/advisor/PostIdea";
+import ViewIdeas from "./pages/faculty/advisor/ViewIdeas";
+import InterestedGroups from "./pages/faculty/advisor/InterestedGroups";
+import SelectedGroups from "./pages/faculty/advisor/SelectedGroups";
+import CommitteeDashboard from "./pages/faculty/committee/CommitteeDashboard";
 import FydpProgress from "./pages/student/FydpProgress";
 import GroupFormation from "./pages/student/GroupFormation";
 import PastIdeas from "./pages/student/PastIdeas";
@@ -33,6 +38,46 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["advisor"]}>
             <AdvisorDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/advisor/post-idea"
+        element={
+          <ProtectedRoute allowedRoles={["advisor"]}>
+            <PostIdea />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/advisor/view-ideas"
+        element={
+          <ProtectedRoute allowedRoles={["advisor"]}>
+            <ViewIdeas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/advisor/interested-groups"
+        element={
+          <ProtectedRoute allowedRoles={["advisor"]}>
+            <InterestedGroups />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/advisor/selected-groups"
+        element={
+          <ProtectedRoute allowedRoles={["advisor"]}>
+            <SelectedGroups />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/committee/CommitteeDashboard"
+        element={
+          <ProtectedRoute allowedRoles={["advisor", "committee"]}>
+            <CommitteeDashboard />
           </ProtectedRoute>
         }
       />

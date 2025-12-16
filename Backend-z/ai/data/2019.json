@@ -1,0 +1,275 @@
+[
+  {
+    "title": "DESIGN AND IMPLEMENT AN EXPERT SYSTEM TO ANALYZE PLANT HEALTH",
+    "team_members": ["Fazil Hanif", "Zaid Saeed", "Maroof Ahmed", "Geetesh Kumar"],
+    "description": "This project explores the use of Convolutional Neural Networks (CNNs) with PyTorch for accurate and efficient plant disease detection, addressing challenges in traditional methods that are time-consuming and require expertise. Publicly available plant disease datasets were collected, preprocessed, and used to train and test CNN models. The system achieved high accuracy, precision, and recall, demonstrating its ability to identify plant diseases reliably and reduce crop losses. By leveraging deep learning, the approach improves detection efficiency compared to manual inspection or laboratory testing. This study highlights CNNs with PyTorch as a promising tool for enhancing global food security, while future work may focus on transfer learning and larger datasets to further improve model performance and generalization.",
+    "advisor": "Dr. Syed Aqeel Haider",
+    "batch": "2019"
+  },
+  {
+    "title": "Active Speaker Detection",
+    "team_members": ["Kashaf Khan", "Hafsa Zafar", "Aleesha Ahmed"],
+    "description": "This project develops a system for active speaker detection in crowded environments using both audio and visual data. Meetings in colleges and enterprises often involve multiple speakers, making it challenging to identify who is speaking at any moment. The system employs machine learning and deep learning models: an audio model uses CNNs and speaker diarization on the AVA dataset to detect speaking activity and speaker changes, while a video model extracts facial features with RetinaFace to determine active speakers from video frames. Outputs from both models are integrated to improve accuracy. The project demonstrates that combining audiovisual information significantly enhances active speaker detection, providing a robust solution for real-world scenarios where multiple participants communicate simultaneously.",
+    "advisor": "Dr. Urooj Ainuddin",
+    "batch": "2019"
+  },
+  {
+    "title": "Automated Interview Analysis of Candidates",
+    "team_members": ["Yusra Habib", "Labiqa Siddiqui", "Aiman Javed", "Eesha Akram"],
+    "description": "This project develops an automated system to analyze candidates during interviews, reducing time and effort in the hiring process. Traditional interviews are time-consuming, especially when shortlisting candidates based on communication skills or confidence. The system focuses on behavioral analysis to assess candidate confidence and suitability. A dataset of interview questions, along with corresponding audio and image responses, is collected and preprocessed. Audio data is analyzed using CNNs, while image data is evaluated using SVMs, CNNs, K-NN, and Decision Trees to classify responses as high, neutral, or low. The results are presented through a real-time, user-friendly application, enabling efficient and objective candidate shortlisting and improving the overall recruitment process.",
+    "advisor": "Dr. Urooj Ainuddin",
+    "batch": "2019"
+  },
+  {
+    "title": "Smart Automated Interviewing System using Gesture Analysis & NLP",
+    "team_members": ["Tooba Nizami", "Wania Siddiqui", "Moiz Ali", "Uzair Farooqui"],
+    "description": "This project develops a Smart Automated Interviewing System to enhance the efficiency and objectivity of the hiring process. Traditional interviews are often time-consuming and prone to bias, making it difficult to assess candidates' non-verbal communication, such as body language and facial expressions. The system integrates Natural Language Processing (NLP), Computer Vision, and Machine Learning to evaluate candidates more accurately. NLP analyzes responses to identify key information, while gesture analysis monitors body language and facial expressions to assess engagement, confidence, and honesty. Using trained machine learning models and computer vision algorithms, the system provides objective evaluations, reduces interviewer bias, and streamlines recruitment, enabling organizations to make better-informed hiring decisions efficiently.",
+    "advisor": "Ms. Anita Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "Walk2Win - Playful companion for reluctant joggers",
+    "team_members": ["Marium Noman Mufti", "Fatima Khalid", "Tooba Abdul Samad", "Saba Abrar"],
+    "description": "This project develops an augmented reality (AR) smartphone game to motivate daily exercise and improve fitness. Many people struggle to maintain physical activity due to busy lifestyles, and this game incentivizes walking and exercise through engaging, level-based challenges. Developed using the Unity engine and location-based AR, the app overlays digital objects on real-world environments using GPS and Mapbox APIs, creating an interactive experience. Users complete daily exercise goals, collect tokens, and advance through levels, earning rewards and increasing motivation. By combining entertainment with physical activity, the game encourages reluctant exercisers to stay active, providing a fun, immersive, and goal-oriented platform that promotes healthier habits through gamification and real-time AR experiences.",
+    "advisor": "Dr. Urooj Ainuddin",
+    "batch": "2019"
+  },
+  {
+    "title": "CAPTURE-DRESS",
+    "team_members": ["Zain Ammad", "Muhammad Ahmed", "Muhammad Haroon Zafar", "Areeb Bin Azim"],
+    "description": "This project develops an intelligent e-commerce application for men's apparel, addressing challenges in item categorization and outfit recommendations. Online shoppers often face a less personalized experience, leading to higher cart abandonment and customer churn. The system uses a data-driven approach, collecting and labeling clothing data via web scraping and databases. A multi-output machine learning model identifies clothing types and genres (formal, informal, etc.), while the user interface provides personalized outfit suggestions. Developed with Python, TensorFlow, Keras, and OpenCV, the application achieved 92% accuracy in clothing type identification and 86% in genre classification. By enhancing personalization, the system improves customer experience, supports informed purchase decisions, and boosts e-commerce sales through intelligent recommendations.",
+    "advisor": "Ms. Syeda Ramish Fatima / Dr. Maria Waqas",
+    "batch": "2019"
+  },
+  {
+    "title": "Virtual Quran assistant",
+    "team_members": ["Sohaib Ahmed Abbasi", "Rohan Ahmed", "Rumaisa Maryam", "Haniya Maqsood"],
+    "description": "",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2019"
+  },
+  {
+    "title": "Seek Image",
+    "team_members": ["Moneeza Baig", "Zuhaira Abdullah Siddiqui", "Ghazia Hashmi", "Sawera Ansari"],
+    "description": "SeekImage addresses the challenge of efficiently searching for images stored on mobile devices, where users often have thousands of photos without captions or keywords. The project leverages artificial intelligence and deep learning, particularly neural networks like LSTM, to generate natural language captions describing the content of each image. These captions are stored in a database linked to the corresponding images, enabling users to retrieve photos by querying words or phrases instead of manually browsing. SeekImage improves search efficiency, saves time, and provides accurate, descriptive captions. Its user-friendly interface ensures accessibility, making the process of managing and finding images on mobile devices faster and more convenient.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2019"
+  },
+  {
+    "title": "Resolution Enhancement of Low-Quality Images",
+    "team_members": ["Bisina Imran", "Sadaf Jawed Farooqui", "Ibrahim Rehman", "Hasnain Ali Arain"],
+    "description": "This project enhances CCTV footage quality using Super-Resolution Generative Adversarial Networks (SRGANs) to improve surveillance and security applications. Low-resolution images are upscaled through a Generator network, while a Discriminator ensures realism by distinguishing generated images from actual high-resolution images. Diverse datasets, including MIRFLICKR-25k, Flickr-Faces-HQ, Human Detection, ImageNet, and Intel Images, provide comprehensive scenes, objects, and facial data for training. Images are preprocessed into paired low- and high-resolution sets, and adversarial training iteratively refines the networks. The model achieves up to four-fold improvement in image quality, enabling better crime investigation, activity monitoring, and visual data applications across industries. Iterative refinement, dataset augmentation, and hyperparameter tuning were key to achieving optimal results.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2019"
+  },
+  {
+    "title": "Smart SQL Query Generator",
+    "team_members": ["Izma Aziz", "Ayesha Aamir", "Eesha Ansari", "Heba Naveed"],
+    "description": "The Smart SQL Query Generator automates SQL query creation from natural language statements, allowing users to input tasks in English and receive executable database queries. This system addresses the common challenge enterprises face in manipulating databases, streamlining data analysis, and reducing reliance on SQL expertise. Using NLP techniques, specifically text-to-text transformers like T5, the system interprets user input to generate structured queries that capture entities, relationships, and conditions. Queries are executed on the backend, and results are displayed on a user-friendly interface. By simplifying SQL query generation, the tool saves time, reduces training costs, and improves efficiency for businesses working with large databases, making data retrieval and analysis faster and more accessible.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2019"
+  },
+  {
+    "title": "The Utility of Artificial Intelligence for Depression Detection",
+    "team_members": ["Abdullah Ahmed Khan", "Muhammad Taimoor Jawaid", "Syed Jahanzaib Ali Zaidi", "Muhammad Talha"],
+    "description": "This project presents an AI-driven solution for early detection of depression, aimed at assisting psychologists and psychiatrists with preliminary diagnostic insights. Textual data from the Distress Analysis Interview Corpus (DAIC) and Reddit posts were preprocessed using Python's NLTK and transformed into structured features via TF-IDF vectorization. Both traditional machine learning and deep learning models were evaluated, with deep learning models underperforming due to the limited dataset size. The Naïve Bayes Voting Classifier achieved the best results and was integrated into a user-friendly web platform developed with the MERN stack (MongoDB, Express.js, React, Node.js). This system enables real-time depression detection through text analysis, offering an accessible, efficient, and scalable tool for mental health assessment.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2019"
+  },
+  {
+    "title": "The Career Mentor - An Artificial Intelligence Based Career Counsellor",
+    "team_members": ["Maimona Khalid", "Syeda Bareeha Ali", "Umme Hani", "Syeda Rida Fatima"],
+    "description": "This project develops a web-based intelligent career guidance system to help students and professionals explore suitable career paths. Targeted primarily at undergraduates, the system addresses the lack of awareness about academic fields, career options, and personal strengths. Built using Django and React JS, it simulates a one-to-one consultation with a professional career counsellor. Users provide personal information, interests, grades, IQ, and personality traits through a questionnaire based on Myers-Briggs Type Indicator and Gardner's Multiple Intelligences theory. Machine learning models, including XGBoost and Random Forest classifiers, analyze the data and generate personalized career recommendations. SMOTE oversampling is applied to balance the dataset, and a fine-tuned Random Forest model ensures accurate, tailored guidance for effective career planning.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2019"
+  },
+  {
+    "title": "Intelligent Braille Translator",
+    "team_members": ["Muhammad Fasihullah Ejaz", "Sukaina Kashif", "Faraiha Safdar", "Hajra Adnan"],
+    "description": "This project aims to develop an intelligent Urdu-to-Braille translator to support visually impaired students in Pakistan. With approximately 1% of the population blind, access to Urdu Braille content is extremely limited, restricting educational opportunities. Existing translation tools primarily support other languages, leaving Urdu underserved. The project leverages Neural Machine Translation (NMT) techniques to accurately convert Urdu text into Braille, enabling visually impaired learners to access educational material, study their culture, and improve literacy skills. The system focuses on precision and usability, promoting reading, typing, and concentration in Urdu. By combining language processing and assistive technology, this solution seeks to enhance educational inclusion and empower visually challenged children in Pakistan.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2019"
+  },
+  {
+    "title": "Diabetic Retinopathy Diagnostics Using Federated Learning Approach",
+    "team_members": ["Bushra Ashfaque"],
+    "description": "This project focuses on improving Diabetic Retinopathy (DR) diagnosis using deep learning and Federated Learning techniques. DR is a diabetes complication that can lead to vision loss if not detected early, and the growing number of patients alongside a shortage of ophthalmologists makes automated diagnosis essential. Fundus images are used to train models including standard transfer learning, Federated Averaging (FedAVG), and FedProx on MobileV2Net architectures. Federated Learning preserves privacy by sharing only model parameters, reduces latency, and improves generalizability. Results show high accuracy---standard model: 96.6%, FedAVG: 80%, FedProx: 83.45%. The system provides efficient, privacy-preserving DR diagnosis and supports medical institutions in managing patient care.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2019"
+  },
+  {
+    "title": "Pakistan Sign Language (PSL) Interpreter",
+    "team_members": ["Anusha Safdar", "Syed Hammad", "Mahnoor Iqbal", "Muhammad Huzaifa Yousuf"],
+    "description": "Sign language is a form of manual communication commonly used by individuals who are deaf, with each gesture or hand symbol organized linguistically and referred to as a \"sign\". Different sign languages exist in various countries or regions, such as British Sign Language and American Sign Language. In Pakistan, the native language used by the deaf community is Pakistan Sign Language (PSL), which provides a common means of communication for teachers, interpreters, and health professionals who work with the Deaf. However, there is a scarcity of human sign language interpreters in Pakistan, making it difficult for individuals with hearing loss to communicate effectively, particularly in professional settings. Therefore, an automated and generic system is needed to facilitate communication between the deaf and hearing populations when human interpreters are not available.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2019"
+  },
+  {
+    "title": "Transformer Based Urdu OCR",
+    "team_members": ["Syed Shayan Abid Fazli", "Yusra Moin", "Aisha Khan", "Syed Jawairiya Kazmi"],
+    "description": "The Urdu OCR project applies Natural Language Processing (NLP) to digitally preserve the Urdu language. Previous attempts at Urdu OCR were often inaccurate and inefficient due to challenges like complex ligatures, inconsistent text sizes, and poor image quality. To address these issues, the project leverages transformer models, which offer advantages such as self-attention for long-term dependencies, scalability, and parallelization. A major focus has been on creating a large and carefully managed Urdu dataset through classification and augmentation techniques, as effective model training requires substantial data. Despite starting with limited datasets, initial training and testing have begun. While early results show lower accuracy, the approach promises improved performance over prior methods. By combining transformer capabilities with a robust dataset, the project aims to develop an efficient, scalable Urdu OCR system capable of accurately recognizing complex Urdu text.",
+    "advisor": "Fauzia Yasir",
+    "batch": "2019"
+  },
+  {
+    "title": "Optimal Robotic Arm Gripper",
+    "team_members": ["Owas Ahmed", "M Huzaifa", "M Areeb", "Hamza Ali Khan"],
+    "description": "This project focuses on developing a robotic arm capable of autonomously grasping rigid and reformable objects using 6D pose estimation from monocular cameras. The system addresses challenges such as unknown object positions and orientations on shelves, requiring the robot to perceive and interact with objects without human intervention. Using two cameras, the system captures images to calculate the six-dimensional pose, which guides a machine learning model to determine the robotic arm's movements for precise grasping. The arm is modeled and tested virtually through ROS (Robot Operating System) to ensure accuracy and efficiency. The project combines computer vision, robotics, and machine learning, aiming to tackle real-world challenges like Amazon's annual robotics \"picking\" competition.",
+    "advisor": "Ms. Anita Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "DEEPFAI (Intelligence for Audio Deepfakes)",
+    "team_members": ["M. Arham Khan", "Syed Saad Ali", "Mina Baig", "Rida M Saleem"],
+    "description": "This project develops a deep learning-based audio deepfake detector to combat misinformation and prevent malicious activities such as impersonation, identity theft, and fraud. The system uses neural networks to learn directly from raw audio data, eliminating manual feature extraction. Key inputs include Mel Frequency Cepstral Coefficients (MFCCs) and spectrograms, which allow the models to capture complex audio patterns. Five models---MLP, CNN, LSTM, CNN-LSTM, and ResNet-50---were evaluated, with CNN-LSTM performing best. Using spectrogram inputs, it achieved training and validation accuracies of 98.91% and 97.61%, and test accuracies of 95.12% and 91.72%. The fusion of CNN and LSTM components ensures high precision and robustness, providing a reliable solution for detecting harmful audio deepfakes.",
+    "advisor": "Miss Anita Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "Design of Structural Health Monitoring System (SHM) on FPGA",
+    "team_members": ["Muhammad Umar", "Aiman", "Mir Shahnawaz Khan", "Shakeel Ahmad"],
+    "description": "This project develops a computer vision-based Structural Health Monitoring (SHM) system using edge computing and FPGA-based processing to ensure the safety and reliability of engineering structures. CMOS camera sensors capture images of pedestrians, bridges, and roads, which are analyzed using deep learning algorithms implemented on FPGA with Verilog code. The system assesses structural behavior severity and sends alerts to administrators via a web interface, enabling real-time monitoring and analysis. By facilitating preventive maintenance, it helps schedule repairs before major damage occurs, reducing downtime and avoiding costly repairs. The integration of efficient edge computing and FPGA processing makes the SHM system cost-effective, reliable, and capable of significantly enhancing structural safety and operational efficiency.",
+    "advisor": "Ms. Fakhra Aftab",
+    "batch": "2019"
+  },
+  {
+    "title": "Deep Learning Based Automated Quality Assurance for Detecting Surface Defects",
+    "team_members": ["Kacnaat Samad", "Iqra Imran", "Neha Fatima", "Rana Junaid"],
+    "description": "This project automates the quality assurance process for Procter & Gamble using deep learning to detect defects in Head & Shoulders shampoo bottles. Manual inspection in industries is time-consuming and prone to errors, so automation ensures faster, more accurate results. The system identifies defects such as design issues, label faults, dents, and surface irregularities, classifying them as Targeted, Acceptable, Marginal, or Unacceptable. Bottles with any unacceptable defects are rejected, while those with acceptable or marginal defects pass inspection. Deep learning enables detection of minute defects that classical methods cannot handle, providing an end-to-end solution. This approach reduces human effort, increases efficiency, and ensures products meet industrial quality standards in real-world manufacturing scenarios.",
+    "advisor": "Ms. Fakhra Aftab",
+    "batch": "2019"
+  },
+  {
+    "title": "Energy Efficient AI Core on FPGA for Point Of Care Application",
+    "team_members": ["Alauddin Taha Ismail Faya", "Rimsha Sohail", "Osamah Ameen Munasser", "Muhammad Shoaib"],
+    "description": "This project develops a Point of Care Application for real-time diagnosis and monitoring of diabetic retinopathy (DR), a diabetes-related retinal disease. In Pakistan, limited healthcare access in rural areas makes early detection challenging, increasing the risk of blindness. To address this, the project employs a CNN-based AI model for feature extraction and accurate DR detection. To overcome computational and energy constraints of cloud-based AI, the model is optimized for energy efficiency and deployed on an FPGA device (Xilinx PynQ board) for edge computing. The CNN architecture includes input, convolutional, pooling, flattening, dense, and output layers. This approach ensures fast, secure, and low-latency processing, enabling timely diagnosis and treatment in underserved regions.",
+    "advisor": "Ms. Fauzia Yasir / Dr. Majida Kazmi",
+    "batch": "2019"
+  },
+  {
+    "title": "Adaptive Traffic Signal Using Computer Vision For Intelligent Transportation System (ITS)",
+    "team_members": ["Hamza Munir", "Shah Hussain", "Areeba Fayyaz", "Anas"],
+    "description": "This project develops an intelligent traffic light system for metropolitan areas like Karachi, using Computer Vision (CV) and Intelligent Transportation Systems (ITS) to reduce traffic congestion. The system employs a vehicle detection algorithm to assess road occupancy and dynamically adjust signal timings based on traffic volume. A custom dataset of over 800 images with 8,000 annotations was created, and multiple machine learning algorithms were tested to identify the most efficient solution. YOLOv7-Tiny was selected for real-time vehicle detection due to its speed and computational efficiency. The road occupancy algorithm calculates the percentage of road usage, and the entire system is deployed on an edge device (Nvidia Jetson Nano J10) for low-latency processing and effective traffic management.",
+    "advisor": "Ms. Mehwish Raza",
+    "batch": "2019"
+  },
+  {
+    "title": "Flood-inundation modelling and mapping service (Flood-Safe)",
+    "team_members": ["Muhammad Shadab Ahmed", "Syed Mubashir Ul Hassan", "Umer Bin Mujeeb", "Mehmeer Hussain"],
+    "description": "This project focuses on flood simulation and planning in Pakistan, aiming to identify flood-prone areas using Digital Elevation Model (DEM) modeling and advanced geospatial analysis. Flood simulation models were developed to predict water spread and immersion levels, enabling precise forecasting of vulnerable regions. Findings were made accessible through a public website hosted on Google Cloud Platform (GCP), featuring interactive maps and visualizations for policymakers, researchers, and the public. By accurately predicting flood-prone zones, the project supports disaster preparedness, early warning systems, and informed decision-making. Its significance lies in enhancing flood risk assessment, improving mitigation strategies, and reducing the impact of floods on lives, property, and infrastructure in Pakistan.",
+    "advisor": "Dr. Hameeza Ahmed",
+    "batch": "2019"
+  },
+  {
+    "title": "Cyber Profiling and Network Tracking of Eccentric Accounts",
+    "team_members": ["Samreen Shamim", "Amna Naeem", "Tehreem Saleem", "Abdul Moiz"],
+    "description": "This project develops a machine learning and deep learning system for sentiment analysis and cyber-criminal profiling on social media. It aims to detect hate speech, analyze user behavior, and perform social network analysis. Data is collected using a Twitter scraper with keyword-based queries and balanced with synthetic data generated via Generative Adversarial Networks (GANs). The dataset undergoes preprocessing, annotation, and feature extraction before training machine learning classifiers and deep neural networks to predict hateful content. A user interface provides behavioral profiling, profile ranking, and visualization of communities. By combining real-time data scraping, GAN-based augmentation, and advanced analytics, the system enables efficient monitoring of objectionable content, reducing manual effort and supporting actionable insights for social media oversight.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2019"
+  },
+  {
+    "title": "Real Time IT Skills Recommender and Predictor",
+    "team_members": ["Sana Parveen", "Maryam Bashir", "Wasia Mukhtar Khan", "Sidra Fatima"],
+    "description": "This project develops a recommendation system for trending IT skills and job opportunities in Pakistan, addressing the challenge of tracking in-demand skills across multiple platforms. By analyzing online courses, job postings, and social media platforms like YouTube and Twitter, the system identifies top IT skills, languages, and tools and recommends relevant courses for each. Using machine learning algorithms, it predicts future job market trends, helping IT graduates and professionals make informed career decisions. The insights are presented through a real-time, user-friendly web application. This platform streamlines access to essential IT career information, enabling users to stay competitive, plan skill development effectively, and align with evolving industry demands.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2019"
+  },
+  {
+    "title": "Smart Performance Appraisal Analyzer",
+    "team_members": ["Khadija", "Faryal Rana", "Uzma Aijaz", "Ayesha Farooq"],
+    "description": "The Smart Performance Appraisal Analyzer automates employee evaluation and training, addressing the time-consuming and costly nature of manual performance appraisals. Employees register on a platform and complete quizzes designed to assess their skills and performance. Based on the results, the system generates progress reports to identify employees who excel and those who need improvement. Employees requiring development receive automated training through lecture videos, eliminating the need for additional trainers and reducing organizational expenses. By streamlining assessment and training processes, the system improves efficiency, saves time and money, and ensures consistent evaluation standards. This project demonstrates how automation can optimize workforce management and support effective employee development in businesses and organizations.",
+    "advisor": "Mr. Umar Iftikhar",
+    "batch": "2019"
+  },
+  {
+    "title": "Smart Recommender for Process Optimization in Pharmaceutical Industry",
+    "team_members": ["Rahaab Naleem", "Rida Ul Fatima", "Amna Aslam", "Anas Ahmed Khan"],
+    "description": "This project aims to optimize pharmaceutical production processes in Pakistan to meet global standards set by organizations like WHO, FDA, and PIC. Current local systems lack historical data management, resulting in inefficiencies, quality gaps, and risks to product integrity. The system focuses on improving productivity, simplifying processes, saving time and costs, and ensuring compliance with quality standards for domestic and export products. Data analytics is employed to identify issues, suggest solutions, and maintain accurate records of production processes. Additionally, the system addresses data integrity challenges caused by multiple user entries. By streamlining operations and enforcing data accuracy, this project enhances product quality, regulatory readiness, and overall efficiency in the pharmaceutical industry.",
+    "advisor": "Mr. Umar Iftikhar",
+    "batch": "2019"
+  },
+  {
+    "title": "Polarity Detection of Bi-lingual Data from Online Source",
+    "team_members": ["Zobia Khan", "Muqadas Ashraf", "Wajiha Khan", "Hafiza Javeria Adil"],
+    "description": "This project focuses on sentiment analysis of multilingual data, including Roman Urdu, Urdu, English, and mixed content. The goal is to accurately determine sentiment polarity despite differences in syntax, grammar, and word order across languages. Data is collected using a Twitter scraper, followed by preprocessing steps like tokenization, stop-word removal, and cleaning. Features are extracted numerically for model training. Separate Machine Learning and Deep Learning models are developed for each language, while an ensemble learning model handles mixed data. The system is integrated into a web interface to provide analytics reports based on user-scraped data. The proposed models demonstrate high accuracy, showing that hybrid and neural network-based methods effectively enhance multilingual sentiment analysis. Further research can improve reliability and performance.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2019"
+  },
+  {
+    "title": "Voice of Hearing and Speech Impaired People",
+    "team_members": ["Zakawat Abbas", "Sadaf Manzoor", "Syeda Mehak Zehra", "Syeda Zoya Haider Rizvi"],
+    "description": "This project addresses the communication gap between hearing and speech impaired individuals and the general public by developing a two-way, real-time translation system. The application translates sign language into text and speech, and vice versa, enabling effective interaction. The methodology involves collecting American and Pakistani Sign Language (ASL and PSL) video data, preprocessing to remove noise, feature extraction, and classification using a Convolutional Neural Network (CNN). OpenCV is used for real-time recognition and processing. The system accounts for the linguistic structure and regional specificity of sign languages, ensuring high accuracy and usability. This technology has broad applications in medical, educational, and social settings, fostering inclusion and bridging communication barriers between hearing-impaired communities and others.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "DeepCars (Simulation of self-driving car using Deep Neural Network)",
+    "team_members": ["Muhammad Hammad", "Muhammad Jan", "Musfirah Fayyaz", "Faseeh U Rehman"],
+    "description": "This project focuses on developing a simulation of a self-driving car using artificial neural networks to enhance safety and efficiency in transportation. The system addresses human error-related accidents by autonomously controlling the vehicle's steering, acceleration, and braking. The simulation incorporates realistic environments with roads, buildings, trees, and obstacles, while sensors, ray casting, and collision detection enable obstacle avoidance. A Double Deep Q-Learning (DQN) network is implemented using Python's gymnasium (highway-env) to train the model, with future plans to expand to a 3D environment using socket communication between C# and Python. This project provides a foundation for advanced autonomous driving systems, offering insights into safer, time-efficient, and intelligent transportation technologies.",
+    "advisor": "Prof. Dr. Syed Abbas Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "Dynamic Chatbot",
+    "team_members": ["Syed Asad Ur-Rehman", "Muhammad Anas Jafri", "Hashir Nadeem", "L.aibs"],
+    "description": "This project focuses on developing a dynamic chatbot capable of providing intelligent, personalized, and context-aware responses to user queries. Leveraging Natural Language Processing (NLP) and machine learning, the chatbot is trained on a large corpus of text data using both supervised and unsupervised learning techniques. The system preprocesses input, interprets user intent, and generates accurate responses while continuously learning from interactions to improve performance over time. Integration with other systems and data sources enhances its functionality. The findings demonstrate high accuracy, efficiency, and adaptability, making it a promising tool for industries such as customer service, healthcare, and e-commerce. Ongoing evaluation ensures sustained relevance and effectiveness.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2019"
+  },
+  {
+    "title": "AI Fashion Chek Using Deep Learning",
+    "team_members": ["Hasan Abdullah Khan", "Haleema Afshan", "Syed Muhammad Taha", "Muhammad Nayalish Nasim"],
+    "description": "The textile industry, contributing 8.5% to Pakistan's GDP, requires a constant influx of unique and diverse designs. Manual design processes are time-consuming, inefficient, and unable to meet the industry's demand. To address this, the proposed system, Fashion Chek, leverages Deep Convolutional Generative Adversarial Networks (DCGAN) to automate design creation. The system consists of two neural networks: a Generator, which produces new designs, and a Discriminator, which evaluates their authenticity against real samples. By learning from existing designs, Fashion Chek generates innovative and unique textile patterns, reducing reliance on multiple designers and minimizing production costs. This AI-driven approach empowers the textile sector to blend creativity with efficiency, enabling rapid generation of novel designs. Overall, Fashion Chek demonstrates how artificial intelligence can transform traditional textile design by enhancing creativity, saving time, and maintaining innovation in a competitive industry.",
+    "advisor": "Muhammad Ali Akhtar",
+    "batch": "2019"
+  },
+  {
+    "title": "PHOENIX-The Data Security Platform",
+    "team_members": ["Shafaq Azeem", "Arham Ahmed Siddiqui", "Syed Khurram Abbas Rizvi", "Ahmer Waqar"],
+    "description": "A data security platform is a comprehensive solution designed to protect sensitive data from unauthorized access, theft, and misuse throughout its entire lifecycle. With the rapid growth of digital data and the increasing frequency of cyberattacks, organizations face greater risks to data confidentiality, integrity, and availability. A robust data security platform incorporates technologies such as encryption, access control, continuous monitoring, and data loss prevention to safeguard both data-at-rest and data-in-transit. Implementing such a platform enables organizations to meet regulatory compliance requirements, strengthen defenses against cybersecurity threats, protect their reputation, and ensure uninterrupted business operations. Phoenix -- The Data Security Platform aims to help organizations identify vulnerabilities, mitigate potential risks, and provide a secure environment for sensitive information, thereby reducing the likelihood of data breaches and operational disruptions.",
+    "advisor": "Ms. Ibshar Ishrat",
+    "batch": "2019"
+  },
+  {
+    "title": "Security Orchestration Automation and Response",
+    "team_members": ["Dawood Arshad", "Neha Akhter", "Javeria Jameel", "Maheen Khan"],
+    "description": "In today's dynamic cybersecurity environment, organizations face increasing threats, a shortage of skilled security professionals, and delayed response times due to manual processes. To address these challenges, the Security Orchestration, Automation, and Response (SOAR) platform has been developed. Integrated with the Wazuh Security Information and Event Management (SIEM) system, SOAR automates security workflows using Ansible playbooks, enabling rapid and consistent incident response. The platform features an intuitive drag-and-drop interface for creating custom workflows and a comprehensive dashboard displaying security event summaries and actionable insights. By reducing response time from hours or minutes to seconds, SOAR allows security teams to focus on critical tasks while improving operational efficiency. Overall, the platform provides a cost-effective, time-efficient, and robust solution, enhancing organizations' ability to detect, respond to, and mitigate cyber threats effectively.",
+    "advisor": "Dr. Asad Afreen",
+    "batch": "2019"
+  },
+  {
+    "title": "Fractional Ownership of Real Estate using Asset Tokenization in Blockchain",
+    "team_members": ["Hamza Junaid", "Mohsin Iqbal", "Mehdi Zafar"],
+    "description": "Fractional ownership of real estate is an innovative investment model that enables individuals to own a portion of a property rather than purchasing it outright, reducing the need for large capital investments. This approach is gaining popularity due to its flexibility and accessibility for small and medium investors. Blockchain technology enhances fractional ownership by enabling property shares to be represented as digital tokens that can be securely bought, sold, and traded on a decentralized platform. These blockchain-based transactions ensure transparency, immutability, and security, significantly reducing the risk of fraud. Additionally, tokenization improves liquidity by allowing investors to trade their ownership shares easily while also earning rental income. Overall, integrating blockchain technology with fractional real estate ownership simplifies the investment process, increases market participation, and has the potential to transform the traditional real estate industry by making it more transparent, efficient, and inclusive.",
+    "advisor": "Miss Ibshar Ishrat / Dr. Asad Arfeen",
+    "batch": "2019"
+  },
+  {
+    "title": "Attack eye-External cyber attack surface monitoring solution",
+    "team_members": ["Muhammad Hamza", "Muhtashim Malick", "Muhammad Ebadullah", "Syed Muhammad Shayan"],
+    "description": "An external cyber-attack surface consists of all publicly exposed IT assets of an organization, such as domains, subdomains, DNS servers, and email services, which can be accessed by both legitimate users and malicious attackers. These assets are continuously targeted by threat actors seeking vulnerabilities, especially through advanced social-engineering and domain-spoofing techniques. As modern attack surfaces extend beyond internal networks to include third-party managed assets, organizations require continuous visibility and monitoring of their external digital footprint. Attack Eye addresses this challenge by providing an outside-in view of an organization's cyber-attack surface through automated subdomain enumeration and asset mapping. The platform enables organizations to maintain updated asset inventories, identify exposure points, and prioritize risk mitigation, making it a critical component of an effective cybersecurity risk management strategy.",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2019"
+  },
+  {
+    "title": "Image and Video Forensics through Deep Learning and Computer Vision for Finding Persons",
+    "team_members": ["Wajahat Ahmed", "Alizah Ikram", "Fashanam Shahba", "Syed Zohaib Ahsan"],
+    "description": "This project develops a deep learning-based application to locate missing children in Pakistan, addressing the country's high rates of child abduction and abuse. Users can file missing person reports using images or videos, which are enhanced and processed by the system. Uploaded images or videos of found children are automatically compared with existing records, and guardians are notified with location and relevant details when matches are found. The system collects data from schools, colleges, and online sources, employing optimized models selected for accuracy. By providing a fast, efficient, and centralized platform, this application supports law enforcement agencies in conducting timely investigations, accelerates reporting, and enhances the chances of safely recovering missing children.",
+    "advisor": "Ms. Ibshar Ishrat",
+    "batch": "2019"
+  },
+  {
+    "title": "Strengthening Enterprise Security by Mitigating Insider Threats Using User and Entity Behavior Analysis (UEBA)",
+    "team_members": ["Mubina Waheed", "Samra Saleem", "Ali Hamza Detho", "Samar ul Hassan Zaidi"],
+    "description": "This project develops an end-to-end UEBA system to detect malicious users and insider threats using advanced analytics, machine learning, and deep learning techniques. Unlike traditional SIEM solutions, UEBA relies on probabilistic models and risk factors rather than Boolean alerts. The system processes the Carnegie Mellon University insider threat dataset, performing exploratory data analysis, feature extraction---including sentiment and quantitative analysis---and model training. Fourteen features are extracted per user to identify behavioral patterns. A deep learning Autoencoder generates a baseline of routine activity, enabling the detection of anomalies. The system achieves 83% accuracy and 71% recall, demonstrating its effectiveness in distinguishing malicious behavior from normal actions and providing a robust cybersecurity solution for insider threat mitigation.",
+    "advisor": "Dr. Asad Afreen",
+    "batch": "2019"
+  },
+  {
+    "title": "Diabetics and Heart Disease Prediction using Machine Learning Algorithms",
+    "team_members": ["Sheikh Ishaq Kamran"],
+    "description": "This project develops a machine learning model to predict noncommunicable diseases (NCDs) in diabetic patients, enhancing early risk assessment and healthcare intervention. Using a comprehensive dataset containing medical attributes such as heart rate, blood pressure, cholesterol, chest pain, age, and gender, the system evaluates patients' likelihood of developing NCDs. Multiple machine learning algorithms---including K-Nearest Neighbors, logistic regression, decision trees, random forests, and support vector machines---are explored to identify the most accurate predictive model. The output provides risk scores to guide healthcare professionals in identifying high-risk patients and developing personalized preventive strategies. By combining data-driven insights with medical expertise, this system improves patient outcomes, supports proactive disease management, and contributes to enhanced quality of life.",
+    "advisor": "Dr. Syed Zaffar Qasim",
+    "batch": "2019"
+  }
+]

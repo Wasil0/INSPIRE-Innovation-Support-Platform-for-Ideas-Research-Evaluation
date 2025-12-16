@@ -1,0 +1,275 @@
+[
+  {
+    "title": "Deepwriter: Enhancing integrity in industrial handwritten document recognition",
+    "team_members": ["Aaminah Qaiser", "Ushna Hamza", "Mashal Abbas"],
+    "description": "This project develops an end-to-end system for recognizing the writer of Urdu handwritten documents. It employs state-of-the-art Vision Transformer (ViT) models and preprocessing techniques to learn complex handwriting patterns. The system achieves high accuracy, aiming to facilitate document authentication and analysis across various agencies. It provides a user-friendly interface and has demonstrated a significant improvement in identification accuracy. This technology can be beneficial for industries requiring handwriting verification and contributes to the preservation of the Urdu language in handwritten form.",
+    "advisor": "Ms. Fauzia Yasir / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Deep learning-based voice cloning for local languages with a focus on Urdu",
+    "team_members": ["Hunzala Mushtaq", "Mujtaba Mateen", "M. Usama Shahid", "Muneeb Ullah Khan"],
+    "description": "The project creates a high-quality Urdu text-to-speech (TTS) system using deep learning and transfer learning models like XTTS. Collaborating with Anjuman Taraqqi-e-Urdu Pakistan, it aims to improve digital accessibility, support speech-impaired users, and preserve Urdu language nuances in synthesized speech.",
+    "advisor": "Ms. Fauzia Yasir / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Seamless recognition: FPGA powered Urdu card reader",
+    "team_members": ["Zain Siddiqui", "Syed Muhammad Osama", "Syed Muhammad Arham Tahir", "Muhammad Hamza Malik"],
+    "description": "N/A",
+    "advisor": "Ms. Fauzia Yasir / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Deep learning-based rust and smut detector for wheat crop",
+    "team_members": ["Mohamedamin", "Alina Dahani", "Muneeba Mubarak"],
+    "description": "This project creates an AI-powered tool to help Pakistani wheat farmers detect Rust and Smut diseases early. It involves collecting image data from local fields and developing a machine learning module capable of identifying these diseases from pictures of wheat plants. The solution includes a user-friendly interface, built with Django, tailored for farmers' use. By enabling timely and accurate diagnosis, the tool aims to empower farmers to take preventive action, reduce crop loss, protect yield, and support food security and economic stability.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2020"
+  },
+  {
+    "title": "Deep learning based Urdu image captioning and auditory aid for visually impaired users",
+    "team_members": ["Aleena Yameen", "Safia Faiz", "Syed Muhammad Mubashir Rizvi", "Sunyah Faisal"],
+    "description": "An AI system that generates Urdu captions for images and converts them to audio, aiding visually impaired users. It uses encoder-decoder models like Xception-LSTM and Transformer architectures, trained on Urdu-translated datasets. The tool enhances accessibility in education, healthcare, and e-commerce.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2020"
+  },
+  {
+    "title": "VogueVisionAI: Text-conditioned fashion image manipulation using generative AI",
+    "team_members": ["Areesha Raza Jagirani", "Leena Kamran", "Aira Farman", "Munaem Moin"],
+    "description": "VogueVisionAI is a generative AI system that creates and manipulates fashion images based on text descriptions. It uses a sophisticated deep learning model, integrating techniques like CLIP to guide image generation from textual prompts. The project aims to revolutionize the fashion design process by enabling designers to quickly visualize concepts, generate variations, and virtually try on outfits based on simple text input. It provides a user-friendly interface for instant outfit amendments, fostering creativity and accelerating the traditional design workflow in the digital fashion industry.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2020"
+  },
+  {
+    "title": "Revisiting Memories: Deep learning based efficient video search for episodic memory",
+    "team_members": ["Syeda Khadija Abidi", "Sheikh Hashir Ahmed", "Muhammad Faizan", "Umer Khalil"],
+    "description": "This project creates an AI assistant to help individuals, especially those with memory impairments or visual challenges, locate misplaced items by searching through egocentric (first-person) video footage. It processes video data by splitting it into frames, uses the YOLOv8 model for object detection, and employs keyword matching to respond to user queries in text, image, or voice form. The system retrieves and displays the specific video frame where a queried object was last seen, acting as a practical tool to aid memory recall in daily life.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2020"
+  },
+  {
+    "title": "Cyberbullying detection in custom hand-labeled Urdu scripts using deep learning framework",
+    "team_members": ["Anusha waseem", "Mustafa suri", "Hassan farooqui"],
+    "description": "This project develops an offensive and cyberbullying speech detector for Urdu using deep learning models like GRU and LSTM. These RNN-based architectures analyze sentence structure and context to identify harmful content in social media text, addressing the lack of NLP tools for Urdu and improving online safety.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2020"
+  },
+  {
+    "title": "PersonifyU: A deep dive into personalities",
+    "team_members": ["Muhammad Anas Ansari", "Bilal", "Haris Ahmed", "Waleed Ahmed"],
+    "description": "PersonifyU applies NLP to analyze university students' personalities via questionnaire responses. It provides insights into traits, preferences, and behaviors to support academic advising, career counseling, and personalized student services, improving institutional support systems.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2020"
+  },
+  {
+    "title": "LogiSync-Streamlining last mile logistics through map matching based tracking for logistics companies",
+    "team_members": ["Abdul Raffay", "Syed Ali Salar", "Askari Abbas", "Syed Ibrahim Noman"],
+    "description": "LogiSync optimizes last-mile delivery by providing accurate tracking and analytics for logistics companies. It uses advanced map-matching algorithms, particularly the LCSS (Longest Common Subsequence) Matcher, to align noisy GPS data from riders' mobile phones with actual road networks. The system includes a Rider Portal app for data capture and a Company Portal dashboard for route visualization, distance calculation, and analytics. This solution aims to reduce operational costs, improve delivery efficiency, and enable data-driven decision-making without expensive hardware.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2020"
+  },
+  {
+    "title": "Therapy AI- An AI powered tool for empathetic support and self-care plans",
+    "team_members": ["Waseela", "Syeda Laiba Azam", "Abdur Rehman", "Syed Osama shad"],
+    "description": "Therapy AI is a chatbot application designed to offer empathetic support and self-care guidance to individuals, particularly youth, experiencing depression. It uses the Falcon Large Language Model (LLM) and prompt engineering techniques to generate compassionate, conversational responses based on user text input. The system can analyze conversations to identify symptoms and suggest personalized self-care plans. By providing accessible, 24/7 mental health support, it aims to bridge gaps in mental healthcare services and assist users in managing their well-being.",
+    "advisor": "Dr. Shahab Tahzeeb",
+    "batch": "2020"
+  },
+  {
+    "title": "Defects identification on piston rods and pipe fork for quality control in automotive manufacturing",
+    "team_members": ["Aayaat Ali", "Warisha Sajjad", "Tehreem Fatima", "Musfirah"],
+    "description": "This project automates the visual inspection of critical automotive components—piston rods and pipe forks—to detect defects like cracks or diameter inconsistencies. It replaces manual, error-prone inspections with a deep learning-based system that analyzes images for anomalies. The solution includes a user-friendly dashboard for production staff and has demonstrated high accuracy in measurement, significantly reducing error margins. This aims to improve product quality, enhance safety, reduce labor costs, and increase efficiency in automotive manufacturing.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Gauge Vision: Transforming manual readings with computer vision",
+    "team_members": ["Syed Muhammad Taha Waqar", "Syed Arham Hasan", "Umar Khalid", "Syed Maaz Ali"],
+    "description": "This project automates the manual reading of gauges in industrial settings using computer vision. It addresses human error and inefficiency by employing models like YOLOv8 to accurately identify gauges within an image or video feed, extract their readings, and interpret the values. The system includes a user-friendly interface for practical deployment. By automating this process, it aims to enhance operational efficiency, improve safety protocols, and provide reliable, real-time monitoring of industrial equipment without manual intervention.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Urdu to Braille: Bridging literacy and access for the blind",
+    "team_members": ["Hiba Khan", "Nizana Khan", "Syed Aali", "Hafsa Azhar"],
+    "description": "This project develops an intelligent Grade 2 Urdu-to-Braille converter to promote literacy and access for the visually impaired in Pakistan. It uses Neural Machine Translation (NMT) models, trained on a dataset of Urdu contractions and sentences, to accurately translate digital Urdu text into Braille. Developed in collaboration with the Ida Rieu School, the tool features a user-friendly interface and aims to make Urdu literature and information accessible, fostering inclusion and preserving linguistic heritage.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Enhancing industrial efficiency with predictive maintenance and analytics for induction motors",
+    "team_members": ["Farah Hussain", "Syed Muhammad", "Malaika Ali", "Gorve Kumar"],
+    "description": "This project develops a Predictive Maintenance (PdM) system for industrial induction motors to prevent unexpected failures and downtime. It uses machine learning algorithms to analyze motor sensor data, identify anomalies, and predict potential faults. The system features a real-time dashboard built with React JS, providing status updates, performance reports, and automated alerts for maintenance teams. By enabling proactive maintenance, it aims to increase operational efficiency, reduce energy consumption, and minimize economic losses in industrial settings.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "DataVision Pro: Your smart data analytics and prediction companion",
+    "team_members": ["Danish Kamal", "Muhammad Ajlal Imam", "Mirza Muneem Baig", "Mohsin Ali"],
+    "description": "DataVision Pro is a conversational AI tool that acts as a comprehensive data analytics companion. Built on generative AI, it allows users to interact with their data using natural language. The tool can perform tasks like sentiment analysis, entity recognition, data visualization, and extraction from various file formats (text, audio, video). It consolidates multiple analytical functions into a single, intuitive interface, aiming to simplify data interaction and empower users to derive insights without needing specialized technical skills.",
+    "advisor": "Dr. Zareen Sadiq",
+    "batch": "2020"
+  },
+  {
+    "title": "Image captioning for visually impaired people",
+    "team_members": ["Muhammad Huzaifa Inshal", "Muhammad Zain ul Abedin", "Muhammad Huzaifa", "Syed Shehroz Ali"],
+    "description": "This project develops smart glasses to assist visually impaired individuals by providing real-time auditory descriptions of their surroundings. It integrates a camera and processor with a deep learning-based image captioning model built using TensorFlow. The system captures images, generates accurate captions for static scenes, and converts them into voice output. The hardware is discreetly built into sunglasses, and a mobile app serves as an alternative interface. The goal is to enhance independence and accessibility by offering instant verbal context about the visual environment.",
+    "advisor": "Dr. Syed Zaffar Qasim",
+    "batch": "2020"
+  },
+  {
+    "title": "Interview EQ analyzer",
+    "team_members": ["Muhammad Usman Yousuf", "Syed Yasoob Raza Naqvi", "Muhammad Jahanzaib Khan", "Syed Hassan Mehdi Zaidi"],
+    "description": "This project introduces an AI tool to objectively analyze emotional intelligence (EQ) during job interviews using Speech Emotion Recognition (SER). It processes candidates' speech to discern emotional cues, providing recruiters with standardized insights beyond verbal content. Developed using data from mock interviews, the system integrates with a user-friendly interface to complement traditional evaluation methods. It aims to reduce subjective bias, offer deeper insights into candidate suitability, and expedite the hiring process by adding an objective layer of emotional and non-verbal analysis.",
+    "advisor": "Dr. Syed Zaffar Qasim",
+    "batch": "2020"
+  },
+  {
+    "title": "AutoTag media manager",
+    "team_members": ["Mufeeza Khan", "Faiqa Haider", "Rimsha Nadeem", "Aqsa Aslam"],
+    "description": "A cloud-based Media Asset Management (MAM) system that organizes, tags, and retrieves digital media files using ML-driven automation. It enhances searchability, collaboration, and compliance for organizations managing large volumes of media content.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2020"
+  },
+  {
+    "title": "Sentix-Empowering multi-lingual twitter communities through advanced sentiment analysis and insights",
+    "team_members": ["Safa Rizwan", "Muniba Rahman", "Alaina Alam", "Nimrah Sohail"],
+    "description": "SenTix is a tool for detecting hate speech in Roman Urdu and Urdu tweets using NLP and ML classifiers. It includes data scraping, GAN-based dataset augmentation, and visualization features to profile harmful accounts and support safer online communities.",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2020"
+  },
+  {
+    "title": "Web analytics & visualization of user behavior through data-driven playbacks for enhancing user experience",
+    "team_members": ["Muhammad Anas", "Amna Saeed", "Muhammad Bakhtiar Malik"],
+    "description": "DeepDive Analytics is a real-time web analytics platform designed to capture and analyze user interactions using JavaScript and WebSockets. It provides detailed insights into user behavior, helping optimize website performance and UX. Built with Next.js for efficient backend processing, it prioritizes privacy with GDPR compliance, encryption, and JWT authentication. Future plans include ML-driven predictive analytics and enhanced heatmapping.",
+    "advisor": "Dr. Asad Arfeen / Mr. Sheikh Abdul Basit",
+    "batch": "2020"
+  },
+  {
+    "title": "IntelliAssist: Your personal AI assistant",
+    "team_members": ["Syed Muhammad Ghufran", "Muhammad Hamdan", "Syed Hussain Kazmi", "Anas Ansari"],
+    "description": "IntelliAssist is an AI-powered assistant that helps users manage digital overload by integrating email, calendar, notifications, and smart device controls into one platform. Using NLP and AI, it offers a user-friendly interface to improve productivity, reduce stress, and streamline daily task management through personalized automation.",
+    "advisor": "Ms. Ibshar Ishrat",
+    "batch": "2020"
+  },
+  {
+    "title": "Digital board pack",
+    "team_members": ["Saad Nadeem Khan", "Anas Afzal Khan", "Mohammad Aliyan Amir", "Basit Kaleem Qureshi"],
+    "description": "A digital board pack solution designed to streamline document management and distribution for Pakistan Oxygen Limited's board members. It centralizes critical documents, improves governance, and facilitates decision-making through a secure, organized digital platform.",
+    "advisor": "Dr. Urooj Ainuddin",
+    "batch": "2020"
+  },
+  {
+    "title": "SafeNav - Enhancing travel safety with Google maps",
+    "team_members": ["Abdul Sami Khan", "Daniyal Amir", "Irtaza", "Syed Muhammad Taimoor"],
+    "description": "SafeNav is a mobile app that identifies crime hotspots in Karachi using historical crime data analysis and ML models. Integrated with Google Maps, it provides safety alerts, trend analysis, and predictive insights to help users navigate safely and empower community awareness.",
+    "advisor": "Dr. Syed Abbas Ali / Mr. Muhammad Ali Akhtar",
+    "batch": "2020"
+  },
+  {
+    "title": "Rice grain variety classification through deep learning",
+    "team_members": ["Romaisa Manzoor", "Fareha Ahmed", "Kaneez Sukaina", "Bisma Aleem"],
+    "description": "This project automates the classification of rice grain varieties using deep learning to replace traditional, error-prone manual methods. It utilizes the YOLOv8 object detection model trained on a diverse dataset of rice grain images. The system can accurately identify and categorize different rice types, aiding in quality control and analysis for the agricultural sector. This technology promises to enhance efficiency, accuracy, and scalability in grain classification, supporting better market competitiveness and sustainable agricultural practices in Pakistan.",
+    "advisor": "Ms. Fakhra Aftab / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Neuroball: Embedded system-based cricket ball tracking",
+    "team_members": ["Farrukh Ahmed Siddiqui", "Syed Muhammad Hamza Naveed", "Aleena Fatima", "Ifra siddiqui"],
+    "description": "Neuroball is an embedded system designed for real-time cricket ball tracking to aid performance analysis. It uses computer vision algorithms and object detection models like YOLO-NAS, combined with a Kalman filter, to track the ball's trajectory, speed, and accuracy from video footage. The system is optimized for deployment on Field-Programmable Gate Arrays (FPGAs) for efficient processing. It aims to provide affordable, advanced analytics tools for local cricket academies in Pakistan, helping coaches and players with detailed performance metrics.",
+    "advisor": "Ms. Fakhra Aftab / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Custom SIEM log parser generator to enhance the security of open source and enterprise SIEM systems",
+    "team_members": ["Ifra Bint-e-Khalid", "Werdah Hashmi", "Muhammad Hamza Hussain", "Syed Muhammad Kazim"],
+    "description": "This project creates a tool to automate the generation of custom parsers for Security Information and Event Management (SIEM) systems. It addresses the challenge of integrating diverse log sources by allowing users to automatically create parsing rules using Regular Expressions (RegEx) through a user-friendly web interface. The solution reduces the cost and complexity associated with proprietary parsers, making it easier for organizations to onboard new data sources and enhance their security monitoring capabilities.",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2020"
+  },
+  {
+    "title": "Personal protective equipment (PPE) monitoring and violation alert system for factory floor safety",
+    "team_members": ["Muhammad Maaz Zahid", "Hassan Hussain Merchant", "Muhammad Khubaib", "Taha Amjad Ansari"],
+    "description": "This system enhances factory floor safety by using computer vision to monitor workers' compliance with PPE requirements like helmets and vests. It employs deep learning models, specifically YOLO-NAS, for real-time detection from CCTV feeds. The system identifies violations and triggers immediate alerts, enabling proactive safety management. Designed for edge-based environments, it aims to reduce accidents, enforce safety protocols automatically, and foster a safer workplace culture through continuous, automated monitoring.",
+    "advisor": "Ms. Mehwish Raza / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Safety First: Preventing overspeed incidents in factories with computer vision",
+    "team_members": ["Affan Ahmed Ali", "Affan Minhas", "Abdul Moiz", "Salman Ahmed Sheikh"],
+    "description": "This project develops a computer vision system to enhance safety in factories by preventing vehicle overspeed incidents. It uses strategically placed cameras and the YOLOv8 model to detect vehicles on the factory floor. By applying speed estimation techniques like pixel subtraction and reference lines, the system calculates vehicle speed in real-time. If overspeeding is detected, it triggers automatic alerts via a mobile application for administrators, enabling immediate intervention to prevent accidents and protect both personnel and equipment.",
+    "advisor": "Ms. Mehwish Raza / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "FPGA-driven real-time Pakistan sign language recognition system",
+    "team_members": ["Mahad Sabih", "Hasham Baig", "Maaz jawaid"],
+    "description": "This project develops a real-time system to recognize Pakistan Sign Language (PSL) using Field-Programmable Gate Arrays (FPGAs). It aims to bridge the communication gap for the deaf community in Pakistan, where human interpreters are scarce. By leveraging the parallel processing power of FPGAs, the system accelerates sign interpretation compared to software-based solutions, enabling faster and more efficient translation of gestures into text or speech for smoother communication in real-time scenarios.",
+    "advisor": "Ms. Mehwish Raza / Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "CISpedia: Your gateway to CIS wisdom",
+    "team_members": ["Syed Hanzala Ali", "Sameer Naveed", "Mahad Naseem", "Muhammad Anas"],
+    "description": "CISPedia is an intelligent chatbot designed as a comprehensive study guide for Computer Engineering students. It leverages Retrieval-Augmented Generation (RAG) architecture and Large Language Models (LLMs) to answer academic queries accurately. The system utilizes a curated dataset from the four-year curriculum, including digitized notes and textbooks. By dynamically retrieving relevant information, it provides personalized, context-aware explanations to help students navigate complex topics, aiming to enhance learning accessibility and academic understanding.",
+    "advisor": "Mr. Ali Akhtar",
+    "batch": "2020"
+  },
+  {
+    "title": "Retina insight: Automated disease detection & reporting using fundus fluorescein angiography",
+    "team_members": ["Muhammad Sabih Ur Rehman", "Muhammad Hasan", "Muhammad Haseeb Salman", "Izhan Ahmed"],
+    "description": "Retina Insight is an AI-powered system that automates the diagnosis of retinal diseases from Fundus Fluorescein Angiography (FFA) images. It combines computer vision models to analyze images and Natural Language Processing (NLP) to generate detailed diagnostic reports. The tool helps address the shortage of ophthalmologists by providing fast, accurate analysis of conditions like diabetic retinopathy. It features a user-friendly web platform for healthcare professionals, aiming to reduce diagnostic delays and streamline the reporting process.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2020"
+  },
+  {
+    "title": "Dialogify: Intelligent chat interface for simplified cloud orchestration and monitoring",
+    "team_members": ["M. Hayyan Khan", "Umair Ali", "Hasnain Ahmed", "Sibtain Ahmed"],
+    "description": "Dialogify simplifies complex cloud management tasks through a natural language chat interface. It allows users to deploy, orchestrate, and monitor cloud services on platforms like AWS and GCP using simple conversational commands. By integrating Large Language Models (LLMs), the chatbot understands user intent, manages cloud configurations, and provides intelligent assistance. This approach makes cloud infrastructure management more accessible and user-friendly, especially in multi-cloud environments, reducing the need for deep technical expertise.",
+    "advisor": "Dr. Hameeza Ahmed",
+    "batch": "2020"
+  },
+  {
+    "title": "Salesforce files connect: Sync data from salesforce to cloud storage",
+    "team_members": ["Bilal Arif", "Muhammad Ali", "Hubban Khan", "Muhammad Huzaifa"],
+    "description": "This project addresses the high cost of data storage within Salesforce by developing an integration that automatically archives files to Google Drive. Built using Salesforce technologies like Apex and Lightning Web Components (LWC), it provides a seamless interface for users to manage and transfer data. The solution helps organizations reduce their reliance on expensive native Salesforce storage, leading to significant cost savings while maintaining data accessibility and security through a familiar cloud storage platform.",
+    "advisor": "Dr. Hameeza Ahmed",
+    "batch": "2020"
+  },
+  {
+    "title": "ServiceSwift: Universal Plug-n-Play OEM support and personalized assistance chatbot framework",
+    "team_members": ["Rimsha Ishtiaq", "Syeda Zobia Irshad", "Habiba Asif", "Vandana"],
+    "description": "ServiceSwift is an LLM-powered chatbot framework designed to revolutionize customer support for Original Equipment Manufacturers (OEMs). It uses advanced RAG techniques and role-based prompt engineering to resolve customer queries efficiently. The framework emphasizes 'plug-and-play' integration, allowing OEMs to deploy it within their existing systems with minimal coding. It aims to reduce reliance on human agents, decrease response times, and provide scalable, intelligent, and personalized 24/7 customer assistance.",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2020"
+  },
+  {
+    "title": "SmartServe360 - A comprehensive accelerator for F&B industry",
+    "team_members": ["Yumna Khan", "Hamza Ahad Akhtar", "Hammad Khan", "Muhammad Mudasir Alam"],
+    "description": "N/A",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2020"
+  },
+  {
+    "title": "VisageIris - Biometric integrate of face and iris recognition",
+    "team_members": ["Muhammad Huzaif", "Hameem Khalil", "Nooh Khan Alias Shah Muhammad", "Ijaz Ahmad"],
+    "description": "N/A",
+    "advisor": "Dr. Syed Aqeel Haider",
+    "batch": "2020"
+  },
+  {
+    "title": "AssessAI: Automated answer script assessment",
+    "team_members": ["Muhammad Ammar Lodhi", "Ubaidullah Amir", "Umer Ahmed"],
+    "description": "N/A",
+    "advisor": "Dr. Syed Zaffar Qasim",
+    "batch": "2020"
+  },
+  {
+    "title": "Unified mobile device management solution for enterprise",
+    "team_members": ["Syed Muhammad Hammad", "Muhammad Shayan", "Muhammad Abid", "Muhammad Zeeshan"],
+    "description": "N/A",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2020"
+  }
+]

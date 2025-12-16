@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Settings,
@@ -6,6 +6,7 @@ import {
   LogOut,
   User,
   GraduationCap,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +15,36 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getAdvisorInfo } from "@/api/advisors";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [notifications] = React.useState(3); // Placeholder for notification count
+  const [isCommitteeMember, setIsCommitteeMember] = useState(false);
+  const [loadingCommitteeStatus, setLoadingCommitteeStatus] = useState(true);
+  const role = localStorage.getItem("role");
+
+  // Check if current user is a committee member (only for advisors)
+  useEffect(() => {
+    const checkCommitteeStatus = async () => {
+      if (role !== "advisor") {
+        setLoadingCommitteeStatus(false);
+        return;
+      }
+
+      try {
+        const advisorInfo = await getAdvisorInfo();
+        setIsCommitteeMember(advisorInfo.committee_member || false);
+      } catch (error) {
+        console.error("Failed to fetch committee status:", error);
+        setIsCommitteeMember(false);
+      } finally {
+        setLoadingCommitteeStatus(false);
+      }
+    };
+
+    checkCommitteeStatus();
+  }, [role]);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -44,6 +71,18 @@ const Navbar = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
+            {/* Switch to Committee Member View Button - Only show for advisors who are committee members */}
+            {role === "advisor" && !loadingCommitteeStatus && isCommitteeMember && (
+              <Button
+                variant="ghost"
+                onClick={() => navigate("/faculty/committee/CommitteeDashboard")}
+                className="h-9 transition-colors"
+              >
+                <Users className="mr-2 h-4 w-4" />
+                Switch to Committee Member View
+              </Button>
+            )}
+            
             {/* Settings Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

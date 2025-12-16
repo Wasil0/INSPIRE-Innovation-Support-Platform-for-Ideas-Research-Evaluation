@@ -1,0 +1,310 @@
+[
+  {
+    "title": "Smart Crop Counting Using Satellite Images and Machine Learning",
+    "team_members": ["Hafsa Bhatti", "Mariam Irfan", "Tayyaba Shafiq", "Ahmed Saud", "Zain-ul-Abidin", "Muhammad Safwan"],
+    "description": "This project addresses the need for efficient techniques for sustainable agricultural practices and daily crop monitoring. The primary goal is to classify crops using satellite view. The methodology involved: The images (S2L1C) were downloaded from the Sentinel Hub. The images were preprocessed and analyzed using a time-series approach with data based on Landsat. Multiple classification methods were tested, and the average accuracy of classification exceeded 80%. This approach to field monitoring and crop identification helps predict the overall yield of a particular crop and could reduce the time and money spent on traditional land surveys.",
+    "advisor": "Dr. Muhammad Khuram",
+    "batch": "2016"
+  },
+  {
+    "title": "Vehicle Parking Management Using Image Processing",
+    "team_members": ["Kulsoom Rahim", "Fareha Baig", "Kainat Aijaz", "Anum Fatima"],
+    "description": "This project introduces an image-based vacancy parking area detection method specifically for the NED University parking areas. It addresses the current inefficiency of manually confirming vacant spots. The system uses an algorithm to process images of the parking space. It detects and extracts occupancy information for each parking spot, then reports if individual parking spots are occupied or empty. This occupancy data is made available to newly arriving drivers, which will reduce the stress and time wastage associated with car parking, making the management of such areas less costly.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "Aquaculture Monitoring Using IoT",
+    "team_members": ["Ammar Farid Ghori", "Aisha Waheed", "Aqsa Mehmood"],
+    "description": "N/A",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2016"
+  },
+  {
+    "title": "Acoustic Modelling Using Deep Learning For Quran Recitation Assistance",
+    "team_members": ["Hafiz Zaidan Jawaid", "Hiba Naqvi", "Areesha Zehra"],
+    "description": "This project addresses the importance of the Holy Quran and the skill required for proper recitation. The key goal of the project is to develop an automatic speech recognition system that provides assistance to reciters in learning the correct recitation of the Holy Quran. This is achieved by training an acoustic model that can transform the recited words into their corresponding transcriptions by analyzing speech patterns using deep learning. The trained model is based on deep neural network architecture and uses Mel-frequency cepstrum coefficients (MFCCs) for representing speech data.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "AI Based Calories Calculation",
+    "team_members": ["Maham Shafiq", "Sana Mahmood", "Fatima Zafar"],
+    "description": "This project addresses the challenge of monitoring caloric intake and diet, which is becoming increasingly critical for individuals due to rising issues like weight gain and diabetes. It proposes building an application using the mobile phone stage to track the calories consumed by users while they approach their everyday exercises with their mobile phone. This app is specifically designed for diet-conscious individuals and aims to help them easily check if food is healthy, addressing the difficulty many people face in managing calorie consumption. The proposed framework is intended to positively improve and encourage present calorie estimation systems and can also be used by restaurants to attract diet-conscious people.",
+    "advisor": "Ms. Fakhra Aftab",
+    "batch": "2016"
+  },
+  {
+    "title": "Al-Human Collaborated Fashion Designers",
+    "team_members": ["Syeda Fatima Navaid", "Asiya Masood", "Wajeeha Kanwal"],
+    "description": "N/A",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Effective Phishing Detection Using Machine Learning Approach",
+    "team_members": ["Ramsha Ilyas", "Mujtaba Hasan", "Hassan Siraj"],
+    "description": "This project addresses web-based phishing, which is typically countered manually using blacklists of known phishing sites. It proposes a powerful and adaptable solution that uses an automated URL detection framework, which is progressively critical for providing end-clients with assurance. The framework utilizes the Random Forest algorithm and a rich arrangement of features to achieve high detection power and low error rates. The aim is to recognize phishing URLs by using the best machine learning algorithms and AI techniques to achieve high accuracy results.",
+    "advisor": "Dr. Muhammad Khuram",
+    "batch": "2016"
+  },
+  {
+    "title": "Dashboard for Gold Market Analysis And Predicton",
+    "team_members": ["Ramsha", "Nazia Khan", "Areeba Aijaz"],
+    "description": "This project aims to design and implement a dashboard that provides trading information essential for any trader before executing a trade. It features interactive visualizations and a predictive system intended to guide gold market investment. The system utilizes various Machine Learning algorithms on indicators. It also incorporates sentiment analysis on Twitter data and uses an economic calendar for currency.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Closet Buddy",
+    "team_members": ["Afnan Amin", "Aasia Batool", "Bushra Najam"],
+    "description": "N/A",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2016"
+  },
+  {
+    "title": "Detection of Diabetic Retinopathy using Artificial Intelligence",
+    "team_members": ["Muhammad Ahsan Khan", "Ammar Gadit", "Shaheer Amin"],
+    "description": "N/A",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Deepfake Video Discrimination Using Deep Learning",
+    "team_members": ["Afreen Zehra", "Rabia Binte Ahmed", "Fatima Ali"],
+    "description": "This project addresses the rise of sophisticated Deepfake videos, which are sometimes difficult for humans to identify as fraudulent. The technology uses Artificial Intelligence (AI) and Deep Learning to create realistic-looking fake videos for various purposes, including defamation or blackmail. The project's goal is to create a powerful solution that can identify real and deepfake videos. It is presented as a proof of concept and a working prototype showcasing the capability of using Artificial Intelligence and Deep Learning approaches to discriminate between these video types.",
+    "advisor": "Ms. Ibshar Ishrat",
+    "batch": "2016"
+  },
+  {
+    "title": "IOT based User Behavior and Profiling for Super Store",
+    "team_members": ["Isna Khan", "Sidra Adnan", "Bisma Hassan"],
+    "description": "This project addresses how customer behavior analysis is critical for superstores to make better management strategies and boost performance. While some techniques exist for counting people, they can misinterpret items by viewing them as individuals. The project proposes an IoT-based framework to analyze customer behavior by determining two factors: Counting customers entering/leaving the superstore using a single overhead camera. Analyzing customers' point of attraction in different segments. It uses the Background Subtraction Algorithm, morphological operations, and centroid tracking to detect the person in motion and track the movement of a detected person to capture the time spent within the segment. This allows for evaluating a client's behavior to enhance their services and increase profit.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2016"
+  },
+  {
+    "title": "Port Qasim PDP Tool",
+    "team_members": ["Urooj Abdel Halim", "Esha Anwar Khan", "Aiman Ejaz Kazi"],
+    "description": "N/A",
+    "advisor": "Ms. Zareen Abbas",
+    "batch": "2016"
+  },
+  {
+    "title": "Robotic Vacuum Cleaner",
+    "team_members": ["Rimsha Mumtaz", "Isbah Khalid", "Syed Taha Afzal Naqvi"],
+    "description": "This project reports on the improvement of a minimal and proficient robotic vacuum cleaner designed for office and home use, which offers comfort and lessens the time spent on family errands. The robot is controlled by: Three batteries and two engine shields. A retractable garbage bin. A cooling fan on a microcontroller. Four ultrasonic sensors to identify deterrents (obstacles). It is constrained by an Arduino Mega and is designed to move on back wheels (front wheel that controls turn). The aim is to create robots that perform complex cleaning functions while completely taking into account self-sufficient cleaning.",
+    "advisor": "Mr. Ali Akhtar",
+    "batch": "2016"
+  },
+  {
+    "title": "Digital Handling Of Financial Activities Using Fintech Approach",
+    "team_members": ["Muhammad Hassan", "Mehdi Rizvi"],
+    "description": "This project focuses on Financial Technology (FinTech), which helps companies innovate products and services on a technology platform. FinTech is emerging in the 21st century to change the form of traditional transactions into new, modern, and more effective methods like mobile payments, money transfers, and asset management. The main goal is to provide users with an application that allows them to manage all their cash handling (transactions, payments, and purchases) anytime, anywhere, without the headache of using debit cards, credit cards, or cash. This approach uses high-tech devices in financial sectors and is disrupting conventional financial services.",
+    "advisor": "Ms. Ibshar Ishrat",
+    "batch": "2016"
+  },
+  {
+    "title": "Supervised Pixel - Based Image Classification Model for Urban Land Cover",
+    "team_members": ["Arva Iqbal", "Arfa Anwer", "Osama Zafar"],
+    "description": "N/A",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2016"
+  },
+  {
+    "title": "Face Image Super Resolution Using Machine Learning",
+    "team_members": ["Waqas Baqir", "Iqbal Parekh", "Hafsa Fareed"],
+    "description": "This project tackles the computer vision problem of Super Resolution. Super Resolution is the process of restoring missing details in a degraded, low-resolution (LR) image to reconstruct a high-resolution (HR) image. This technique is crucial because images from surveillance cameras often lack major details, particularly faces, making them unsuitable for useful purposes. The goal is to accurately reverse the degradation process, represented by the formula $LR = \\text{degradation}(HR)$. The project specifically uses Convolutional Neural Networks (CNN) and its layers to achieve this goal. This technology has broader applications in areas such as satellite imagery, target detection, and medical imaging.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "Object Detection in Deep Sky",
+    "team_members": ["Tahreem Arif", "Ismat Fatima", "Kisa Raza"],
+    "description": "This project presents a method for automatically detecting new celestial objects in the night sky by taking wide-angle images and analyzing them. The primary steps involved are: Image Enhancement: Cropping the Region of Interest (Ursa Minor) and enhancing the image using techniques like Greyscaling and Thresholding, which filters out non-star objects. 2. Noise Reduction: Using four reference stars (Beta Ursae Minoris, Gamma Ursae Minoris, Delta Ursae Minoris, and Alpha Ursae Minoris, also called Polaris) to reduce noise. Detection: Applying template matching techniques to compare the constellation image with a previous constellation image, fulfilling the aim of finding any celestial objects that have passed through it.",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2016"
+  },
+  {
+    "title": "Modern-Day BI based Smart Predictor",
+    "team_members": ["Durray Nayab", "Huda Nadeem", "Farheen Amjad"],
+    "description": "This project addresses how the designed system is a business analytics solution that significantly helps the organization (ICI Pakistan) manage its E-leave system more efficiently. The system applies Business Intelligence (BI) Analytics to E-leave data to track and manage leave requests (requested, denied, etc.). It facilitates the business professionals of the organization by providing relevant information through dashboards. The ultimate goal of applying analytics is to predict the number of leaves on top of the BI features, segmented by business, department, and individual employee.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "Institute and Alumni Progress Analyzer",
+    "team_members": ["Arsala Hamid", "Muhammad Faaiz", "Hamza Ali Siddiqui", "Muhammad Uzair"],
+    "description": "N/A",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2016"
+  },
+  {
+    "title": "Risk Management Enabled SIEM Solution",
+    "team_members": ["Syed Muhammad Ayyan", "Nabila Nasir", "Sobia Nafees"],
+    "description": "This project aims to provide an alternative Risk Analysis based SIEM (Security Information and Event Management) solution to the current market options, which are often third-party owned and costly. Cybersecurity is crucial for protecting sensitive data and information in any organization. This solution is designed to help organizations perform risk checks for any violations of local laws and regulations. It will identify the probability of future threats using evaluations and the impact they might have on the organization through the use of risk scores, allowing the system to offer suitable mitigation techniques.",
+    "advisor": "Dr. Asad Arfeen",
+    "batch": "2016"
+  },
+  {
+    "title": "Identification of Antenna / Microwave Dishes on Towers using Image processing",
+    "team_members": ["Muhammad Usman Siddiqui", "Muhammad Omer", "Sana Mohib"],
+    "description": "This project develops an application to assist wireless staff in identifying Microwave Dish or RF Antenna ID to help them plan better maintenance and optimize their network link. The proposed system includes an Android Application that uses GPS to access the user's location and a camera. When pointed toward a tower, the application targets and displays information about multiple objects found on it, such as Microwave Dishes or RF Antennas. The leading concept involves using image processing and computer vision to extract objects from the scene image, identify them from a database, and provide valuable information without needing to physically access the tower's location.",
+    "advisor": "Ms. Urooj Ain Uddin",
+    "batch": "2016"
+  },
+  {
+    "title": "Sketch Based Image Retrieval Using Convolution Neural Networking",
+    "team_members": ["Shahira Malik", "Areeba Naz", "Marvi Zardari"],
+    "description": "This project introduces a game-based learning system that leverages educational gaming to foster problem-solving and self-learning skills in young children. The core function involves a user inputting a hand-drawn comic strip sketch or doodle. The system processes this input as a query against a dataset of both sketched images and natural photographs. Using sketch processing, recognition, and search techniques from computer vision, the system then: Classifies the input doodle, identifying its category. Displays the corresponding natural photograph of the object. This interactive approach allows children to recognize objects and learn their names in an engaging way. It demonstrates a practical application of sketch recognition research for image search (using a rough sketch as a query) and educational games that automatically evaluate sketched objects.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "Airline Customer Behavior Analysis for Customizable Packages",
+    "team_members": ["Sehrish Subhan", "Shariqa Anjum", "Sheikh Muhammad Farjad"],
+    "description": "N/A",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2016"
+  },
+  {
+    "title": "Integration of MTD System in SDN Architecture",
+    "team_members": ["Syeda Marium Faheem", "Umama Ahmed", "Rubbiya Kamal"],
+    "description": "This project focuses on integrating a Moving Target Defense (MTD) system into a Software-Defined Networking (SDN) architecture to enhance security. SDN Context: SDN improves network efficiency by separating the control plane from the forwarding plane, which helps manage and update routing information effectively. Vulnerability: The centralized control provided by SDN introduces a critical Single Point of Failure (SPOF) vulnerability. Goal: This project aims to tackle and overcome this notable vulnerability for securing SDN architecture from cyber-attacks. It achieves this by leveraging MTD to make the network a moving target, thus making it harder to attack.",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2016"
+  },
+  {
+    "title": "Customized App For Paperless Workflow In NED University",
+    "team_members": ["Aleena Abid", "Ayesha Shabbir", "Fizza Jawed"],
+    "description": "This project addresses the need for a paperless workflow environment at NED University for processes that currently require several students and teachers to go through documentation (like leave applications or circulars). The idea is to develop an Android application to digitalize this procedure. The application will allow the submission of QSP documents (e.g., Earned Leave or Enrollment form). These documents can be viewed, approved/filled, and sent to various authorities for approval at each stage. A key feature is the technology of electronic signatures, which will eliminate the need for documents to be printed for signatures or approval. Teachers and other employees can also send their applications and get them back with signatures.",
+    "advisor": "Syed Zaffar Qasim",
+    "batch": "2016"
+  },
+  {
+    "title": "Development Of Virtual Patient Simulator",
+    "team_members": ["Sukaina Zehra", "Bazgha Amin", "Hafsa Qamar"],
+    "description": "This project utilizes Virtual Reality (VR), which has greatly evolved computer visuals by adding 3D technology. The project introduces a Virtual Patient Simulator (VPS), a technology that allows users to immerse themselves in an illusory artificial world. VPS enables a trainee to freely interact with virtual patients and their surroundings by navigating a 3D virtual environment. It offers repetitive training and incorporates medical workflows. Studies indicate that training conducted on VPS helps reduce the training time for a beginner by half. The primary goal of VPS is to enable students to practice rigorous decision-making skills without the fear of causing harm.",
+    "advisor": "Ms. Urooj Ain Uddin",
+    "batch": "2016"
+  },
+  {
+    "title": "Customizable Document Tracking Solution",
+    "team_members": ["Umna Qasim", "Manzareen Mustafa", "Syeda Nisma Arif"],
+    "description": "N/A",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2016"
+  },
+  {
+    "title": "Management System For Outcome Based Education",
+    "team_members": ["Nimra Bashir", "Farah", "Sohaira", "Maryam Abid"],
+    "description": "N/A",
+    "advisor": "Dr. -Ing Shehzad Hasan",
+    "batch": "2016"
+  },
+  {
+    "title": "Virtual Batting Nets",
+    "team_members": ["Aiman Ali", "Yasir Rehman", "Muhammad Hasim"],
+    "description": "This project addresses the difficulty for young players to train in varied and unfamiliar cricket conditions due to factors like humidity, bounce, and grass level. The solution is a Unity-based Virtual Reality (VR) technology platform that provides a realistic environment for a batsman to practice. The batsman is given categories of bowling options (length, swing, and pace). After practice, the program simulates the ball's trajectory based on the selected options and receives a statistical report of their performance, including metrics like the type of bowling, number of balls played, and accuracy.",
+    "advisor": "Ms. Urooj Ain Uddin",
+    "batch": "2016"
+  },
+  {
+    "title": "Process Management Of Textile Industries",
+    "team_members": ["Zaraq Khan", "Ali Abbas", "Hassan Naqvi"],
+    "description": "This project aims to address the issue of detecting defects in the weaving machine process in textile industries. The developed program successfully detects these defects. The system achieves an accuracy that is more than human eye accuracy and is ready to be implemented in industries.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Customization of OBE System Of CIS With Additional Modules",
+    "team_members": ["Soban Bin Shams", "Sameer Dawani", "Muhammad Usama"],
+    "description": "N/A",
+    "advisor": "Dr. -Ing Shehzad Hasan",
+    "batch": "2016"
+  },
+  {
+    "title": "A Machine Vision Based Industrial Inspection System For Bottle Defects",
+    "team_members": ["Muhammad Adur-Rehman Siddi", "Muhammad Faisal Ibrahim", "Muhammad Yasir", "Muhammad Ebad Sheikh"],
+    "description": "This project addresses the industrial reliance on manual product inspection, which is time-consuming and leads to defective products being shipped. The aim is to develop an automated machine vision based industrial inspection system for detecting defects in hair care product bottles. The system uses a mobile camera to take pictures in a controlled environment and classifies defects according to industry standards (\"Targeted, Acceptable, Marginal, Unacceptable\"). It focuses on the four most common defects: Dent Detection, Artwork Alignment, Batch Number Reading, and Cap Defect. The system uses Mask RCNN for dent detection and Hough transform/OCR for alignment and reading tasks.",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2016"
+  },
+  {
+    "title": "Smart Reward Based Garbage Bin Using IOT (SRGB)",
+    "team_members": ["Ravel Ejaz", "Muhammad Ebad", "Muhammad Tahseen"],
+    "description": "This project implements a Smart Reward based Garbage Bin (SRGB) system using IoT, which rewards depositors with points for the garbage they deposit. The project consists of a Garbage Bin with both hardware and software components, including an Android application. When a user deposits nonmetal or plastic material, they receive positive points (green points), but if deposited in the wrong section, they receive negative points (red points). The aim is to solve cleanliness problems by using the Android Application to reward depositors, thereby creating motivation among people to keep the environment garbage free and healthy.",
+    "advisor": "Ms. Anita Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Software-Defined Smart Camera",
+    "team_members": ["Iqra Malik", "Ehab Rehman", "Maria Syed"],
+    "description": "N/A",
+    "advisor": "Dr. Majida Kazmi",
+    "batch": "2016"
+  },
+  {
+    "title": "Remote Health Clinic",
+    "team_members": ["Aimen Zahid", "Fizza Fatima", "Shiwita Kumari"],
+    "description": "N/A",
+    "advisor": "Syed Zaffar Qasim",
+    "batch": "2016"
+  },
+  {
+    "title": "OBE Management As A Cloud Service",
+    "team_members": ["Muhammad Shahnoor Khalid", "Asfandyar Meer", "Noman Shahid"],
+    "description": "This project involves customizing the OBE (Outcome-Based Education) outcome-based system of the Moodle plugin to support its implementation and modules. The OBE system describes the criteria for CLOs (Course Learning Outcomes) and PLOs (Program Learning Outcomes). All reports and forms related to these criteria are being automated within the OBE system for the chairman, teacher, and student. The entire Moodle system is moved into a virtual machine, and SQL Workbench is used to import and export database tables. The system also features a student subject-wise PLO prediction system and allows students to check the status of their passed and failed CLOs.",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2016"
+  },
+  {
+    "title": "Automation And Customization Of Open Stack",
+    "team_members": ["Daniyal Jaweed", "Muhammad Usman", "Muhammad Ammar"],
+    "description": "This project aims to create a user-friendly platform that automates the entire process of cloud development, thereby eliminating the need for substantial time and cost associated with hiring professionals. The system is based on OpenStack, an open-source software that offers multiple cloud components. The core idea is to use an automation tool to fetch and configure individual OpenStack components according to user specifications. Ansible is used as the configuration manager, with configuration files written in YAML language. This product is designed to automate server configuration and management, ultimately simplifying the process of making the server reach a desirable state and providing users with their own cloud platform.",
+    "advisor": "Dr. Muhammad Ali Ismail",
+    "batch": "2016"
+  },
+  {
+    "title": "Autonomous Indoor Payload Vehicle",
+    "team_members": ["Amna Fatima", "Bushra", "Vijay Kummar"],
+    "description": "This project is part of the extensive research being done on autonomous vehicles (AVs), which possess great potential in challenging applications. However, most existing AVs are limited to onboard capabilities only, hindering their full performance and limiting them to real-world applications. The advent of Internet and cloud infrastructure suggests new methodologies where vehicles are not limited to onboard processing. This project aims to support different operations and increase decision-making by using the cloud to support the AVs.",
+    "advisor": "Syed Aqeel Haider",
+    "batch": "2016"
+  },
+  {
+    "title": "Augmented Reality Based Multi-Image Tracking For Building Of NEDUET",
+    "team_members": ["Saudullah Khan", "Shahrukh Siddiqui", "Muhammad Maaz"],
+    "description": "This project proposes developing a mobile application using a location detection user interface based on augmented reality (AR). Mobile phones and smartphones have increased the popularity of mobile applications enormously. This application is intended to help students, particularly newcomers, with location-based information, enabling the user to find information on specific structures on campus. It offers the user the ability to explore the campus environment via augmented reality. The proposal describes the initial thoughts on designing a graphical user interface and the actual process that led to the final system environment.",
+    "advisor": "Mr. Ali Akhtar",
+    "batch": "2016"
+  },
+  {
+    "title": "Estimating Traffic Flow Using Supervised Machine Learning and Image Processing Techniques",
+    "team_members": ["Mahnoor Meraj", "Rida Fatima", "Laaebba Sundas"],
+    "description": "This project aims to solve the problem of traffic congestion by developing a method for deep analysis of local heterogeneous traffic conditions to generate patterns and provide measurements for daily traffic regulation. The project focuses on two main parts: Developing a 4-tier Computer Vision algorithm that can locate moving vehicles and measure their area occupancy. Developing a Supervised Machine Learning model that can detect and classify vehicles from an overhead angle. The final goal is to develop an efficient transport network and provide a tangible Computer Vision algorithm for use by local Traffic Controlling departments.",
+    "advisor": "Dr. Syed Abbas Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "Facial Features Analysis using Deep Learning",
+    "team_members": ["Maheen Muhammad Ali", "Saba Tanveer", "Sameer Kazi"],
+    "description": "This project addresses an innovative method to minimize the stress of Fashion Designers by producing new and different designs from existing ones. This AI-Human collaborated design system is developed using Fashion GANs (Generative Adversarial Networks), a model that has produced high-resolution fake images. The system first trains an AI-based Generative model that randomly generates a large number of sewing patterns, selects a few designs, and finally combines dress prints and other materials to create a final product. Fashion-GANs continually learn from a dataset of real fashion patterns, with pictures becoming increasingly understandable and sensible over time.",
+    "advisor": "Dr. Maria Waqas",
+    "batch": "2016"
+  },
+  {
+    "title": "Data Analytics Of Assets Tracking And Monitoring System",
+    "team_members": ["Hamza Usman Ghani", "Rimsha Khan", "Muhammad Jawad Mansoor"],
+    "description": "This project addresses the need for big data analytics in GPRS tracking systems. Current systems often do not provide complex data analytics regarding present vehicles, leading to a \"blank world\". The system aims to track objects (like cars, phones, or even human beings) and utilize big data analytics to provide accurate, user-friendly reports and insights. These insights can potentially open new business opportunities. The core focus is on deriving insights by observing data curves and performing intelligent analysis on data regarding movement.",
+    "advisor": "Ms. Anita Ali",
+    "batch": "2016"
+  },
+  {
+    "title": "FYP Management System (version-2)",
+    "team_members": ["Ghulam Mohammad Dadabhoy", "Aneel Kumar"],
+    "description": "The project aims to design and launch an online platform to facilitate the Final Year Project (FYP) process for both students and teachers. The system works on the principle of automation by providing a web interface. It addresses the lack of a monitoring process, which often requires a lot of manual time from students and teachers. Key functionalities include: Overcoming the manual detailing of the entire FYP by using intelligent techniques",
+    "advisor": "Mr. Kashif Asrar",
+    "batch": "2016"
+  }
+]

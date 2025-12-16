@@ -15,95 +15,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
-
-// TODO: Replace mockSessions with GET /api/ai/sessions
-// Expected backend response: Array<{ id: string, title: string, lastMessage: string, updatedAt: string }>
-const generateMockSessions = () => {
-  return [
-    {
-      id: "1",
-      title: "Project Idea Discussion",
-      lastMessage: "How can I improve my proposal structure?",
-      updatedAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    },
-    {
-      id: "2",
-      title: "Technical Requirements",
-      lastMessage: "What technologies should I use?",
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    },
-    {
-      id: "3",
-      title: "FYDP Timeline Planning",
-      lastMessage: "When should I submit my proposal?",
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    },
-  ];
-};
-
-// TODO: Replace mockChatHistory with backend chat history
-// Expected backend response: Array<{ id: string, role: 'user' | 'assistant', content: string, timestamp: string }>
-const generateMockChatHistory = (sessionId) => {
-  if (sessionId === "1") {
-    return [
-      {
-        id: "1",
-        role: "user",
-        content: "How can I improve my FYDP proposal?",
-        timestamp: new Date(Date.now() - 1000 * 60 * 45),
-      },
-      {
-        id: "2",
-        role: "assistant",
-        content:
-          "To improve your FYDP proposal, focus on clearly defining your problem statement, outlining your methodology, and providing a realistic timeline. Make sure to include specific technical requirements and expected outcomes.",
-        timestamp: new Date(Date.now() - 1000 * 60 * 44),
-      },
-      {
-        id: "3",
-        role: "user",
-        content: "What sections are mandatory in a proposal?",
-        timestamp: new Date(Date.now() - 1000 * 60 * 40),
-      },
-      {
-        id: "4",
-        role: "assistant",
-        content:
-          "Mandatory sections typically include: Introduction, Problem Statement, Objectives, Literature Review, Methodology, Expected Outcomes, Timeline, and References. Check with your advisor for specific requirements.",
-        timestamp: new Date(Date.now() - 1000 * 60 * 39),
-      },
-    ];
-  }
-  return [];
-};
-
-// TODO: Replace generateDemoResponse with actual POST /api/ai/chat
-// Expected backend request: { sessionId: string, message: string }
-// Expected backend response: { content: string, timestamp: string }
-const generateDemoResponse = async (message) => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1000));
-
-  // Simple demo responses based on keywords
-  const lowerMessage = message.toLowerCase();
-  if (lowerMessage.includes("proposal") || lowerMessage.includes("propose")) {
-    return "A strong FYDP proposal should clearly articulate your research question, methodology, and expected contributions. Make sure to align with your advisor's expertise and the program requirements.";
-  } else if (lowerMessage.includes("timeline") || lowerMessage.includes("schedule")) {
-    return "A typical FYDP timeline spans two semesters. Plan for proposal submission in the first semester, followed by implementation and documentation in the second semester. Always build in buffer time for unexpected challenges.";
-  } else if (lowerMessage.includes("technology") || lowerMessage.includes("tech") || lowerMessage.includes("stack")) {
-    return "Choose technologies based on your project requirements. Consider factors like scalability, maintainability, team expertise, and project constraints. Popular stacks include MERN, Python/Django, and React/Node.js.";
-  } else {
-    return "I'm here to help with your FYDP journey! I can assist with proposal writing, project planning, technical decisions, and more. What specific area would you like guidance on?";
-  }
-};
+import {
+  createOrResumeSession,
+  sendMessage as sendChatMessage,
+  getChatHistory,
+  listUserSessions,
+} from "@/api/chat";
 
 const AiChat = () => {
   const navigate = useNavigate();
-  const [sessions, setSessions] = useState(generateMockSessions());
-  const [activeSessionId, setActiveSessionId] = useState(sessions[0]?.id || null);
+  const [sessions, setSessions] = useState([]);
+  const [activeSessionId, setActiveSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingSessions, setLoadingSessions] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showNewChatModal, setShowNewChatModal] = useState(false);
   const [editingSessionId, setEditingSessionId] = useState(null);
@@ -112,14 +39,117 @@ const AiChat = () => {
   const chatContainerRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // TODO: Load selected session's messages from backend when session opens
+  // Fetch all sessions on component mount
   useEffect(() => {
-    if (activeSessionId) {
-      const chatHistory = generateMockChatHistory(activeSessionId);
-      setMessages(chatHistory);
-    } else {
-      setMessages([]);
-    }
+    const fetchSessions = async () => {
+      try {
+        setLoadingSessions(true);
+        const sessionsData = await listUserSessions();
+        // Transform backend format to frontend format
+        const transformedSessions = sessionsData.map((s) => ({
+          id: s.session_id,
+          title: s.title || "New Chat",
+          lastMessage: s.title !== "New Chat" ? s.title : "", // Use title as last message preview
+          updatedAt: new Date(s.created_at),
+        }));
+        setSessions(transformedSessions);
+        
+        // If there are sessions, select the first one
+        if (transformedSessions.length > 0 && !activeSessionId) {
+          setActiveSessionId(transformedSessions[0].id);
+        } else if (transformedSessions.length === 0) {
+          // No sessions exist, create a new one
+          try {
+            const newSessionResponse = await createOrResumeSession();
+            const newSession = {
+              id: newSessionResponse.session_id,
+              title: "New Chat",
+              lastMessage: "",
+              updatedAt: new Date(),
+            };
+            setSessions([newSession]);
+            setActiveSessionId(newSession.id);
+          } catch (error) {
+            console.error("Failed to create initial session:", error);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch sessions:", error);
+        setSessions([]);
+        // Try to create a new session on error
+        try {
+          const newSessionResponse = await createOrResumeSession();
+          const newSession = {
+            id: newSessionResponse.session_id,
+            title: "New Chat",
+            lastMessage: "",
+            updatedAt: new Date(),
+          };
+          setSessions([newSession]);
+          setActiveSessionId(newSession.id);
+        } catch (createError) {
+          console.error("Failed to create initial session:", createError);
+        }
+      } finally {
+        setLoadingSessions(false);
+      }
+    };
+
+    fetchSessions();
+  }, []);
+
+  // Load messages when active session changes
+  useEffect(() => {
+    const loadSessionMessages = async () => {
+      if (!activeSessionId) {
+        setMessages([]);
+        return;
+      }
+
+      try {
+        setLoadingMessages(true);
+        // Use createOrResumeSession to get history when resuming
+        const response = await createOrResumeSession(activeSessionId);
+        
+        // Transform backend history format to frontend format
+        const transformedMessages = response.history.map((msg, index) => ({
+          id: `${activeSessionId}-${index}`,
+          role: msg.role,
+          content: msg.content,
+          timestamp: new Date(), // Backend doesn't return timestamp, use current time
+        }));
+        
+        setMessages(transformedMessages);
+        
+        // Update session's last message if there are messages
+        if (transformedMessages.length > 0) {
+          // Get the last user message for preview
+          const lastUserMessage = [...transformedMessages]
+            .reverse()
+            .find((m) => m.role === "user");
+          if (lastUserMessage) {
+            setSessions((prev) =>
+              prev.map((s) =>
+                s.id === activeSessionId
+                  ? { 
+                      ...s, 
+                      lastMessage: lastUserMessage.content,
+                      updatedAt: new Date() // Update timestamp
+                    }
+                  : s
+              )
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load session messages:", error);
+        setMessages([]);
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+
+    loadSessionMessages();
   }, [activeSessionId]);
 
   // Auto-scroll to bottom when new messages arrive
@@ -138,43 +168,48 @@ const AiChat = () => {
     }
   }, [inputMessage]);
 
-  // TODO: Send user message through backend model
+  // Send user message through backend API
   const handleSendMessage = useCallback(async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim() || isLoading || !activeSessionId) return;
 
+    const userMessageContent = inputMessage.trim();
     const userMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      content: inputMessage.trim(),
+      content: userMessageContent,
       timestamp: new Date(),
     };
 
+    // Optimistically add user message
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
     setIsLoading(true);
 
     try {
-      const response = await generateDemoResponse(userMessage.content);
+      const response = await sendChatMessage(activeSessionId, userMessageContent);
 
       const aiMessage = {
         id: `ai-${Date.now()}`,
         role: "assistant",
-        content: response,
+        content: response.assistant,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
 
-      // TODO: Update session's last message through backend
+      // Update session's last message and updatedAt
       setSessions((prev) =>
         prev.map((s) =>
           s.id === activeSessionId
-            ? { ...s, lastMessage: userMessage.content, updatedAt: new Date() }
+            ? { ...s, lastMessage: userMessageContent, updatedAt: new Date() }
             : s
         )
       );
     } catch (error) {
       console.error("Error sending message:", error);
+      // Remove the user message on error
+      setMessages((prev) => prev.filter((m) => m.id !== userMessage.id));
+      
       const errorMessage = {
         id: `error-${Date.now()}`,
         role: "assistant",
@@ -196,20 +231,27 @@ const AiChat = () => {
     }
   }, [messages, inputMessage]);
 
-  // TODO: Replace new chat handler with POST /api/ai/new-session
-  const createNewSession = useCallback(() => {
-    const newSession = {
-      id: `session-${Date.now()}`,
-      title: "New Chat",
-      lastMessage: "",
-      updatedAt: new Date(),
-    };
+  // Create new chat session using backend API
+  const createNewSession = useCallback(async () => {
+    try {
+      const response = await createOrResumeSession();
+      const newSession = {
+        id: response.session_id,
+        title: "New Chat",
+        lastMessage: "",
+        updatedAt: new Date(),
+      };
 
-    setSessions((prev) => [newSession, ...prev]);
-    setActiveSessionId(newSession.id);
-    setMessages([]);
-    setInputMessage("");
-    setShowNewChatModal(false);
+      setSessions((prev) => [newSession, ...prev]);
+      setActiveSessionId(newSession.id);
+      setMessages([]);
+      setInputMessage("");
+      setShowNewChatModal(false);
+    } catch (error) {
+      console.error("Failed to create new session:", error);
+      // Still close modal on error
+      setShowNewChatModal(false);
+    }
   }, []);
 
   const handleSessionClick = useCallback((sessionId) => {
@@ -221,7 +263,7 @@ const AiChat = () => {
     setEditingTitle(currentTitle);
   }, []);
 
-  // TODO: Sync renamed session title with backend
+  // Rename session (frontend only for now, backend doesn't have update endpoint)
   const handleRenameSave = useCallback(() => {
     if (editingTitle.trim() && editingSessionId) {
       setSessions((prev) =>
@@ -302,9 +344,18 @@ const AiChat = () => {
           {/* Sessions List - Expanded State */}
           {!sidebarCollapsed && (
             <div className="flex-1 overflow-y-auto min-h-0">
-              {sessions.length === 0 ? (
+              {loadingSessions ? (
+                <div className="p-4 space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="h-16 bg-muted rounded-lg animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : sessions.length === 0 ? (
                 <div className="p-4 text-center text-sm text-muted-foreground">
-                  No sessions yet
+                  No sessions yet. Start a new chat to begin!
                 </div>
               ) : (
                 <div className="p-2 space-y-1">
@@ -401,7 +452,17 @@ const AiChat = () => {
           {/* Sessions List - Collapsed State */}
           {sidebarCollapsed && (
             <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-2">
-              {sessions.map((session) => {
+              {loadingSessions ? (
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="w-full aspect-square bg-muted rounded-lg animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : (
+                sessions.map((session) => {
                 const isActive = session.id === activeSessionId;
                 return (
                   <button
@@ -417,7 +478,7 @@ const AiChat = () => {
                     <MessageSquare className="h-5 w-5" />
                   </button>
                 );
-              })}
+              }))}
             </div>
           )}
         </div>
@@ -431,7 +492,19 @@ const AiChat = () => {
             style={{ paddingBottom: "100px" }}
           >
             <div className="max-w-full">
-            {messages.length === 0 ? (
+            {loadingMessages ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center max-w-md">
+                  <Loader2 className="h-12 w-12 text-primary mx-auto mb-4 animate-spin" />
+                  <h3 className="font-semibold text-foreground mb-2">
+                    Loading chat history...
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Please wait while we load your messages.
+                  </p>
+                </div>
+              </div>
+            ) : messages.length === 0 ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center max-w-md">
                   <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
