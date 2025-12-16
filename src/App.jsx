@@ -7,6 +7,8 @@ import AdvisorDashboard from "./pages/faculty/advisor/AdvisorDashboard";
 import FydpProgress from "./pages/student/FydpProgress";
 import GroupFormation from "./pages/student/GroupFormation";
 import PastIdeas from "./pages/student/PastIdeas";
+import FydpAdvisorIdeas from "./pages/student/FydpAdvisorIdeas";
+import AiChat from "./pages/student/AiChat";
 // import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
@@ -63,6 +65,22 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <PastIdeas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/fydp-advisor-ideas"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <FydpAdvisorIdeas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/ai-chat"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <AiChat />
           </ProtectedRoute>
         }
       />

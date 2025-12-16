@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -21,7 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Navbar from "@/components/Navbar";
-import { mockPastIdeas } from "@/api/pastideas/mockPastIdeas";
+import { getProjects, getProjectsMeta } from "@/api/projects";
 
 // Configuration
 const ITEMS_PER_PAGE = 20;
@@ -36,18 +36,43 @@ const PastIdeas = () => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalProjects, setTotalProjects] = useState(0);
+  const [availableBatches, setAvailableBatches] = useState([]);
+  const [loadingMeta, setLoadingMeta] = useState(true);
 
-  // Get unique years from mock data
-  const availableYears = useMemo(() => {
-    const years = [...new Set(mockPastIdeas.map((idea) => idea.year))].sort(
-      (a, b) => b - a
-    );
-    return years;
+  // Fetch available batches on mount
+  useEffect(() => {
+    const fetchMeta = async () => {
+      try {
+        setLoadingMeta(true);
+        const meta = await getProjectsMeta();
+        // Sort batches in descending order (newest first)
+        const sortedBatches = meta.batches.sort((a, b) => {
+          // Convert to numbers if possible, otherwise string compare
+          const aNum = parseInt(a);
+          const bNum = parseInt(b);
+          if (!isNaN(aNum) && !isNaN(bNum)) {
+            return bNum - aNum;
+          }
+          return b.localeCompare(a);
+        });
+        setAvailableBatches(sortedBatches);
+      } catch (error) {
+        console.error("Failed to fetch projects metadata:", error);
+        setAvailableBatches([]);
+      } finally {
+        setLoadingMeta(false);
+      }
+    };
+
+    fetchMeta();
   }, []);
 
   // Debounced search
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
       setCurrentPage(1); // Reset to first page on search
@@ -56,56 +81,62 @@ const PastIdeas = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Filter and sort ideas
-  const filteredAndSortedIdeas = useMemo(() => {
-    let filtered = [...mockPastIdeas];
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const batch = selectedYear !== "all" ? selectedYear : null;
+        const response = await getProjects({
+          q: debouncedSearch || null,
+          batch: batch,
+          page: currentPage,
+          limit: ITEMS_PER_PAGE,
+        });
 
-    // TODO: Replace with backend filtering
-    // Backend should handle: GET /api/fydp/past-projects?search=...&year=...&sort=...
+        // Map API response to UI format
+        const mappedProjects = response.data.map((project) => ({
+          id: project._id,
+          title: project.title || "Untitled Project",
+          advisorName: project.advisor || "Unknown Advisor",
+          year: project.batch || project.year || "N/A",
+          description: project.description || "No description available.",
+          teamMembers: project.teamMembers || project.team_members || [],
+        }));
 
-    // Apply year filter
-    if (selectedYear !== "all") {
-      filtered = filtered.filter((idea) => idea.year === parseInt(selectedYear));
-    }
+        // Apply client-side sorting (since backend doesn't support all sort options)
+        mappedProjects.sort((a, b) => {
+          switch (sortFilter) {
+            case "title_asc":
+              return a.title.localeCompare(b.title);
+            case "title_desc":
+              return b.title.localeCompare(a.title);
+            case "year_desc":
+              const aYear = parseInt(a.year) || 0;
+              const bYear = parseInt(b.year) || 0;
+              return bYear - aYear;
+            case "advisor_asc":
+              return a.advisorName.localeCompare(b.advisorName);
+            default:
+              return 0;
+          }
+        });
 
-    // Apply search filter
-    if (debouncedSearch) {
-      const query = debouncedSearch.toLowerCase();
-      filtered = filtered.filter(
-        (idea) =>
-          idea.title.toLowerCase().includes(query) ||
-          idea.advisorName.toLowerCase().includes(query) ||
-          idea.description.toLowerCase().includes(query) ||
-          idea.year.toString().includes(query)
-      );
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      switch (sortFilter) {
-        case "title_asc":
-          return a.title.localeCompare(b.title);
-        case "title_desc":
-          return b.title.localeCompare(a.title);
-        case "year_desc":
-          return b.year - a.year;
-        case "advisor_asc":
-          return a.advisorName.localeCompare(b.advisorName);
-        default:
-          return 0;
+        setProjects(mappedProjects);
+        setTotalPages(response.pages || 1);
+        setTotalProjects(response.total || 0);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+        setProjects([]);
+        setTotalPages(0);
+        setTotalProjects(0);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
 
-    return filtered;
-  }, [debouncedSearch, selectedYear, sortFilter]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredAndSortedIdeas.length / ITEMS_PER_PAGE);
-  const paginatedIdeas = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return filteredAndSortedIdeas.slice(start, end);
-  }, [filteredAndSortedIdeas, currentPage]);
+    fetchProjects();
+  }, [debouncedSearch, selectedYear, currentPage, sortFilter]);
 
   // Handle card expand/collapse
   const handleCardClick = useCallback(
@@ -124,9 +155,6 @@ const PastIdeas = () => {
     setSelectedYear(year);
     setCurrentPage(1);
     setExpandedCard(null);
-    setLoading(true);
-    // Simulate loading when switching tabs
-    setTimeout(() => setLoading(false), 300);
   }, []);
 
   // Skeleton loader
@@ -216,19 +244,23 @@ const PastIdeas = () => {
               >
                 All
               </button>
-              {availableYears.map((year) => (
-                <button
-                  key={year}
-                  onClick={() => handleYearChange(year.toString())}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-                    selectedYear === year.toString()
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-muted text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  {year}
-                </button>
-              ))}
+              {loadingMeta ? (
+                <span className="px-4 py-2 text-sm text-muted-foreground">Loading batches...</span>
+              ) : (
+                availableBatches.map((batch) => (
+                  <button
+                    key={batch}
+                    onClick={() => handleYearChange(batch.toString())}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                      selectedYear === batch.toString()
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "bg-muted text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    {batch}
+                  </button>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
@@ -240,8 +272,7 @@ const PastIdeas = () => {
               <div>
                 <CardTitle>Past Projects</CardTitle>
                 <CardDescription>
-                  {filteredAndSortedIdeas.length} project
-                  {filteredAndSortedIdeas.length !== 1 ? "s" : ""} found
+                  {loading ? "Loading..." : `${totalProjects} project${totalProjects !== 1 ? "s" : ""} found`}
                 </CardDescription>
               </div>
             </div>
@@ -253,7 +284,7 @@ const PastIdeas = () => {
                   <SkeletonCard key={i} />
                 ))}
               </div>
-            ) : paginatedIdeas.length === 0 ? (
+            ) : projects.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                 <p className="text-muted-foreground">
@@ -262,7 +293,7 @@ const PastIdeas = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {paginatedIdeas.map((idea) => {
+                {projects.map((idea) => {
                   const isExpanded = expandedCard === idea.id;
 
                   return (

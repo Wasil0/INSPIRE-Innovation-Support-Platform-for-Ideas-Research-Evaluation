@@ -218,7 +218,7 @@ const FydpProgress = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Past FYDP Ideas Card */}
           <Card 
-            className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer"
+            className="flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer"
             onClick={() => navigate("/student/past-ideas")}
           >
             <CardHeader>
@@ -234,14 +234,14 @@ const FydpProgress = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
+            <CardContent className="flex flex-col flex-1">
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
                 Explore a collection of successful FYDP projects from previous
                 years to get ideas and understand project requirements.
               </p>
               <Button 
                 variant="outline" 
-                className="w-full"
+                className="w-full mt-auto"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate("/student/past-ideas");
@@ -254,7 +254,10 @@ const FydpProgress = () => {
           </Card>
 
           {/* AI Assistance Card */}
-          <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer">
+          <Card 
+            className="flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/40 hover:bg-accent/50 border-primary/20 will-change-transform origin-center transform-gpu cursor-pointer"
+            onClick={() => navigate("/student/ai-chat")}
+          >
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
@@ -268,12 +271,19 @@ const FydpProgress = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
+            <CardContent className="flex flex-col flex-1">
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
                 Use AI assistance to refine your project idea, get suggestions,
                 and improve your proposal.
               </p>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full mt-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/student/ai-chat");
+                }}
+              >
                 Get AI Help
                 <Sparkles className="ml-2 h-4 w-4" />
               </Button>

@@ -25,7 +25,12 @@ async def create_profile(
     bio: str = Form(...),
     github_link: str = Form(...),
     skills: Optional[str] = Form(None),
-    resume_pdf: Optional[UploadFile] = File(None)
+    resume_pdf: Optional[UploadFile] = File(None),
+    # Optional stage parameters (for manual override if needed)
+    stage1_completed: Optional[bool] = Form(False),
+    stage2_completed: Optional[bool] = Form(False),
+    stage3_completed: Optional[bool] = Form(False),
+    stage4_completed: Optional[bool] = Form(False)
 ):
     # Validate user_id
     try:
@@ -52,6 +57,7 @@ async def create_profile(
     # Clean skills list
     skills_list = list(set(s.strip() for s in skills.split(",") if s.strip())) if skills else []
 
+    # Create profile document with NESTED stage field
     profile_doc = {
         "user_id": user_obj_id,
         "name": name,
@@ -64,11 +70,20 @@ async def create_profile(
         "bio": bio,
         "github_link": github_link,
         "resume_pdf_id": pdf_id,
-        "skills": skills_list
+        "skills": skills_list,
+        # NESTED stage field
+        "stages": {
+            "stage1_completed": stage1_completed,
+            "stage2_completed": stage2_completed,
+            "stage3_completed": stage3_completed,
+            "stage4_completed": stage4_completed
+        },
     }
 
-    profiles_col.insert_one(profile_doc)
+    # Insert into database
+    result = profiles_col.insert_one(profile_doc)
 
+    # Return the created profile
     return {
         "user_id": user_id,
         "name": name,
@@ -81,7 +96,14 @@ async def create_profile(
         "bio": bio,
         "github_link": github_link,
         "resume_pdf_id": str(pdf_id) if pdf_id else None,
-        "skills": skills_list
+        "skills": skills_list,
+        # Nested stage in response
+        "stages": {
+            "stage1_completed": stage1_completed,
+            "stage2_completed": stage2_completed,
+            "stage3_completed": stage3_completed,
+            "stage4_completed": stage4_completed
+        },
     }
 
 # -------------------
@@ -102,6 +124,14 @@ def get_profile(user_id: str):
     user_doc = users_col.find_one({"_id": user_obj_id})
     gsuite_id = user_doc.get("gsuite_id") if user_doc else None
 
+    # Get stage data or use default if not exists
+    stage_data = profile.get("stage", {
+        "stage1_completed": False,
+        "stage2_completed": False,
+        "stage3_completed": False,
+        "stage4_completed": False
+    })
+
     return {
         "user_id": str(profile["user_id"]),
         "gsuite_id": gsuite_id,
@@ -116,8 +146,11 @@ def get_profile(user_id: str):
         "github_link": profile.get("github_link"),
         "resume_pdf_id": str(profile.get("resume_pdf_id")) if profile.get("resume_pdf_id") else None,
         "skills": profile.get("skills", []),
+        # Add stage data
+        "stage": stage_data,
     }
-
+    
+    
 # -------------------
 # DOWNLOAD PDF
 # -------------------

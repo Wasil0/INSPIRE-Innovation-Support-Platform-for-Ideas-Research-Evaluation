@@ -8,23 +8,17 @@ from db.db import db, fs
 router = APIRouter()
 advisor_ideas_col = db["Advisor_ideas"]
 
-# -------------------
-# POST: Add FYP Idea (Flowchart Optional)
-# -------------------
+# ------------------- POST: Add FYP Idea -------------------
 @router.post("/advisor_ideas")
 async def ideabyadvisor(
-    idea: FypIdeaByAdvisor = Depends(),  # Pydantic schema for validation
-    flowchart_image: Optional[UploadFile] = File(None)  # Optional file upload
+    idea: FypIdeaByAdvisor = Depends(),
+    flowchart_image: Optional[UploadFile] = File(None)
 ):
-    # -------------------
     # Validate source_type
-    # -------------------
     if idea.source_type not in ["advisor", "industry"]:
         raise HTTPException(status_code=400, detail="source_type must be 'advisor' or 'industry'")
 
-    # -------------------
     # Validate advisor / industry
-    # -------------------
     if idea.source_type == "advisor":
         if not idea.advisor_id:
             raise HTTPException(status_code=400, detail="advisor_id is required")
@@ -52,22 +46,33 @@ async def ideabyadvisor(
             contentType=flowchart_image.content_type
         )
 
-    # -------------------
-    # Clean lists
-    # -------------------
-    domain_list = [d.strip() for d in idea.domain if d.strip()]
-    skills_list = [s.strip() for s in idea.skills_required if s.strip()]
+    # Convert comma-separated strings to lists
+    domain_list = [d.strip() for d in idea.domain.split(",") if d.strip()]
+    skills_list = [s.strip() for s in idea.skills_required.split(",") if s.strip()]
 
-    # -------------------
+    # Duplicate check
+    duplicate_query = {
+        "title": idea.title,
+        "description": idea.description,
+        "source_type": idea.source_type,
+        "advisor_id": advisor_obj_id,
+        "industry_name": idea.industry_name
+    }
+    duplicate = advisor_ideas_col.find_one(duplicate_query)
+    if duplicate:
+        raise HTTPException(
+            status_code=400,
+            detail="An FYP idea with the exact same details already exists."
+        )
+
     # Save idea
-    # -------------------
     idea_doc = {
         "title": idea.title,
         "description": idea.description,
-        "flowchart_image": image_id,   # None if not uploaded
+        "flowchart_image": ObjectId(image_id) if image_id else None,  # Store as ObjectId
         "domain": domain_list,
         "flow_explanation": idea.flow_explanation,
-        "advisor_id": advisor_obj_id,
+        "advisor_id": advisor_obj_id,  # Store as ObjectId
         "source_type": idea.source_type,
         "industry_name": idea.industry_name,
         "skills_required": skills_list
@@ -79,6 +84,7 @@ async def ideabyadvisor(
         "fyp_idea_id": str(result.inserted_id),
         "flowchart_image_id": str(image_id) if image_id else None
     }
+
 
 
 
