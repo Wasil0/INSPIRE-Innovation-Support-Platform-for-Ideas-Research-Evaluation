@@ -20,7 +20,7 @@ import AiChat from "./pages/student/AiChat";
 import IndustryDashboard from "./pages/industry/IndustryDashboard";
 import PostIndustryIdea from "./pages/industry/PostIndustryIdea";
 import PostIndustryJob from "./pages/industry/PostIndustryJob";
-// import Unauthorized from "./pages/Unauthorized";
+import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
 function App() {
@@ -212,7 +212,7 @@ function App() {
       />
 
       {/* Unauthorized Page */}
-      {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
+      <Route path="/unauthorized" element={<Unauthorized />} />
     </Routes>
   );
 }
