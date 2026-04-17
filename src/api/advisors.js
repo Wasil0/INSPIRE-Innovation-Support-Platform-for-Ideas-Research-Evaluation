@@ -135,3 +135,50 @@ export async function getTop3InterestedTeams() {
   }
 }
 
+/**
+ * Get all available advisors (with slot counts and team pitch status)
+ * 
+ * @returns {Promise<Array>} Array of advisors
+ */
+export async function getAllAdvisors() {
+  try {
+    const response = await axios.get("/advisors/all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all advisors:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get all pitches sent to the logged in advisor
+ * 
+ * @returns {Promise<Array>} Array of pitches
+ */
+export async function getAdvisorPitches() {
+  try {
+    const response = await axios.get("/student_pitches/advisor/pitches");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching advisor pitches:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update the status of a pitch (accept or reject)
+ * 
+ * @param {string} pitchId - The ID of the pitch
+ * @param {string} status - "accepted" or "rejected"
+ * @returns {Promise<Object>} Response object
+ */
+export async function updatePitchStatus(pitchId, status) {
+  try {
+    const response = await axios.put(`/student_pitches/${pitchId}/status`, { status });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating pitch status:", error);
+    throw error;
+  }
+}
+

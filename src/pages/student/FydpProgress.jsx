@@ -69,7 +69,7 @@ const FydpProgress = () => {
     // Map stages to steps
     const stageMap = [
       { stage: stage1_completed, id: 1, title: "Group Formation", description: "Form your project team and assign roles", icon: Users, route: "/student/group-formation" },
-      { stage: stage2_completed, id: 2, title: "Advisor Selection and Idea Pitching", description: "Select an advisor and pitch your project idea", icon: UserCheck, route: null },
+      { stage: stage2_completed, id: 2, title: "Advisor Selection and Idea Pitching", description: "Select an advisor and pitch your project idea", icon: UserCheck, route: "/student/advisor-selection" },
       { stage: stage3_completed, id: 3, title: "Proposal Submission", description: "Submit your detailed project proposal", icon: FileText, route: null },
       { stage: stage4_completed, id: 4, title: "Proposal Approved", description: "Wait for committee approval of your proposal", icon: CheckCircle2, route: null },
     ];

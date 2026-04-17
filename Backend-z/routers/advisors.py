@@ -66,3 +66,65 @@ def get_current_user_advisor_info(
         "department": advisor_doc.get("department"),
         "committee_member": advisor_doc.get("committee_member", False)
     }
+
+# -------------------
+# GET: All Advisors (with slots and team pitch status)
+# -------------------
+
+@router.get("/all")
+def get_all_advisors(current_user: dict = Depends(get_current_user)):
+    user_id_str = str(current_user["_id"])
+    
+    from db.db import db
+    teams_col = db["teams"]
+    student_pitches_col = db["student_pitches"]
+    
+    # 1. Get user's team id
+    team = teams_col.find_one({"members": user_id_str})
+    team_id_str = str(team["_id"]) if team else None
+
+    advisors_list = []
+    cursor = advisors_col.find()
+    
+    for adv in cursor:
+        adv_id_str = str(adv["advisor_id"])
+        
+        # Calculate available slots
+        industry_accepted = student_pitches_col.count_documents({
+            "advisor_id": adv_id_str,
+            "is_industry": True,
+            "status": "accepted"
+        })
+        normal_accepted = student_pitches_col.count_documents({
+            "advisor_id": adv_id_str,
+            "is_industry": False,
+            "status": "accepted"
+        })
+        
+        available_industry_slots = max(0, 1 - industry_accepted)
+        available_normal_slots = max(0, 4 - normal_accepted)
+        
+        # Check team pitch status for this advisor
+        team_pitch_status = "none"
+        if team_id_str:
+            # Find any active pitch (pending or accepted) to this advisor from this team
+            existing_pitch = student_pitches_col.find_one({
+                "team_id": team_id_str,
+                "advisor_id": adv_id_str,
+                "status": {"$in": ["pending", "accepted"]}
+            })
+            
+            if existing_pitch:
+                team_pitch_status = existing_pitch.get("status", "none")
+                
+        advisors_list.append({
+            "advisor_id": adv_id_str,
+            "name": adv.get("name"),
+            "department": adv.get("department"),
+            "available_normal_slots": available_normal_slots,
+            "available_industry_slots": available_industry_slots,
+            "team_pitch_status": team_pitch_status,
+            "committee_member": adv.get("committee_member", False)
+        })
+        
+    return advisors_list

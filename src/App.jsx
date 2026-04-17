@@ -8,11 +8,13 @@ import PostIdea from "./pages/faculty/advisor/PostIdea";
 import ViewIdeas from "./pages/faculty/advisor/ViewIdeas";
 import InterestedGroups from "./pages/faculty/advisor/InterestedGroups";
 import SelectedGroups from "./pages/faculty/advisor/SelectedGroups";
+import ReviewPitches from "./pages/faculty/advisor/ReviewPitches";
 import CommitteeDashboard from "./pages/faculty/committee/CommitteeDashboard";
 import StudentsOverview from "./pages/faculty/committee/StudentsOverview";
 import GroupsOverview from "./pages/faculty/committee/GroupsOverview";
 import IndustryManagement from "./pages/faculty/committee/IndustryManagement";
 import FydpProgress from "./pages/student/FydpProgress";
+import AdvisorSelection from "./pages/student/AdvisorSelection";
 import GroupFormation from "./pages/student/GroupFormation";
 import PastIdeas from "./pages/student/PastIdeas";
 import FydpAdvisorIdeas from "./pages/student/FydpAdvisorIdeas";
@@ -80,6 +82,14 @@ function App() {
         }
       />
       <Route
+        path="/faculty/advisor/review-pitches"
+        element={
+          <ProtectedRoute allowedRoles={["advisor"]}>
+            <ReviewPitches />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/faculty/committee/CommitteeDashboard"
         element={
           <ProtectedRoute allowedRoles={["advisor", "committee"]}>
@@ -124,6 +134,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <FydpProgress />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/advisor-selection"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <AdvisorSelection />
           </ProtectedRoute>
         }
       />

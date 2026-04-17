@@ -11,6 +11,7 @@ import {
   Settings,
   Award,
   Building2,
+  Inbox,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Navbar from "@/components/Navbar";
-import { getAdvisorInfo, getTop3InterestedTeams } from "@/api/advisors";
+import { getAdvisorInfo, getTop3InterestedTeams, getAdvisorPitches } from "@/api/advisors";
 import { Loader2 } from "lucide-react";
 
 const AdvisorDashboard = () => {
@@ -40,6 +41,10 @@ const AdvisorDashboard = () => {
   // State for interested groups
   const [interestedGroups, setInterestedGroups] = useState([]);
   const [loadingInterestedGroups, setLoadingInterestedGroups] = useState(true);
+
+  // State for idea pitches
+  const [pitches, setPitches] = useState([]);
+  const [loadingPitches, setLoadingPitches] = useState(true);
 
   // Fetch advisor info from API
   useEffect(() => {
@@ -88,6 +93,24 @@ const AdvisorDashboard = () => {
     };
 
     fetchInterestedGroups();
+  }, []);
+
+  // Fetch pending pitches
+  useEffect(() => {
+    const fetchPitches = async () => {
+      try {
+        setLoadingPitches(true);
+        const data = await getAdvisorPitches();
+        setPitches(data || []);
+      } catch (error) {
+        console.error("Failed to fetch pitches:", error);
+        setPitches([]);
+      } finally {
+        setLoadingPitches(false);
+      }
+    };
+
+    fetchPitches();
   }, []);
 
   // demo data, replace with API response
@@ -241,6 +264,80 @@ const AdvisorDashboard = () => {
                   <div className="text-center py-8 space-y-4">
                     <p className="text-muted-foreground">
                       No student groups have shown interest yet.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Student Pitches Card */}
+            <Card className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
+                    <Inbox className="h-6 w-6 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <CardTitle>Submitted Idea Pitches</CardTitle>
+                    <CardDescription>
+                      Students groups pitching their FYDP ideas to you
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {loadingPitches ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  </div>
+                ) : pitches.filter(p => p.status === 'pending').length > 0 ? (
+                  <>
+                    <div className="space-y-3">
+                      {pitches.filter(p => p.status === 'pending').slice(0, 3).map((pitch, idx) => (
+                        <div
+                          key={pitch.pitch_id || idx}
+                          className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent flex justify-between items-center"
+                        >
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-foreground mb-1">{pitch.title}</h4>
+                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                              {pitch.summary || pitch.description || "No summary provided."}
+                            </p>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge className="bg-primary text-primary-foreground text-xs">
+                                {pitch.is_industry ? "Industry Idea" : "Normal Idea"}
+                              </Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                Pending
+                              </Badge>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 mt-3">
+                              {pitch.members && pitch.members.length > 0 ? (
+                                pitch.members.map((m, i) => (
+                                  <Badge key={i} variant="secondary" className="text-xs">
+                                    {m.name} ({m.roll_number || 'N/A'})
+                                  </Badge>
+                                ))
+                              ) : (
+                                <span className="text-xs text-muted-foreground">Unknown Group</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      className="w-full"
+                      onClick={() => navigate("/faculty/advisor/review-pitches")}
+                    >
+                      Review All Pitches
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </>
+                ) : (
+                  <div className="text-center py-8 space-y-4">
+                    <p className="text-muted-foreground">
+                      No pending idea pitches at the moment.
                     </p>
                   </div>
                 )}

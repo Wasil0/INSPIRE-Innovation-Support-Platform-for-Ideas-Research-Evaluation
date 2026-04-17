@@ -74,10 +74,10 @@ const InterestedGroups = () => {
           getMyIdeas(advisorId, "advisor"),
           getMyIdeas(advisorId, "industry"),
         ]);
-        
+
         const allIdeas = [...advisorIdeas, ...industryIdeas];
         setMyIdeas(allIdeas);
-        
+
         // Create a map of project_id to title for quick lookup
         const titlesMap = {};
         allIdeas.forEach((idea) => {
@@ -145,7 +145,7 @@ const InterestedGroups = () => {
   // Format team score as percentage
   const formatScore = (score) => {
     if (score === null || score === undefined) return "N/A";
-    return `${(score * 100).toFixed(1)}%`;
+    return `${score.toFixed(1)}%`;
   };
 
   if (loadingAdvisorId) {
@@ -329,15 +329,15 @@ const InterestedGroups = () => {
                         </h4>
                         <div className="space-y-2">
                           {interest.members.map((member, idx) => {
-                            const memberName = 
+                            const memberName =
                               typeof member === "object" && member.name
                                 ? member.name
                                 : `Member ${idx + 1}`;
-                            const rollNumber = 
+                            const rollNumber =
                               typeof member === "object" && member.roll_number
                                 ? member.roll_number
                                 : null;
-                            
+
                             return (
                               <div
                                 key={idx}
@@ -353,13 +353,18 @@ const InterestedGroups = () => {
                                     </div>
                                   )}
                                 </div>
-                                {typeof member === "object" && member.individual_score !== undefined && (
-                                  <div className="text-right">
-                                    <Badge variant="outline" className="text-xs">
-                                      Skills matched: {member.individual_score}
-                                    </Badge>
-                                  </div>
-                                )}
+                                {typeof member === "object" &&
+                                  member.individual_score !== undefined && (
+                                    <div className="text-right">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        Skills matched:{" "}
+                                        {member.individual_score}
+                                      </Badge>
+                                    </div>
+                                  )}
                               </div>
                             );
                           })}

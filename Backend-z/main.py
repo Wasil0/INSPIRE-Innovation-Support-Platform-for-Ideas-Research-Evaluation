@@ -13,7 +13,7 @@ from routers import advisor_ideas_scoring
 from routers import chat
 from routers import stages_status
 from routers import team_members
-
+from routers import student_pitches
 
 app = FastAPI()
 origins = [
@@ -46,3 +46,4 @@ app.include_router(advisor_ideas_scoring.router)
 app.include_router(chat.router)
 app.include_router(stages_status.router)
 app.include_router(team_members.router)
+app.include_router(student_pitches.router)

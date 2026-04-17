@@ -109,3 +109,27 @@ export async function getMyTeamMembers() {
   }
 }
 
+/**
+ * Submit an idea pitch to an advisor
+ * 
+ * @param {Object} pitchData - The pitch data {advisor_id, title, description, is_industry}
+ * @returns {Promise<Object>} Response object
+ */
+export async function submitIdeaPitch(pitchData) {
+  try {
+    const formData = new FormData();
+    for (const key in pitchData) {
+      if (pitchData[key] !== undefined && pitchData[key] !== null) {
+        formData.append(key, pitchData[key]);
+      }
+    }
+    const response = await axios.post("/student_pitches/", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting idea pitch:", error);
+    throw error;
+  }
+}
+
