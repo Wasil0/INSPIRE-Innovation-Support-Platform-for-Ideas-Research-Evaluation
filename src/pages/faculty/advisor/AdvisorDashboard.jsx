@@ -24,7 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Navbar from "@/components/Navbar";
-import { getAdvisorInfo, getTop3InterestedTeams, getAdvisorPitches } from "@/api/advisors";
+import { getAdvisorInfo, getTop3InterestedTeams, getAdvisorPitches, getAdvisorSelectedGroups } from "@/api/advisors";
 import { Loader2 } from "lucide-react";
 
 const AdvisorDashboard = () => {
@@ -113,25 +113,26 @@ const AdvisorDashboard = () => {
     fetchPitches();
   }, []);
 
-  // demo data, replace with API response
-  const selectedGroups = [
-    {
-      id: 1,
-      teamName: "AI Vision Team",
-      members: ["Sarah Ali", "Ahmed Khan", "Fatima Ahmed"],
-      projectTitle: "Computer Vision for Medical Diagnosis",
-      status: "In Progress",
-      progress: 65,
-    },
-    {
-      id: 2,
-      teamName: "Blockchain Innovators",
-      members: ["Mohamed Ibrahim", "Zainab Hassan"],
-      projectTitle: "Decentralized Voting System",
-      status: "Planning",
-      progress: 30,
-    },
-  ];
+  // Fetch selected groups
+  const [selectedGroups, setSelectedGroups] = useState([]);
+  const [loadingSelectedGroups, setLoadingSelectedGroups] = useState(true);
+
+  useEffect(() => {
+    const fetchSelectedGroups = async () => {
+      try {
+        setLoadingSelectedGroups(true);
+        const data = await getAdvisorSelectedGroups();
+        setSelectedGroups(data || []);
+      } catch (error) {
+        console.error("Failed to fetch selected groups:", error);
+        setSelectedGroups([]);
+      } finally {
+        setLoadingSelectedGroups(false);
+      }
+    };
+
+    fetchSelectedGroups();
+  }, []);
 
   const getInitials = (name) => {
     return name
@@ -365,56 +366,41 @@ const AdvisorDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {selectedGroups.length > 0 ? (
+                {loadingSelectedGroups ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  </div>
+                ) : selectedGroups.length > 0 ? (
                   <>
                     <div className="space-y-3">
-                      {selectedGroups.map((group) => (
+                      {selectedGroups.slice(0, 2).map((group) => (
                         <div
-                          key={group.id}
+                          key={group.team_id}
                           className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-2">
-                                <h4 className="font-semibold text-sm">
-                                  {group.teamName}
+                                <h4 className="font-semibold text-sm line-clamp-1">
+                                  {group.project_title}
                                 </h4>
                                 <Badge
-                                  variant="secondary"
-                                  className="text-xs"
+                                  variant={group.has_proposal ? "default" : "secondary"}
+                                  className={`text-xs ${group.has_proposal ? "bg-green-100 text-green-700 hover:bg-green-200" : ""}`}
                                 >
-                                  {group.status}
+                                  {group.has_proposal ? "Proposal Ready" : "Pending Proposal"}
                                 </Badge>
                               </div>
-                              <p className="text-xs text-muted-foreground mb-2">
-                                {group.projectTitle}
-                              </p>
                               <div className="flex flex-wrap gap-1.5 mb-2">
                                 {group.members.map((member, idx) => (
                                   <Badge
                                     key={idx}
                                     variant="secondary"
-                                    className="text-xs"
+                                    className="text-xs font-normal"
                                   >
-                                    {member}
+                                    {member.name}
                                   </Badge>
                                 ))}
-                              </div>
-                              <div className="mt-2">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs text-muted-foreground">
-                                    Progress
-                                  </span>
-                                  <span className="text-xs font-medium">
-                                    {group.progress}%
-                                  </span>
-                                </div>
-                                <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                                  <div
-                                    className="h-full bg-primary transition-all duration-300"
-                                    style={{ width: `${group.progress}%` }}
-                                  />
-                                </div>
                               </div>
                             </div>
                           </div>

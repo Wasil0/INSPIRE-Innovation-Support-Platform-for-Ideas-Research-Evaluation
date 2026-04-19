@@ -133,3 +133,38 @@ export async function submitIdeaPitch(pitchData) {
   }
 }
 
+/**
+ * Submit FYDP Proposal Document
+ * 
+ * @param {File} file - PDF Document
+ * @returns {Promise<Object>} Response object
+ */
+export async function submitProposal(file) {
+  try {
+    const formData = new FormData();
+    formData.append("proposal_file", file);
+    
+    const response = await axios.post("/project_proposals/submit", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting proposal:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch group's active proposal status and event log
+ * 
+ * @returns {Promise<Object>} Formatted Proposal Object
+ */
+export async function getProposalStatus() {
+  try {
+    const response = await axios.get("/project_proposals/my_proposal");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching proposal status:", error);
+    throw error;
+  }
+}

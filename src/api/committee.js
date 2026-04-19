@@ -152,3 +152,45 @@ export async function getAllLockedGroups({ page = 1, limit = 20, search = "", st
   }
 }
 
+/**
+ * Get aggregated statistics for the Committee Dashboard
+ * 
+ * @returns {Promise<Object>} Dashboard statistics
+ */
+export async function getCommitteeDashboardStats() {
+  try {
+    const response = await axios.get('/committee/dashboard-stats');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching committee dashboard stats:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get all proposals for the committee to review
+ */
+export async function getAllCommitteeProposals() {
+  try {
+    const response = await axios.get('/committee/all-proposals');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all committee proposals:", error);
+    throw error;
+  }
+}
+
+/**
+ * Review a proposal (Accept or Reject)
+ * @param {string} proposalId The proposal object ID
+ * @param {Object} payload { action: "accepted" | "rejected", comment: string }
+ */
+export async function reviewCommitteeProposal(proposalId, payload) {
+  try {
+    const response = await axios.post(`/committee/review-proposal/${proposalId}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting committee review:", error);
+    throw error;
+  }
+}

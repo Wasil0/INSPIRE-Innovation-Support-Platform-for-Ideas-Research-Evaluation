@@ -13,8 +13,10 @@ import CommitteeDashboard from "./pages/faculty/committee/CommitteeDashboard";
 import StudentsOverview from "./pages/faculty/committee/StudentsOverview";
 import GroupsOverview from "./pages/faculty/committee/GroupsOverview";
 import IndustryManagement from "./pages/faculty/committee/IndustryManagement";
+import CommitteeProposals from "./pages/faculty/committee/CommitteeProposals";
 import FydpProgress from "./pages/student/FydpProgress";
 import AdvisorSelection from "./pages/student/AdvisorSelection";
+import ProposalSubmission from "./pages/student/ProposalSubmission";
 import GroupFormation from "./pages/student/GroupFormation";
 import PastIdeas from "./pages/student/PastIdeas";
 import FydpAdvisorIdeas from "./pages/student/FydpAdvisorIdeas";
@@ -122,6 +124,14 @@ function App() {
         }
       />
       <Route
+        path="/faculty/committee/proposals"
+        element={
+          <ProtectedRoute allowedRoles={["advisor", "committee"]}>
+            <CommitteeProposals />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/student/dashboard"
         element={
           <ProtectedRoute allowedRoles={["student"]}>
@@ -142,6 +152,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <AdvisorSelection />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/proposal-submission"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <ProposalSubmission />
           </ProtectedRoute>
         }
       />

@@ -14,6 +14,8 @@ from routers import chat
 from routers import stages_status
 from routers import team_members
 from routers import student_pitches
+from routers import project_proposals
+from routers import committee
 
 app = FastAPI()
 origins = [
@@ -47,3 +49,5 @@ app.include_router(chat.router)
 app.include_router(stages_status.router)
 app.include_router(team_members.router)
 app.include_router(student_pitches.router)
+app.include_router(project_proposals.router)
+app.include_router(committee.router)

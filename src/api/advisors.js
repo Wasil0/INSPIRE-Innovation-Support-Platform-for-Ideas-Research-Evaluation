@@ -182,3 +182,35 @@ export async function updatePitchStatus(pitchId, status) {
   }
 }
 
+/**
+ * Get the selected groups supervised by the logged-in advisor
+ * @returns {Promise<Array>} Array of groups and their proposal status
+ */
+export async function getAdvisorSelectedGroups() {
+  try {
+    const response = await axios.get("/project_proposals/advisor/selected_groups");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching selected groups:", error);
+    throw error;
+  }
+}
+
+/**
+ * Review a submitted project proposal
+ * @param {string} proposalId - The ID of the proposal
+ * @param {string} action - 'accepted' or 'rejected'
+ * @param {string} comment - The feedback comment
+ */
+export async function reviewProposal(proposalId, action, comment = "") {
+  try {
+    const response = await axios.post(`/project_proposals/review/${proposalId}`, {
+      action,
+      comment
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error reviewing proposal:", error);
+    throw error;
+  }
+}

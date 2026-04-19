@@ -26,6 +26,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
 import { getAdvisorInfo } from "@/api/advisors";
+import { getCommitteeDashboardStats } from "@/api/committee";
 
 const CommitteeDashboard = () => {
   const navigate = useNavigate();
@@ -39,23 +40,28 @@ const CommitteeDashboard = () => {
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // Demo data for Proposal Review (Card D)
-  const [proposalData] = useState({
-    pending: 5,
-    approved: 12,
-    pendingList: [
-      { id: 1, groupName: "AI Vision Team", submittedDate: "2024-01-15" },
-      { id: 2, groupName: "Blockchain Innovators", submittedDate: "2024-01-12" },
-      { id: 3, groupName: "IoT Solutions", submittedDate: "2024-01-10" },
-    ],
-    approvedList: [
-      { id: 1, groupName: "ML Research Group", approvedDate: "2024-01-08" },
-      { id: 2, groupName: "Cloud Computing Team", approvedDate: "2024-01-05" },
-    ],
+  const [dashboardStats, setDashboardStats] = useState({
+    students: { total_enrolled: 0 },
+    groups: { total_registered: 0 },
+    industry: { pending_ideas: 0, pending_jobs: 0 },
+    proposals: { pending_count: 0, approved_count: 0, pending_list: [], approved_list: [] }
   });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   // Fetch advisor info from API
   useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoadingStats(true);
+        const stats = await getCommitteeDashboardStats();
+        setDashboardStats(stats);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
     const fetchAdvisorInfo = async () => {
       try {
         setLoadingProfile(true);
@@ -80,6 +86,7 @@ const CommitteeDashboard = () => {
     };
 
     fetchAdvisorInfo();
+    fetchDashboardData();
   }, []);
 
   const getInitials = (name) => {
@@ -116,18 +123,23 @@ const CommitteeDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="rounded-lg border border-primary/20 bg-card p-4 mb-4">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Access comprehensive student information including names, roll
-                    numbers, and their current FYDP stage progress.
-                  </p>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between p-3 rounded-lg border bg-card/50 transition-colors hover:bg-accent/50 cursor-default">
+                    <div className="flex items-center gap-3">
+                      <Users className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">Total Active Students</span>
+                    </div>
+                    <Badge variant="secondary" className="font-normal">
+                      {loadingStats ? "..." : dashboardStats.students.total_enrolled} Enrolled
+                    </Badge>
+                  </div>
                 </div>
                 <Button
+                  variant="outline"
                   className="w-full"
                   onClick={() => navigate("/faculty/committee/students")}
                 >
-                  View All Students
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  Manage Student Directory
                 </Button>
               </CardContent>
             </Card>
@@ -148,18 +160,23 @@ const CommitteeDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="rounded-lg border border-primary/20 bg-card p-4 mb-4">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    View all FYDP groups with member details, stage completion
-                    status, and assigned advisors.
-                  </p>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between p-3 rounded-lg border bg-card/50 transition-colors hover:bg-accent/50 cursor-default">
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">Registered Groups</span>
+                    </div>
+                    <Badge variant="secondary" className="font-normal">
+                      {loadingStats ? "..." : dashboardStats.groups.total_registered} Groups
+                    </Badge>
+                  </div>
                 </div>
                 <Button
+                  variant="outline"
                   className="w-full"
                   onClick={() => navigate("/faculty/committee/groups")}
                 >
-                  View All Groups
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  Manage FYDP Groups
                 </Button>
               </CardContent>
             </Card>
@@ -180,18 +197,32 @@ const CommitteeDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="rounded-lg border border-primary/20 bg-card p-4 mb-4">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Manage industry submissions including FYDP ideas and job
-                    postings. Review pending items and approve or reject them.
-                  </p>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between p-3 rounded-lg border bg-card/50 transition-colors hover:bg-accent/50 cursor-default">
+                    <div className="flex items-center gap-3">
+                      <Briefcase className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">Pending Ideas</span>
+                    </div>
+                    <Badge variant="secondary" className="font-normal">
+                      {loadingStats ? "..." : dashboardStats.industry.pending_ideas} pending
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 rounded-lg border bg-card/50 transition-colors hover:bg-accent/50 cursor-default">
+                    <div className="flex items-center gap-3">
+                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">Pending Jobs</span>
+                    </div>
+                    <Badge variant="secondary" className="font-normal">
+                      {loadingStats ? "..." : dashboardStats.industry.pending_jobs} pending
+                    </Badge>
+                  </div>
                 </div>
                 <Button
+                  variant="outline"
                   className="w-full"
                   onClick={() => navigate("/faculty/committee/industry-management")}
                 >
-                  Manage Industry Posts
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  Review Industry Ideas
                 </Button>
               </CardContent>
             </Card>
@@ -212,84 +243,63 @@ const CommitteeDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="pending" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="pending">
-                      Pending ({proposalData.pending})
-                    </TabsTrigger>
-                    <TabsTrigger value="approved">
-                      Approved ({proposalData.approved})
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="pending" className="mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
+                  {/* Pending Proposals Section */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3 border-b pb-2">
+                      <h4 className="text-sm font-semibold text-muted-foreground flex items-center">
+                        <Loader2 className="w-4 h-4 mr-2" /> Pending Reviews
+                      </h4>
+                      <Badge variant="secondary" className="text-xs font-normal">
+                        {loadingStats ? "..." : dashboardStats.proposals.pending_count}
+                      </Badge>
+                    </div>
                     <div className="space-y-3">
-                      {proposalData.pendingList.length > 0 ? (
-                        proposalData.pendingList.map((proposal) => (
-                          <div
-                            key={proposal.id}
-                            className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h4 className="font-semibold text-sm mb-1">
-                                  {proposal.groupName}
-                                </h4>
-                                <p className="text-xs text-muted-foreground">
-                                  Submitted: {proposal.submittedDate}
-                                </p>
-                              </div>
-                              <Badge variant="secondary" className="text-xs">
-                                Pending
-                              </Badge>
-                            </div>
+                      {!loadingStats && dashboardStats.proposals.pending_list.length > 0 ? (
+                        dashboardStats.proposals.pending_list.map((proposal) => (
+                          <div key={proposal.id} className="rounded-lg border bg-card p-3 transition-colors hover:bg-accent/50 cursor-pointer" onClick={() => navigate("/faculty/committee/proposals")}>
+                            <h4 className="font-medium text-sm truncate">{proposal.groupName}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">Submitted: {proposal.submittedDate}</p>
                           </div>
                         ))
                       ) : (
-                        <p className="text-sm text-muted-foreground text-center py-4">
-                          No pending proposals
-                        </p>
+                        <div className="text-sm text-muted-foreground text-center py-6 bg-card/50 rounded-lg border border-dashed">
+                          {loadingStats ? "Loading..." : "No pending proposals"}
+                        </div>
                       )}
                     </div>
-                  </TabsContent>
-                  <TabsContent value="approved" className="mt-4">
+                  </div>
+
+                  {/* Approved Proposals Section */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3 border-b pb-2">
+                      <h4 className="text-sm font-semibold text-muted-foreground flex items-center">
+                        <CheckCircle2 className="w-4 h-4 mr-2" /> Recently Approved
+                      </h4>
+                      <Badge variant="outline" className="text-xs font-normal text-green-700 bg-green-50 border-green-200">
+                        {loadingStats ? "..." : dashboardStats.proposals.approved_count}
+                      </Badge>
+                    </div>
                     <div className="space-y-3">
-                      {proposalData.approvedList.length > 0 ? (
-                        proposalData.approvedList.map((proposal) => (
-                          <div
-                            key={proposal.id}
-                            className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h4 className="font-semibold text-sm mb-1">
-                                  {proposal.groupName}
-                                </h4>
-                                <p className="text-xs text-muted-foreground">
-                                  Approved: {proposal.approvedDate}
-                                </p>
-                              </div>
-                              <Badge
-                                variant="default"
-                                className="bg-primary text-primary-foreground text-xs"
-                              >
-                                Approved
-                              </Badge>
-                            </div>
+                      {!loadingStats && dashboardStats.proposals.approved_list.length > 0 ? (
+                        dashboardStats.proposals.approved_list.map((proposal) => (
+                          <div key={proposal.id} className="rounded-lg border bg-card p-3 transition-colors hover:bg-accent/50 cursor-pointer" onClick={() => navigate("/faculty/committee/proposals")}>
+                            <h4 className="font-medium text-sm truncate">{proposal.groupName}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">Approved: {proposal.approvedDate}</p>
                           </div>
                         ))
                       ) : (
-                        <p className="text-sm text-muted-foreground text-center py-4">
-                          No approved proposals
-                        </p>
+                        <div className="text-sm text-muted-foreground text-center py-6 bg-card/50 rounded-lg border border-dashed">
+                          {loadingStats ? "Loading..." : "No approved proposals"}
+                        </div>
                       )}
                     </div>
-                  </TabsContent>
-                </Tabs>
-                <div className="mt-4 pt-4 border-t">
-                  <p className="text-xs text-muted-foreground text-center">
-                    Backend integration pending - using demo data
-                  </p>
+                  </div>
                 </div>
+                
+                <Button variant="outline" className="w-full mt-6" onClick={() => navigate("/faculty/committee/proposals")}>
+                  Manage All Proposals
+                </Button>
               </CardContent>
             </Card>
           </div>
