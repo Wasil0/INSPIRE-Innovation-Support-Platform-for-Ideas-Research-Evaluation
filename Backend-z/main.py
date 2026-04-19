@@ -10,6 +10,8 @@ from routers import industry_job
 from routers import industry_profile
 from routers import invites
 from routers import advisor_ideas_scoring
+from routers import industry_ideas_scoring
+from routers import student_job_applications
 from routers import chat
 from routers import stages_status
 from routers import team_members
@@ -45,6 +47,8 @@ app.include_router(industry_job.router)
 app.include_router(industry_profile.router)
 app.include_router(invites.router)
 app.include_router(advisor_ideas_scoring.router)
+app.include_router(industry_ideas_scoring.router)
+app.include_router(student_job_applications.router)
 app.include_router(chat.router)
 app.include_router(stages_status.router)
 app.include_router(team_members.router)

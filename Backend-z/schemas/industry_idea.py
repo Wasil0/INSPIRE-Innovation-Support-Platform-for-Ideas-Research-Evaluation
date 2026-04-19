@@ -22,7 +22,22 @@ class ApprovedIdeaResponse(BaseModel):
     company_description: str
     founded_year: int
     location: str
-    
+
+class MyIdeaResponse(BaseModel):
+    idea_id: str
+    title: str
+    description: str
+    technology_stack: List[str]
+    expected_skills: List[str]
+    status: str
+    interested_count: int
+    # Included for frontend compatibility
+    company_name: str
+    company_type: str
+    industry_domain: str
+    company_description: str
+    founded_year: int
+    location: str
 
 class IndustryIdeaStatusUpdate(BaseModel):
     status: Literal["approved", "rejected"]

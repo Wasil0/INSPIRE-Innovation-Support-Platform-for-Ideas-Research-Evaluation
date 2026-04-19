@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from db.db import db
-from schemas.industry_job import IndustryJobPosting, IndustryJobStatusUpdate, IndustryJobResponse
+from schemas.industry_job import IndustryJobPosting, IndustryJobStatusUpdate, IndustryJobResponse, MyIndustryJobResponse
 from bson import ObjectId
 from dependencies.auth import get_current_user   # JWT dependency
 from typing import List
@@ -178,6 +178,57 @@ def get_pending_industry_jobs():
             company_description=industry_profile["company_description"],
             founded_year=industry_profile["founded_year"],
             location=industry_profile["location"]
+        ))
+    return jobs
+
+@router.get("/industry/jobs/my-jobs", response_model=List[MyIndustryJobResponse])
+def get_my_industry_jobs(
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Get ALL industry jobs (pending, approved, rejected) for the logged-in industry user.
+    """
+    jobs = []
+    user_industry_id = current_user["_id"]
+    
+    # Get all jobs for the industry user
+    cursor = industry_jobs_col.find({"industry_id": ObjectId(user_industry_id)})
+    
+    # Get the industry profile once
+    industry_profile = db["industry_profiles"].find_one({
+        "industry_id": ObjectId(user_industry_id)
+    })
+    
+    # Fallback if profile is not fully created
+    if not industry_profile:
+        industry_profile = {
+            "company_name": "Unknown",
+            "company_type": "Unknown",
+            "industry_domain": "Unknown",
+            "company_description": "",
+            "founded_year": 0,
+            "location": "Unknown"
+        }
+        
+    for doc in cursor:
+        jobs.append(MyIndustryJobResponse(
+            job_id=str(doc["_id"]),
+            title=doc["title"],
+            description=doc["description"],
+            job_type=doc.get("job_type", "Unknown"),
+            amount=doc.get("amount"),
+            duration=doc.get("duration"),
+            technology_stack=doc.get("technology_stack", []),
+            expected_skills=doc.get("expected_skills", []),
+            status=doc.get("status", "pending"),
+            interested_count=0, # To be filled with actual interest count logic later
+            # Industry profile information
+            company_name=industry_profile.get("company_name", "Unknown"),
+            company_type=industry_profile.get("company_type", "Unknown"),
+            industry_domain=industry_profile.get("industry_domain", "Unknown"),
+            company_description=industry_profile.get("company_description", ""),
+            founded_year=industry_profile.get("founded_year", 0),
+            location=industry_profile.get("location", "Unknown"),
         ))
     
     return jobs

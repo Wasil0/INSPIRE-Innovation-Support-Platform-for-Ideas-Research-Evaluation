@@ -39,6 +39,10 @@ const StudentDashboard = () => {
   const [notifications] = useState(3); // Placeholder for notification count
   const [advisorIdeas, setAdvisorIdeas] = useState([]);
   const [loadingAdvisorIdeas, setLoadingAdvisorIdeas] = useState(true);
+  const [industryIdeas, setIndustryIdeas] = useState([]);
+  const [loadingIndustryIdeas, setLoadingIndustryIdeas] = useState(true);
+  const [industryJobs, setIndustryJobs] = useState([]);
+  const [loadingIndustryJobs, setLoadingIndustryJobs] = useState(true);
   const [studentData, setStudentData] = useState({
     name: "",
     gsuite_id: "",
@@ -68,34 +72,12 @@ const StudentDashboard = () => {
     isTemporary: true,
   });
 
-  const jobOpportunities = [
-    {
-      id: 1,
-      title: "Full Stack Developer",
-      company: "Tech Corp",
-      snippet: "Looking for React and Node.js developers...",
-    },
-    {
-      id: 2,
-      title: "Software Engineer Intern",
-      company: "StartupXYZ",
-      snippet: "Join our team to build innovative solutions...",
-    },
-    {
-      id: 3,
-      title: "Frontend Developer",
-      company: "Design Studio",
-      snippet: "Create beautiful user interfaces...",
-    },
-  ];
-
   // Fetch top 3 advisor ideas on component mount
   useEffect(() => {
     const fetchAdvisorIdeas = async () => {
       try {
         setLoadingAdvisorIdeas(true);
         const titles = await getTop3AdvisorIdeas();
-        // Convert titles array to objects with id and title
         const ideas = titles.map((title, index) => ({
           id: index + 1,
           title: title,
@@ -103,7 +85,6 @@ const StudentDashboard = () => {
         setAdvisorIdeas(ideas);
       } catch (error) {
         console.error("Failed to fetch advisor ideas:", error);
-        // Keep empty array on error, UI will show no ideas
         setAdvisorIdeas([]);
       } finally {
         setLoadingAdvisorIdeas(false);
@@ -111,6 +92,44 @@ const StudentDashboard = () => {
     };
 
     fetchAdvisorIdeas();
+  }, []);
+
+  // Fetch industry ideas on component mount
+  useEffect(() => {
+    const fetchIndustryIdeas = async () => {
+      try {
+        setLoadingIndustryIdeas(true);
+        const { getApprovedIndustryIdeas } = await import("@/api/industryIdeas");
+        const ideas = await getApprovedIndustryIdeas();
+        setIndustryIdeas(ideas || []);
+      } catch (error) {
+        console.error("Failed to fetch industry ideas:", error);
+        setIndustryIdeas([]);
+      } finally {
+        setLoadingIndustryIdeas(false);
+      }
+    };
+
+    fetchIndustryIdeas();
+  }, []);
+
+  // Fetch industry jobs on component mount
+  useEffect(() => {
+    const fetchIndustryJobs = async () => {
+      try {
+        setLoadingIndustryJobs(true);
+        const { getApprovedIndustryJobs } = await import("@/api/industryJobs");
+        const jobs = await getApprovedIndustryJobs();
+        setIndustryJobs(jobs || []);
+      } catch (error) {
+        console.error("Failed to fetch industry jobs:", error);
+        setIndustryJobs([]);
+      } finally {
+        setLoadingIndustryJobs(false);
+      }
+    };
+
+    fetchIndustryJobs();
   }, []);
 
   // Fetch student profile summary on component mount
@@ -246,13 +265,6 @@ const StudentDashboard = () => {
       fetchMembers();
     }
   }, [stages.stage1_completed, loadingStages]);
-
-  // Industry ideas (hardcoded for now - can be replaced with API call later)
-  const industryIdeas = [
-    { id: 1, title: "IoT Home Automation" },
-    { id: 2, title: "E-commerce Analytics Platform" },
-  ];
-
 
   const getInitials = (name) => {
     return name
@@ -444,32 +456,47 @@ const StudentDashboard = () => {
                     </div>
                   </div>
                   <Badge className="bg-primary text-primary-foreground">
-                    {jobOpportunities.length} New
+                    {loadingIndustryJobs ? "..." : `${industryJobs.length} New`}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  {jobOpportunities.slice(0, 3).map((job) => (
-                    <div
-                      key={job.id}
-                      className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-sm">{job.title}</h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {job.company}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
-                            {job.snippet}
-                          </p>
+                  {loadingIndustryJobs ? (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-muted-foreground">Loading job opportunities...</p>
+                    </div>
+                  ) : industryJobs.length > 0 ? (
+                    industryJobs.slice(0, 3).map((job) => (
+                      <div
+                        key={job.job_id || job.id}
+                        className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent cursor-pointer"
+                        onClick={() => navigate("/student/industry-jobs")}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{job.title}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {job.company_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+                              {job.description}
+                            </p>
+                          </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-muted-foreground">No jobs available right now.</p>
                     </div>
-                  ))}
+                  )}
                 </div>
-                <Button variant="outline" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => navigate("/student/industry-jobs")}
+                >
                   See More
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -532,7 +559,10 @@ const StudentDashboard = () => {
                 </div>
 
                 {/* Ideas from Industry */}
-                <div className="rounded-lg border border-primary/20 bg-card p-4">
+                <div 
+                  className="rounded-lg border border-primary/20 bg-card p-4 cursor-pointer hover:bg-accent hover:border-primary/60 transition-all duration-150 hover:shadow-sm"
+                  onClick={() => navigate("/student/fydp-industry-ideas")}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-semibold text-sm flex items-center gap-2">
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -541,19 +571,29 @@ const StudentDashboard = () => {
                       From Industry
                     </h4>
                     <Badge className="bg-primary text-primary-foreground text-xs">
-                      {industryIdeas.length} available
+                      {loadingIndustryIdeas ? "..." : industryIdeas.length} available
                     </Badge>
                   </div>
                   <ul className="space-y-2">
-                    {industryIdeas.map((idea) => (
-                      <li
-                        key={idea.id}
-                        className="text-sm text-muted-foreground flex items-center gap-2"
-                      >
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {idea.title}
+                    {loadingIndustryIdeas ? (
+                      <li className="text-sm text-muted-foreground">
+                        Loading ideas...
                       </li>
-                    ))}
+                    ) : industryIdeas.length > 0 ? (
+                      industryIdeas.slice(0, 3).map((idea) => (
+                        <li
+                          key={idea.idea_id || idea.id}
+                          className="text-sm text-muted-foreground flex items-center gap-2"
+                        >
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span className="truncate">{idea.title}</span>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-sm text-muted-foreground">
+                        No industry ideas available
+                      </li>
+                    )}
                   </ul>
                 </div>
               </CardContent>

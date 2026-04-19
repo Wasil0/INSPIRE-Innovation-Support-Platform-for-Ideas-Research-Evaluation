@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from db.db import db
-from schemas.industry_idea import IndustryIdea, IndustryIdeaStatusUpdate, ApprovedIdeaResponse
+from schemas.industry_idea import IndustryIdea, IndustryIdeaStatusUpdate, ApprovedIdeaResponse, MyIdeaResponse
 from bson import ObjectId
 from dependencies.auth import get_current_user   # JWT dependency
 from typing import List
@@ -173,6 +173,55 @@ def get_pending_industry_ideas():
             company_description=industry_profile["company_description"],
             founded_year=industry_profile["founded_year"],
             location=industry_profile["location"],
+        ))
+    
+    return ideas
+
+@router.get("/industry/ideas/my-ideas", response_model=List[MyIdeaResponse])
+def get_my_industry_ideas(
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Get ALL industry ideas (pending, approved, rejected) for the logged-in industry user.
+    """
+    ideas = []
+    user_industry_id = current_user["_id"]
+    
+    # Get all ideas for the industry user
+    cursor = industry_ideas_col.find({"industry_id": ObjectId(user_industry_id)})
+    
+    # Get the industry profile once
+    industry_profile = db["industry_profiles"].find_one({
+        "industry_id": ObjectId(user_industry_id)
+    })
+    
+    # Fallback if profile is not fully created
+    if not industry_profile:
+        industry_profile = {
+            "company_name": "Unknown",
+            "company_type": "Unknown",
+            "industry_domain": "Unknown",
+            "company_description": "",
+            "founded_year": 0,
+            "location": "Unknown"
+        }
+        
+    for doc in cursor:
+        ideas.append(MyIdeaResponse(
+            idea_id=str(doc["_id"]),
+            title=doc["title"],
+            description=doc["description"],
+            technology_stack=doc.get("technology_stack", []),
+            expected_skills=doc.get("expected_skills", []),
+            status=doc.get("status", "pending"),
+            interested_count=0, # To be filled with actual interest count logic later
+            # Industry profile information
+            company_name=industry_profile.get("company_name", "Unknown"),
+            company_type=industry_profile.get("company_type", "Unknown"),
+            industry_domain=industry_profile.get("industry_domain", "Unknown"),
+            company_description=industry_profile.get("company_description", ""),
+            founded_year=industry_profile.get("founded_year", 0),
+            location=industry_profile.get("location", "Unknown"),
         ))
     
     return ideas

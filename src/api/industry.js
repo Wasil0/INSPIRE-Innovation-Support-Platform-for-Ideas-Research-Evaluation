@@ -22,24 +22,8 @@ export async function getIndustryProfile() {
  */
 export async function getMyIndustryIdeas() {
   try {
-    // Get user_id from token
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token found");
-    
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const industry_id = payload._id;
-    
-    // Get all approved and pending ideas, then filter by industry_id on frontend
-    // TODO: Backend should provide /industry/ideas/my-ideas endpoint
-    const [approvedResponse, pendingResponse] = await Promise.all([
-      axios.get("/industry/ideas/approved"),
-      axios.get("/industry/ideas/pending")
-    ]);
-    
-    const allIdeas = [...(approvedResponse.data || []), ...(pendingResponse.data || [])];
-    
-    // Filter by current industry_id
-    return allIdeas.filter(idea => idea.industry_id === industry_id);
+    const response = await axios.get("/industry/ideas/my-ideas");
+    return response.data;
   } catch (error) {
     console.error("Error fetching industry ideas:", error);
     throw error;
@@ -53,24 +37,8 @@ export async function getMyIndustryIdeas() {
  */
 export async function getMyIndustryJobs() {
   try {
-    // Get user_id from token
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token found");
-    
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const industry_id = payload._id;
-    
-    // Get all approved and pending jobs, then filter by industry_id on frontend
-    // TODO: Backend should provide /industry/jobs/my-jobs endpoint
-    const [approvedResponse, pendingResponse] = await Promise.all([
-      axios.get("/industry/jobs/approved"),
-      axios.get("/industry/jobs/pending")
-    ]);
-    
-    const allJobs = [...(approvedResponse.data || []), ...(pendingResponse.data || [])];
-    
-    // Filter by current industry_id
-    return allJobs.filter(job => job.industry_id === industry_id);
+    const response = await axios.get("/industry/jobs/my-jobs");
+    return response.data;
   } catch (error) {
     console.error("Error fetching industry jobs:", error);
     throw error;
@@ -122,3 +90,28 @@ export async function postIndustryJob(data) {
   }
 }
 
+/**
+ * Get groups interested in the logged-in industry's ideas
+ */
+export async function getInterestedGroupsForIndustry() {
+  try {
+    const response = await axios.get("/industry-projects/industry/interested-groups");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching interested groups:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get individual students applied to the logged-in industry's jobs
+ */
+export async function getApplicantsForIndustryJobs() {
+  try {
+    const response = await axios.get("/student/jobs/industry-view/applicants");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching job applicants:", error);
+    throw error;
+  }
+}
