@@ -94,6 +94,7 @@ def get_all_proposals(current_user: dict = Depends(get_current_user)):
         
         pitch = pitches_col.find_one({"team_id": str(team_id), "status": "accepted"})
         project_title = pitch.get("title", "Untitled Proposal") if pitch else "Untitled Proposal"
+        project_summary = pitch.get("summary", "") if pitch else ""
         advisor_id_str = pitch.get("advisor_id") if pitch else None
         
         advisor_name = "Unknown Advisor"
@@ -118,6 +119,7 @@ def get_all_proposals(current_user: dict = Depends(get_current_user)):
             "proposal_id": str(p["_id"]),
             "team_id": str(team_id),
             "project_title": project_title,
+            "project_summary": project_summary,
             "advisor_name": advisor_name,
             "status": p.get("status"),
             "file_id": p.get("file_id"),

@@ -105,7 +105,7 @@ export default function CommitteeProposals() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-6xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <Button
           variant="ghost"
           onClick={() => navigate("/faculty/committee/CommitteeDashboard")}
@@ -142,33 +142,30 @@ export default function CommitteeProposals() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {proposals.map((proposal) => (
-              <Card key={proposal.proposal_id} className="transition-all duration-300 hover:shadow-md border-primary/20 flex flex-col overflow-hidden">
-                <CardHeader className="pb-3 border-b border-border/50">
+              <Card key={proposal.proposal_id} className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-md border-primary/20">
+                <CardHeader className="pb-4">
                   <div className="flex justify-between items-start mb-2">
                     {getStatusBadge(proposal.status)}
-                    <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
-                      {proposal.submitted_date}
-                    </span>
                   </div>
                   <CardTitle className="text-xl line-clamp-2 leading-tight">
                     {proposal.project_title}
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="pt-4 flex-1 space-y-4">
-                  {/* Advisor Info */}
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <User className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="overflow-hidden">
-                      <p className="text-xs text-muted-foreground">Supervised by</p>
-                      <p className="text-sm font-medium truncate">{proposal.advisor_name}</p>
+                <CardContent className="flex-1 flex flex-col space-y-4">
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {proposal.project_summary || "No summary provided."}
+                  </p>
+
+                  <div className="space-y-1.5 mt-auto pt-4 border-t">
+                    <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Supervising Advisor</p>
+                    <div className="flex items-center gap-2">
+                       <User className="h-4 w-4 text-primary shrink-0" />
+                       <p className="text-sm font-medium truncate">{proposal.advisor_name}</p>
                     </div>
                   </div>
 
-                  {/* Student Team List */}
-                  <div className="space-y-1.5 mt-auto pt-2">
+                  <div className="space-y-1.5 pt-4 border-t">
                     <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Group Members</p>
                     <div className="flex flex-wrap gap-2">
                       {proposal.members && proposal.members.length > 0 ? (
@@ -182,18 +179,17 @@ export default function CommitteeProposals() {
                       )}
                     </div>
                   </div>
+                  <div className="pt-4 mt-auto">
+                     <Button 
+                       className="w-full" 
+                       variant={proposal.status === "advisor_accepted" ? "default" : "outline"}
+                       onClick={() => setActiveProposal(proposal)}
+                     >
+                       <FileText className="w-4 h-4 mr-2" />
+                       {proposal.status === "advisor_accepted" ? "Review Proposal" : "View Details"}
+                     </Button>
+                  </div>
                 </CardContent>
-
-                <CardFooter className="bg-muted/30 pt-4 flex pb-4 border-t border-border/50">
-                   <Button 
-                     className="w-full" 
-                     variant={proposal.status === "advisor_accepted" ? "default" : "outline"}
-                     onClick={() => setActiveProposal(proposal)}
-                   >
-                     <FileText className="w-4 h-4 mr-2" />
-                     {proposal.status === "advisor_accepted" ? "Review Proposal" : "View Details"}
-                   </Button>
-                </CardFooter>
               </Card>
             ))}
           </div>
