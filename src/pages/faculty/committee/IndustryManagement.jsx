@@ -8,6 +8,16 @@ import {
   Search,
   Briefcase,
   Lightbulb,
+  MapPin,
+  Mail,
+  Building2,
+  Calendar,
+  Clock,
+  DollarSign,
+  Globe,
+  AlertCircle,
+  FileText,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +31,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
 import {
   getPendingIndustryIdeas,
@@ -51,10 +67,10 @@ const IndustryManagement = () => {
   const [jobCompanyTypeFilter, setJobCompanyTypeFilter] = useState("");
   const [jobIndustryDomainFilter, setJobIndustryDomainFilter] = useState("");
 
-  // Action states
+  // Detail panel state
+  const [activeItem, setActiveItem] = useState(null); // { data, type: 'idea'|'job', isPending: bool }
   const [processingId, setProcessingId] = useState(null);
 
-  // Fetch data
   useEffect(() => {
     fetchIdeas();
     fetchJobs();
@@ -100,12 +116,9 @@ const IndustryManagement = () => {
       } else {
         await updateIndustryJobStatus(id, "approved");
       }
-      // Refresh data
-      if (type === "idea") {
-        await fetchIdeas();
-      } else {
-        await fetchJobs();
-      }
+      setActiveItem(null);
+      if (type === "idea") await fetchIdeas();
+      else await fetchJobs();
     } catch (error) {
       console.error("Failed to approve:", error);
       alert("Failed to approve. Please try again.");
@@ -122,12 +135,9 @@ const IndustryManagement = () => {
       } else {
         await updateIndustryJobStatus(id, "rejected");
       }
-      // Refresh data
-      if (type === "idea") {
-        await fetchIdeas();
-      } else {
-        await fetchJobs();
-      }
+      setActiveItem(null);
+      if (type === "idea") await fetchIdeas();
+      else await fetchJobs();
     } catch (error) {
       console.error("Failed to reject:", error);
       alert("Failed to reject. Please try again.");
@@ -136,107 +146,232 @@ const IndustryManagement = () => {
     }
   };
 
-  // Get unique filter values
-  const getUniqueCompanyTypes = (items) => {
-    const types = new Set();
-    items.forEach((item) => {
-      if (item.company_type) types.add(item.company_type);
-    });
-    return Array.from(types).sort();
+  // --- Filter helpers ---
+  const getUniqueValues = (items, key) => {
+    const values = new Set();
+    items.forEach((item) => { if (item[key]) values.add(item[key]); });
+    return Array.from(values).sort();
   };
 
-  const getUniqueIndustryDomains = (items) => {
-    const domains = new Set();
-    items.forEach((item) => {
-      if (item.industry_domain) domains.add(item.industry_domain);
-    });
-    return Array.from(domains).sort();
-  };
-
-  // Filter functions
-  const filterIdeas = (ideas) => {
-    let filtered = ideas;
-
-    // Search filter
-    if (ideaSearchQuery) {
-      const query = ideaSearchQuery.toLowerCase();
+  const applyFilter = (items, searchQuery, companyTypeFilter, industryDomainFilter) => {
+    let filtered = items;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (idea) =>
-          idea.title?.toLowerCase().includes(query) ||
-          idea.company_name?.toLowerCase().includes(query) ||
-          idea.description?.toLowerCase().includes(query) ||
-          idea.industry_domain?.toLowerCase().includes(query)
+        (item) =>
+          item.title?.toLowerCase().includes(q) ||
+          item.company_name?.toLowerCase().includes(q) ||
+          item.description?.toLowerCase().includes(q) ||
+          item.industry_domain?.toLowerCase().includes(q)
       );
     }
-
-    // Company type filter
-    if (ideaCompanyTypeFilter) {
-      filtered = filtered.filter(
-        (idea) => idea.company_type === ideaCompanyTypeFilter
-      );
+    if (companyTypeFilter) {
+      filtered = filtered.filter((item) => item.company_type === companyTypeFilter);
     }
-
-    // Industry domain filter
-    if (ideaIndustryDomainFilter) {
-      filtered = filtered.filter(
-        (idea) => idea.industry_domain === ideaIndustryDomainFilter
-      );
+    if (industryDomainFilter) {
+      filtered = filtered.filter((item) => item.industry_domain === industryDomainFilter);
     }
-
     return filtered;
   };
 
-  const filterJobs = (jobs) => {
-    let filtered = jobs;
+  const filteredPendingIdeas = applyFilter(pendingIdeas, ideaSearchQuery, ideaCompanyTypeFilter, ideaIndustryDomainFilter);
+  const filteredApprovedIdeas = applyFilter(approvedIdeas, ideaSearchQuery, ideaCompanyTypeFilter, ideaIndustryDomainFilter);
+  const filteredPendingJobs = applyFilter(pendingJobs, jobSearchQuery, jobCompanyTypeFilter, jobIndustryDomainFilter);
+  const filteredApprovedJobs = applyFilter(approvedJobs, jobSearchQuery, jobCompanyTypeFilter, jobIndustryDomainFilter);
 
-    // Search filter
-    if (jobSearchQuery) {
-      const query = jobSearchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (job) =>
-          job.title?.toLowerCase().includes(query) ||
-          job.company_name?.toLowerCase().includes(query) ||
-          job.description?.toLowerCase().includes(query) ||
-          job.industry_domain?.toLowerCase().includes(query)
-      );
-    }
+  // --- Reusable summary card ---
+  const SummaryCard = ({ item, type, isPending }) => {
+    const itemId = type === "idea" ? item.idea_id : item.job_id;
+    return (
+      <Card
+        className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-md border-primary/20 cursor-pointer"
+        onClick={() => setActiveItem({ data: item, type, isPending })}
+      >
+        <CardHeader className="pb-4">
+          <div className="flex justify-between items-start mb-2">
+            {isPending ? (
+              <Badge variant="secondary">
+                <Clock className="w-3 h-3 mr-1" /> Pending
+              </Badge>
+            ) : (
+              <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
+                <CheckCircle2 className="w-3 h-3 mr-1" /> Approved
+              </Badge>
+            )}
+          </div>
+          <CardTitle className="text-xl line-clamp-2 leading-tight">
+            {item.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 flex flex-col space-y-4">
+          <p className="text-sm text-muted-foreground line-clamp-3">
+            {item.description || "No description provided."}
+          </p>
 
-    // Company type filter
-    if (jobCompanyTypeFilter) {
-      filtered = filtered.filter(
-        (job) => job.company_type === jobCompanyTypeFilter
-      );
-    }
+          {/* Company info */}
+          {item.company_name && (
+            <div className="space-y-1.5 mt-auto pt-4 border-t">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Company</p>
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-primary shrink-0" />
+                <p className="text-sm font-medium truncate">{item.company_name}</p>
+              </div>
+            </div>
+          )}
 
-    // Industry domain filter
-    if (jobIndustryDomainFilter) {
-      filtered = filtered.filter(
-        (job) => job.industry_domain === jobIndustryDomainFilter
-      );
-    }
+          {/* Tags row */}
+          <div className="space-y-1.5 pt-4 border-t">
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
+              {type === "idea" ? "Domain & Tech" : "Job Details"}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {item.industry_domain && (
+                <Badge variant="secondary" className="text-xs font-normal">
+                  {item.industry_domain}
+                </Badge>
+              )}
+              {item.company_type && (
+                <Badge variant="secondary" className="text-xs font-normal">
+                  {item.company_type}
+                </Badge>
+              )}
+              {type === "job" && item.job_type && (
+                <Badge variant="secondary" className="text-xs font-normal">
+                  {item.job_type}
+                </Badge>
+              )}
+            </div>
+          </div>
 
-    return filtered;
+          <div className="pt-4 mt-auto">
+            <Button
+              className="w-full"
+              variant={isPending ? "default" : "outline"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveItem({ data: item, type, isPending });
+              }}
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              {isPending ? "Review Submission" : "View Details"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // --- Search/Filter bar (reusable) ---
+  const SearchFilterBar = ({ searchQuery, setSearchQuery, companyTypeFilter, setCompanyTypeFilter, industryDomainFilter, setIndustryDomainFilter, allItems }) => (
+    <Card className="border-primary/20">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Search className="h-5 w-5" />
+          Search & Filter
+        </CardTitle>
+        <CardDescription>
+          Find submissions by title, company, domain, or description
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by title, company name, domain, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Company Type</Label>
+            <select
+              value={companyTypeFilter}
+              onChange={(e) => setCompanyTypeFilter(e.target.value)}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              <option value="">All Company Types</option>
+              {getUniqueValues(allItems, "company_type").map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label>Industry Domain</Label>
+            <select
+              value={industryDomainFilter}
+              onChange={(e) => setIndustryDomainFilter(e.target.value)}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              <option value="">All Domains</option>
+              {getUniqueValues(allItems, "industry_domain").map((domain) => (
+                <option key={domain} value={domain}>{domain}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  // --- Section header ---
+  const SectionHeader = ({ icon: Icon, title, count }) => (
+    <div className="flex items-center gap-3 mb-4">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+        <Icon className="h-5 w-5 text-primary" />
+      </div>
+      <div>
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="text-sm text-muted-foreground">
+          {count} {count === 1 ? "submission" : "submissions"}
+        </p>
+      </div>
+    </div>
+  );
+
+  // --- Empty state ---
+  const EmptyState = ({ icon: Icon, message }) => (
+    <div className="text-center py-16 bg-card border rounded-lg shadow-sm">
+      <Icon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+      <h3 className="text-lg font-medium">Nothing Here Yet</h3>
+      <p className="text-muted-foreground mt-2 max-w-sm mx-auto">{message}</p>
+    </div>
+  );
+
+  // --- Detail metadata row ---
+  const MetaRow = ({ icon: Icon, label, value }) => {
+    if (!value) return null;
+    return (
+      <div className="flex items-start gap-3">
+        <Icon className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+        <div>
+          <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-0.5">{label}</span>
+          <p className="text-sm font-medium">{value}</p>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <Button
           variant="ghost"
           onClick={() => navigate("/faculty/committee/CommitteeDashboard")}
-          className="mb-6"
+          className="mb-6 -ml-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
         </Button>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
             Industry FYDP Ideas & Job Posts
           </h1>
           <p className="text-muted-foreground">
-            Review and manage industry-submitted ideas and job postings
+            Review and manage industry-submitted ideas and job postings.
           </p>
         </div>
 
@@ -252,698 +387,100 @@ const IndustryManagement = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Ideas Tab */}
-          <TabsContent value="ideas" className="space-y-6">
-            {/* Search and Filters Card */}
-            <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
-                  Search & Filter
-                </CardTitle>
-                <CardDescription>
-                  Find ideas by title, company, domain, or description
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by title, company name, domain, or description..."
-                    value={ideaSearchQuery}
-                    onChange={(e) => setIdeaSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="idea-company-type">Company Type</Label>
-                    <select
-                      id="idea-company-type"
-                      value={ideaCompanyTypeFilter}
-                      onChange={(e) => setIdeaCompanyTypeFilter(e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <option value="">All Company Types</option>
-                      {getUniqueCompanyTypes([...pendingIdeas, ...approvedIdeas]).map(
-                        (type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="idea-industry-domain">Industry Domain</Label>
-                    <select
-                      id="idea-industry-domain"
-                      value={ideaIndustryDomainFilter}
-                      onChange={(e) => setIdeaIndustryDomainFilter(e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <option value="">All Domains</option>
-                      {getUniqueIndustryDomains([...pendingIdeas, ...approvedIdeas]).map(
-                        (domain) => (
-                          <option key={domain} value={domain}>
-                            {domain}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* ========== IDEAS TAB ========== */}
+          <TabsContent value="ideas" className="space-y-8">
+            <SearchFilterBar
+              searchQuery={ideaSearchQuery}
+              setSearchQuery={setIdeaSearchQuery}
+              companyTypeFilter={ideaCompanyTypeFilter}
+              setCompanyTypeFilter={setIdeaCompanyTypeFilter}
+              industryDomainFilter={ideaIndustryDomainFilter}
+              setIndustryDomainFilter={setIdeaIndustryDomainFilter}
+              allItems={[...pendingIdeas, ...approvedIdeas]}
+            />
 
             {loadingIdeas ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="flex flex-col items-center justify-center py-24">
+                <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+                <p className="text-muted-foreground animate-pulse">Loading industry ideas...</p>
               </div>
             ) : (
               <>
                 {/* Pending Ideas */}
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <Lightbulb className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold">Pending Ideas</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {filterIdeas(pendingIdeas).length} idea{filterIdeas(pendingIdeas).length !== 1 ? 's' : ''} awaiting review
-                      </p>
-                    </div>
-                  </div>
-                  {filterIdeas(pendingIdeas).length > 0 ? (
-                    <div className="space-y-4">
-                      {filterIdeas(pendingIdeas).map((idea) => (
-                        <Card key={idea.idea_id} className="border-primary/20 transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-                          <CardHeader>
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1 min-w-0">
-                                <CardTitle className="text-lg mb-2">
-                                  {idea.title}
-                                </CardTitle>
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  {idea.company_name && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {idea.company_name}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                              <Badge variant="secondary" className="shrink-0">Pending</Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4 pt-6">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {idea.description}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {idea.company_type && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Company Type:</span> {idea.company_type}
-                                </p>
-                              )}
-                              {idea.industry_domain && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Industry Domain:</span> {idea.industry_domain}
-                                </p>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {idea.gmail && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Contact:</span> {idea.gmail}
-                                </p>
-                              )}
-                              {idea.location && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Location:</span> {idea.location}
-                                </p>
-                              )}
-                              {idea.founded_year && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Founded:</span> {idea.founded_year}
-                                </p>
-                              )}
-                            </div>
-                            {idea.company_description && (
-                              <p className="text-xs text-muted-foreground italic">
-                                {idea.company_description}
-                              </p>
-                            )}
-                            {idea.technology_stack?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Technology Stack:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {idea.technology_stack.map((tech, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {tech}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {idea.expected_skills?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Expected Skills:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {idea.expected_skills.map((skill, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {skill}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            <div className="flex gap-2 pt-2">
-                              <Button
-                                size="sm"
-                                onClick={() => handleApprove(idea.idea_id, "idea")}
-                                disabled={processingId === `idea-${idea.idea_id}`}
-                                className="flex-1"
-                              >
-                                {processingId === `idea-${idea.idea_id}` ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                                )}
-                                Approve
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleReject(idea.idea_id, "idea")}
-                                disabled={processingId === `idea-${idea.idea_id}`}
-                                className="flex-1"
-                              >
-                                {processingId === `idea-${idea.idea_id}` ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <XCircle className="h-4 w-4 mr-2" />
-                                )}
-                                Reject
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
+                  <SectionHeader icon={Lightbulb} title="Pending Ideas" count={filteredPendingIdeas.length} />
+                  {filteredPendingIdeas.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredPendingIdeas.map((idea) => (
+                        <SummaryCard key={idea.idea_id} item={idea} type="idea" isPending={true} />
                       ))}
                     </div>
                   ) : (
-                    <Card>
-                      <CardContent className="pt-6 text-center">
-                        <p className="text-muted-foreground">
-                          No pending ideas found
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <EmptyState icon={Lightbulb} message="No pending ideas awaiting review." />
                   )}
                 </div>
 
                 {/* Approved Ideas */}
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <CheckCircle2 className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold">Approved Ideas</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {filterIdeas(approvedIdeas).length} approved idea{filterIdeas(approvedIdeas).length !== 1 ? 's' : ''}
-                      </p>
-                    </div>
-                  </div>
-                  {filterIdeas(approvedIdeas).length > 0 ? (
-                    <div className="space-y-4">
-                      {filterIdeas(approvedIdeas).map((idea) => (
-                        <Card key={idea.idea_id} className="border-primary/20 transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-                          <CardHeader>
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg">
-                                  {idea.title}
-                                </CardTitle>
-                                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                  {idea.company_name && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {idea.company_name}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                              <Badge className="bg-primary text-primary-foreground shrink-0">
-                                Approved
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4 pt-6">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {idea.description}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {idea.company_type && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Company Type:</span> {idea.company_type}
-                                </p>
-                              )}
-                              {idea.industry_domain && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Industry Domain:</span> {idea.industry_domain}
-                                </p>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {idea.gmail && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Contact:</span> {idea.gmail}
-                                </p>
-                              )}
-                              {idea.location && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Location:</span> {idea.location}
-                                </p>
-                              )}
-                              {idea.founded_year && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Founded:</span> {idea.founded_year}
-                                </p>
-                              )}
-                            </div>
-                            {idea.company_description && (
-                              <p className="text-xs text-muted-foreground italic">
-                                {idea.company_description}
-                              </p>
-                            )}
-                            {idea.technology_stack?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Technology Stack:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {idea.technology_stack.map((tech, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {tech}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {idea.expected_skills?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Expected Skills:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {idea.expected_skills.map((skill, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {skill}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
+                  <SectionHeader icon={CheckCircle2} title="Approved Ideas" count={filteredApprovedIdeas.length} />
+                  {filteredApprovedIdeas.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredApprovedIdeas.map((idea) => (
+                        <SummaryCard key={idea.idea_id} item={idea} type="idea" isPending={false} />
                       ))}
                     </div>
                   ) : (
-                    <Card>
-                      <CardContent className="pt-6 text-center">
-                        <p className="text-muted-foreground">
-                          No approved ideas found
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <EmptyState icon={CheckCircle2} message="No approved ideas yet." />
                   )}
                 </div>
               </>
             )}
           </TabsContent>
 
-          {/* Jobs Tab */}
-          <TabsContent value="jobs" className="space-y-6">
-            {/* Search and Filters Card */}
-            <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
-                  Search & Filter
-                </CardTitle>
-                <CardDescription>
-                  Find job postings by title, company, domain, or description
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by title, company name, domain, or description..."
-                    value={jobSearchQuery}
-                    onChange={(e) => setJobSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="job-company-type">Company Type</Label>
-                    <select
-                      id="job-company-type"
-                      value={jobCompanyTypeFilter}
-                      onChange={(e) => setJobCompanyTypeFilter(e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <option value="">All Company Types</option>
-                      {getUniqueCompanyTypes([...pendingJobs, ...approvedJobs]).map(
-                        (type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="job-industry-domain">Industry Domain</Label>
-                    <select
-                      id="job-industry-domain"
-                      value={jobIndustryDomainFilter}
-                      onChange={(e) => setJobIndustryDomainFilter(e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <option value="">All Domains</option>
-                      {getUniqueIndustryDomains([...pendingJobs, ...approvedJobs]).map(
-                        (domain) => (
-                          <option key={domain} value={domain}>
-                            {domain}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* ========== JOBS TAB ========== */}
+          <TabsContent value="jobs" className="space-y-8">
+            <SearchFilterBar
+              searchQuery={jobSearchQuery}
+              setSearchQuery={setJobSearchQuery}
+              companyTypeFilter={jobCompanyTypeFilter}
+              setCompanyTypeFilter={setJobCompanyTypeFilter}
+              industryDomainFilter={jobIndustryDomainFilter}
+              setIndustryDomainFilter={setJobIndustryDomainFilter}
+              allItems={[...pendingJobs, ...approvedJobs]}
+            />
 
             {loadingJobs ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="flex flex-col items-center justify-center py-24">
+                <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+                <p className="text-muted-foreground animate-pulse">Loading industry jobs...</p>
               </div>
             ) : (
               <>
                 {/* Pending Jobs */}
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <Briefcase className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold">Pending Jobs</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {filterJobs(pendingJobs).length} job{filterJobs(pendingJobs).length !== 1 ? 's' : ''} awaiting review
-                      </p>
-                    </div>
-                  </div>
-                  {filterJobs(pendingJobs).length > 0 ? (
-                    <div className="space-y-4">
-                      {filterJobs(pendingJobs).map((job) => (
-                        <Card key={job.job_id} className="border-primary/20 transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-                          <CardHeader>
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg">
-                                  {job.title}
-                                </CardTitle>
-                                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                  {job.company_name && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {job.company_name}
-                                    </Badge>
-                                  )}
-                                  {job.job_type && (
-                                    <Badge variant="secondary" className="text-xs">
-                                      {job.job_type}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                              <Badge variant="secondary">Pending</Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4 pt-6">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {job.description}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {job.company_type && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Company Type:</span> {job.company_type}
-                                </p>
-                              )}
-                              {job.industry_domain && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Industry Domain:</span> {job.industry_domain}
-                                </p>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {job.gmail && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Contact:</span> {job.gmail}
-                                </p>
-                              )}
-                              {job.location && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Location:</span> {job.location}
-                                </p>
-                              )}
-                              {job.amount && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Amount:</span> {job.amount}
-                                </p>
-                              )}
-                              {job.duration && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Duration:</span> {job.duration}
-                                </p>
-                              )}
-                              {job.founded_year && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Founded:</span> {job.founded_year}
-                                </p>
-                              )}
-                            </div>
-                            {job.company_description && (
-                              <p className="text-xs text-muted-foreground italic">
-                                {job.company_description}
-                              </p>
-                            )}
-                            {job.technology_stack?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Technology Stack:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {job.technology_stack.map((tech, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {tech}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {job.expected_skills?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Expected Skills:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {job.expected_skills.map((skill, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {skill}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            <div className="flex gap-2 pt-2">
-                              <Button
-                                size="sm"
-                                onClick={() => handleApprove(job.job_id, "job")}
-                                disabled={processingId === `job-${job.job_id}`}
-                                className="flex-1"
-                              >
-                                {processingId === `job-${job.job_id}` ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                                )}
-                                Approve
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleReject(job.job_id, "job")}
-                                disabled={processingId === `job-${job.job_id}`}
-                                className="flex-1"
-                              >
-                                {processingId === `job-${job.job_id}` ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <XCircle className="h-4 w-4 mr-2" />
-                                )}
-                                Reject
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
+                  <SectionHeader icon={Briefcase} title="Pending Jobs" count={filteredPendingJobs.length} />
+                  {filteredPendingJobs.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredPendingJobs.map((job) => (
+                        <SummaryCard key={job.job_id} item={job} type="job" isPending={true} />
                       ))}
                     </div>
                   ) : (
-                    <Card>
-                      <CardContent className="pt-6 text-center">
-                        <p className="text-muted-foreground">
-                          No pending jobs found
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <EmptyState icon={Briefcase} message="No pending jobs awaiting review." />
                   )}
                 </div>
 
                 {/* Approved Jobs */}
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <CheckCircle2 className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold">Approved Jobs</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {filterJobs(approvedJobs).length} approved job{filterJobs(approvedJobs).length !== 1 ? 's' : ''}
-                      </p>
-                    </div>
-                  </div>
-                  {filterJobs(approvedJobs).length > 0 ? (
-                    <div className="space-y-4">
-                      {filterJobs(approvedJobs).map((job) => (
-                        <Card key={job.job_id} className="border-primary/20 transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-                          <CardHeader>
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg">
-                                  {job.title}
-                                </CardTitle>
-                                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                  {job.company_name && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {job.company_name}
-                                    </Badge>
-                                  )}
-                                  {job.job_type && (
-                                    <Badge variant="secondary" className="text-xs">
-                                      {job.job_type}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                              <Badge className="bg-primary text-primary-foreground shrink-0">
-                                Approved
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-4 pt-6">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {job.description}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {job.company_type && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Company Type:</span> {job.company_type}
-                                </p>
-                              )}
-                              {job.industry_domain && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Industry Domain:</span> {job.industry_domain}
-                                </p>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {job.gmail && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Contact:</span> {job.gmail}
-                                </p>
-                              )}
-                              {job.location && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Location:</span> {job.location}
-                                </p>
-                              )}
-                              {job.amount && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Amount:</span> {job.amount}
-                                </p>
-                              )}
-                              {job.duration && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Duration:</span> {job.duration}
-                                </p>
-                              )}
-                              {job.founded_year && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-semibold">Founded:</span> {job.founded_year}
-                                </p>
-                              )}
-                            </div>
-                            {job.company_description && (
-                              <p className="text-xs text-muted-foreground italic">
-                                {job.company_description}
-                              </p>
-                            )}
-                            {job.technology_stack?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Technology Stack:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {job.technology_stack.map((tech, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {tech}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {job.expected_skills?.length > 0 && (
-                              <div>
-                                <p className="text-xs font-semibold mb-1">
-                                  Expected Skills:
-                                </p>
-                                <div className="flex flex-wrap gap-1">
-                                  {job.expected_skills.map((skill, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {skill}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
+                  <SectionHeader icon={CheckCircle2} title="Approved Jobs" count={filteredApprovedJobs.length} />
+                  {filteredApprovedJobs.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredApprovedJobs.map((job) => (
+                        <SummaryCard key={job.job_id} item={job} type="job" isPending={false} />
                       ))}
                     </div>
                   ) : (
-                    <Card>
-                      <CardContent className="pt-6 text-center">
-                        <p className="text-muted-foreground">
-                          No approved jobs found
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <EmptyState icon={CheckCircle2} message="No approved jobs yet." />
                   )}
                 </div>
               </>
@@ -951,9 +488,153 @@ const IndustryManagement = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* ========== DETAIL PANEL DIALOG ========== */}
+      <Dialog
+        open={!!activeItem}
+        onOpenChange={(open) => {
+          if (!open) setActiveItem(null);
+        }}
+      >
+        <DialogContent className="max-w-2xl w-full max-h-[90vh] p-0 gap-0 overflow-hidden bg-background flex flex-col">
+          <DialogHeader className="px-6 py-4 border-b bg-card shrink-0">
+            <DialogTitle className="flex items-center text-xl">
+              {activeItem?.type === "idea" ? (
+                <Lightbulb className="mr-3 h-5 w-5 text-primary" />
+              ) : (
+                <Briefcase className="mr-3 h-5 w-5 text-primary" />
+              )}
+              <span className="line-clamp-1">{activeItem?.data?.title}</span>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0">
+            {/* Status */}
+            <div>
+              {activeItem?.isPending ? (
+                <Badge variant="secondary" className="text-sm px-3 py-1">
+                  <Clock className="w-3 h-3 mr-1.5" /> Pending Review
+                </Badge>
+              ) : (
+                <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 text-sm px-3 py-1">
+                  <CheckCircle2 className="w-3 h-3 mr-1.5" /> Approved
+                </Badge>
+              )}
+            </div>
+
+            {/* Description */}
+            <div>
+              <h3 className="font-semibold text-lg border-b pb-2 mb-3">Description</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {activeItem?.data?.description || "No description provided."}
+              </p>
+            </div>
+
+            {/* Company & Contact Info */}
+            <div>
+              <h3 className="font-semibold text-lg border-b pb-2 mb-4">Company & Contact</h3>
+              <div className="space-y-3">
+                <MetaRow icon={Building2} label="Company Name" value={activeItem?.data?.company_name} />
+                <MetaRow icon={Globe} label="Company Type" value={activeItem?.data?.company_type} />
+                <MetaRow icon={Lightbulb} label="Industry Domain" value={activeItem?.data?.industry_domain} />
+                <MetaRow icon={Mail} label="Contact Email" value={activeItem?.data?.gmail} />
+                <MetaRow icon={MapPin} label="Location" value={activeItem?.data?.location} />
+                <MetaRow icon={Calendar} label="Founded" value={activeItem?.data?.founded_year} />
+                {activeItem?.type === "job" && (
+                  <>
+                    <MetaRow icon={Briefcase} label="Job Type" value={activeItem?.data?.job_type} />
+                    <MetaRow icon={DollarSign} label="Compensation" value={activeItem?.data?.amount} />
+                    <MetaRow icon={Clock} label="Duration" value={activeItem?.data?.duration} />
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Company Description */}
+            {activeItem?.data?.company_description && (
+              <div>
+                <h3 className="font-semibold text-lg border-b pb-2 mb-3">About the Company</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed italic">
+                  {activeItem.data.company_description}
+                </p>
+              </div>
+            )}
+
+            {/* Technology Stack */}
+            {activeItem?.data?.technology_stack?.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-lg border-b pb-2 mb-3">Technology Stack</h3>
+                <div className="flex flex-wrap gap-2">
+                  {activeItem.data.technology_stack.map((tech, idx) => (
+                    <Badge key={idx} variant="outline" className="text-xs">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Expected Skills */}
+            {activeItem?.data?.expected_skills?.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-lg border-b pb-2 mb-3">Expected Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {activeItem.data.expected_skills.map((skill, idx) => (
+                    <Badge key={idx} variant="outline" className="text-xs">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons — only for pending items */}
+          {activeItem?.isPending && (
+            <div className="p-6 border-t bg-card/50 shadow-sm shrink-0 flex gap-3">
+              <Button
+                className="flex-1"
+                size="lg"
+                onClick={() =>
+                  handleApprove(
+                    activeItem.type === "idea" ? activeItem.data.idea_id : activeItem.data.job_id,
+                    activeItem.type
+                  )
+                }
+                disabled={!!processingId}
+              >
+                {processingId ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <CheckCircle2 className="h-5 w-5 mr-2" />
+                )}
+                Approve
+              </Button>
+              <Button
+                className="flex-1"
+                size="lg"
+                variant="secondary"
+                onClick={() =>
+                  handleReject(
+                    activeItem.type === "idea" ? activeItem.data.idea_id : activeItem.data.job_id,
+                    activeItem.type
+                  )
+                }
+                disabled={!!processingId}
+              >
+                {processingId ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <XCircle className="h-5 w-5 mr-2" />
+                )}
+                Reject
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 export default IndustryManagement;
-
