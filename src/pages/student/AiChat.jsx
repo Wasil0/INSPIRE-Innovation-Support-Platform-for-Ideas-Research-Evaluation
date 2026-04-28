@@ -21,6 +21,8 @@ import {
   getChatHistory,
   listUserSessions,
 } from "@/api/chat";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const AiChat = () => {
   const navigate = useNavigate();
@@ -168,7 +170,7 @@ const AiChat = () => {
     }
   }, [inputMessage]);
 
-  // Send user message through backend API
+  // Send user message through backend API using streaming (SSE)
   const handleSendMessage = useCallback(async () => {
     if (!inputMessage.trim() || isLoading || !activeSessionId) return;
 
@@ -185,17 +187,83 @@ const AiChat = () => {
     setInputMessage("");
     setIsLoading(true);
 
+    const aiMessageId = `ai-${Date.now()}`;
+
     try {
-      const response = await sendChatMessage(activeSessionId, userMessageContent);
+      const token = localStorage.getItem("token");
+      const url = `http://127.0.0.1:8000/chat/message/stream?session_id=${encodeURIComponent(activeSessionId)}&message=${encodeURIComponent(userMessageContent)}`;
+      
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": token ? `Bearer ${token}` : "",
+          "Content-Type": "application/json"
+        }
+      });
 
-      const aiMessage = {
-        id: `ai-${Date.now()}`,
-        role: "assistant",
-        content: response.assistant,
-        timestamp: new Date(),
-      };
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-      setMessages((prev) => [...prev, aiMessage]);
+      setIsLoading(false); // Stop loading spinner since we are receiving stream
+
+      // Add empty message placeholder now that the stream has officially started
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: aiMessageId,
+          role: "assistant",
+          content: "",
+          timestamp: new Date(),
+        },
+      ]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let done = false;
+      let fullResponse = "";
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          const events = chunk.split("\n\n");
+          
+          for (const ev of events) {
+            if (!ev.trim()) continue;
+            
+            if (ev.includes("event: done")) {
+               const lines = ev.split("\n");
+               const dataLine = lines.find(l => l.startsWith("data: "));
+               const type = dataLine ? dataLine.replace(/^data:\s*/, "") : "";
+               setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === aiMessageId ? { ...m, type: type } : m
+                )
+               );
+            } else if (ev.startsWith("data: ")) {
+              const dataText = ev.replace(/^data:\s*/, "");
+              
+              if (dataText.startsWith("ERROR:")) {
+                 fullResponse += ("\n[Error: " + dataText.replace("ERROR: ", "") + "]");
+                 setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === aiMessageId ? { ...m, content: fullResponse } : m
+                  )
+                );
+                 break;
+              }
+              
+              fullResponse += dataText;
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === aiMessageId ? { ...m, content: fullResponse } : m
+                )
+              );
+            }
+          }
+        }
+      }
 
       // Update session's last message and updatedAt
       setSessions((prev) =>
@@ -207,16 +275,21 @@ const AiChat = () => {
       );
     } catch (error) {
       console.error("Error sending message:", error);
-      // Remove the user message on error
-      setMessages((prev) => prev.filter((m) => m.id !== userMessage.id));
-      
-      const errorMessage = {
-        id: `error-${Date.now()}`,
-        role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      // We only want to create an error message if the placeholder hasn't received anything
+      setMessages((prev) => {
+        const msg = prev.find(m => m.id === aiMessageId);
+        if (msg && !msg.content) {
+          return prev.map(m => m.id === aiMessageId ? { ...m, content: "Sorry, I encountered an error. Please try again." } : m);
+        } else if (!msg) {
+          return [...prev, {
+            id: `error-${Date.now()}`,
+            role: "assistant",
+            content: "Sorry, I encountered an error. Please try again.",
+            timestamp: new Date(),
+          }];
+        }
+        return prev;
+      });
     } finally {
       setIsLoading(false);
     }
@@ -538,16 +611,44 @@ const AiChat = () => {
                         wordBreak: "break-word"
                       }}
                     >
-                      <p 
-                        className="text-sm whitespace-pre-wrap break-words leading-relaxed"
+                      <div 
+                        className="text-sm break-words leading-relaxed"
                         style={{
                           wordWrap: "break-word",
                           overflowWrap: "anywhere",
                           wordBreak: "break-word"
                         }}
                       >
-                        {message.content}
-                      </p>
+                        <ReactMarkdown 
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            p: ({node, ...props}) => <p className="whitespace-pre-wrap mb-2 last:mb-0" {...props} />,
+                            ul: ({node, ...props}) => <ul className="list-disc pl-5 my-2 space-y-1" {...props} />,
+                            ol: ({node, ...props}) => <ol className="list-decimal pl-5 my-2 space-y-1" {...props} />,
+                            h1: ({node, ...props}) => <h1 className="text-xl font-bold my-3" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-lg font-bold my-3" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-md font-bold my-2" {...props} />,
+                            a: ({node, ...props}) => <a className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                            strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
+                            table: ({node, ...props}) => <div className="overflow-x-auto my-4 rounded-md shadow-sm border border-border"><table className="border-collapse min-w-full text-sm" {...props} /></div>,
+                            thead: ({node, ...props}) => <thead className="bg-muted/50 border-b border-border" {...props} />,
+                            th: ({node, ...props}) => <th className="px-4 py-3 font-semibold text-left whitespace-nowrap text-foreground" style={{ wordBreak: 'normal', overflowWrap: 'normal' }} {...props} />,
+                            td: ({node, ...props}) => <td className="border-t border-border px-4 py-3 align-top text-foreground/90" style={{ wordBreak: 'normal', overflowWrap: 'normal' }} {...props} />,
+                            code: ({node, inline, className, children, ...props}) => {
+                              const match = /language-(\w+)/.exec(className || '');
+                              return !inline ? (
+                                <div className="bg-muted text-foreground p-3 rounded-md overflow-x-auto my-2 text-xs font-mono">
+                                  <code className={className} {...props}>{children}</code>
+                                </div>
+                              ) : (
+                                <code className="bg-muted px-1.5 py-0.5 rounded-sm text-xs font-mono" {...props}>{children}</code>
+                              )
+                            }
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
                       <p
                         className={`text-xs mt-2 ${
                           message.role === "user"
