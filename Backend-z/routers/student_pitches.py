@@ -201,9 +201,14 @@ def update_pitch_status(pitch_id: str, update_data: PitchStatusUpdate, current_u
                         pass
                 
                 if member_obj_ids:
+                    advisor_id = pitch.get("advisor_id")
+                    update_fields = {"stages.stage2_completed": True}
+                    if advisor_id:
+                        update_fields["advisor_id"] = str(advisor_id)
+                        
                     profiles_col.update_many(
                         {"user_id": {"$in": member_obj_ids}},
-                        {"$set": {"stages.stage2_completed": True}}
+                        {"$set": update_fields}
                     )
                     
                     

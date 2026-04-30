@@ -483,6 +483,17 @@ def get_all_locked_groups(
             # Get advisor_id from profile (if stage2 completed)
             if stage2:
                 advisor_id = first_member.get("advisor_id")
+                
+                # Fallback: check if there's an accepted pitch for this team
+                if not advisor_id:
+                    student_pitches_col = db["student_pitches"]
+                    accepted_pitch = student_pitches_col.find_one({
+                        "team_id": str(team.get("_id")),
+                        "status": "accepted"
+                    })
+                    if accepted_pitch:
+                        advisor_id = accepted_pitch.get("advisor_id")
+                
                 if advisor_id:
                     try:
                         advisor_obj_id = ObjectId(advisor_id) if isinstance(advisor_id, str) else advisor_id
