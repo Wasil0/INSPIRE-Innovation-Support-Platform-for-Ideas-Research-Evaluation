@@ -108,6 +108,82 @@ async def create_profile(
         },
     }
 # -------------------
+# UPDATE PROFILE
+# -------------------
+
+@router.put("/")
+async def update_profile(
+    current_user: dict = Depends(get_current_user),
+    name: Optional[str] = Form(None),
+    section: Optional[str] = Form(None),
+    roll_number: Optional[str] = Form(None),
+    semester: Optional[str] = Form(None),
+    batch_year: Optional[str] = Form(None),
+    current_year: Optional[str] = Form(None),
+    team_id: Optional[str] = Form(None),
+    bio: Optional[str] = Form(None),
+    github_link: Optional[str] = Form(None),
+    skills: Optional[str] = Form(None),
+    resume_pdf: Optional[UploadFile] = File(None)
+):
+    user_obj_id = current_user["_id"]
+
+    existing_profile = profiles_col.find_one({"user_id": user_obj_id})
+    if not existing_profile:
+        raise HTTPException(status_code=404, detail="Profile not found. Please create it first.")
+
+    update_fields = {}
+
+    if name is not None: update_fields["name"] = name
+    if section is not None: update_fields["section"] = section
+    if roll_number is not None: update_fields["roll_number"] = roll_number
+    if semester is not None: update_fields["semester"] = semester
+    if batch_year is not None: update_fields["batch_year"] = batch_year
+    if current_year is not None: update_fields["current_year"] = current_year
+    if team_id is not None: update_fields["team_id"] = team_id
+    if bio is not None: update_fields["bio"] = bio
+    if github_link is not None: update_fields["github_link"] = github_link
+
+    # Skills parsing
+    if skills is not None:
+        skills_list = (
+            list(set(s.strip() for s in skills.split(",") if s.strip()))
+            if skills else []
+        )
+        update_fields["skills"] = skills_list
+
+    # Resume update
+    if resume_pdf:
+        if resume_pdf.content_type != "application/pdf":
+            raise HTTPException(status_code=400, detail="Only PDF files allowed")
+
+        # Delete old pdf from GridFS if needed
+        old_pdf_id = existing_profile.get("resume_pdf_id")
+        if old_pdf_id:
+            try:
+                fs.delete(old_pdf_id)
+            except Exception as e:
+                pass
+
+        pdf_bytes = await resume_pdf.read()
+        pdf_id = fs.put(
+            pdf_bytes,
+            filename=resume_pdf.filename,
+            contentType=resume_pdf.content_type
+        )
+        update_fields["resume_pdf_id"] = pdf_id
+
+    if not update_fields:
+        return {"detail": "No fields to update", "profile": serialize_mongo(existing_profile)}
+
+    profiles_col.update_one({"user_id": user_obj_id}, {"$set": update_fields})
+    updated_profile = profiles_col.find_one({"user_id": user_obj_id})
+
+    # Return serialized version
+    serialized = serialize_mongo(updated_profile)
+    return {"detail": "Profile updated successfully", "profile": serialized}
+
+# -------------------
 # GET PROFILE
 # -------------------
 

@@ -65,6 +65,34 @@ export async function getStudentProfileSummary(userId = null) {
 }
 
 /**
+ * Update student profile
+ * 
+ * @param {Object} profileData - The profile data {name, roll_number, ..., skills, resume_pdf}
+ * @returns {Promise<Object>} Response object
+ */
+export async function updateStudentProfile(profileData) {
+  try {
+    const formData = new FormData();
+    for (const key in profileData) {
+      if (profileData[key] !== undefined && profileData[key] !== null) {
+        if (key === 'skills' && Array.isArray(profileData[key])) {
+           formData.append(key, profileData[key].join(','));
+        } else {
+           formData.append(key, profileData[key]);
+        }
+      }
+    }
+    const response = await axios.put("/profiles/", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating student profile:", error);
+    throw error;
+  }
+}
+
+/**
  * Fetch stages status for the current user
  * 
  * @returns {Promise<Object>} Object with user_id and stages { stage1_completed, stage2_completed, stage3_completed, stage4_completed }
