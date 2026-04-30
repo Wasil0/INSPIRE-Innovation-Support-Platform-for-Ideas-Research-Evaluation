@@ -24,8 +24,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    # ⚠️ Add your production frontend URL here before deploying:
-    # "https://your-app.vercel.app",
+    "https://inspire-fydp.vercel.app",
 ]
 
 app.add_middleware(
