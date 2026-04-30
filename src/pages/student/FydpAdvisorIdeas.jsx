@@ -48,6 +48,7 @@ const FydpAdvisorIdeas = () => {
   const [filteredIdeasCount, setFilteredIdeasCount] = useState(0);
   const [stages, setStages] = useState({
     stage1_completed: false,
+    stage2_completed: false,
   });
   const [loadingStages, setLoadingStages] = useState(true);
   const [interestedIdeas, setInterestedIdeas] = useState(new Set());
@@ -65,7 +66,7 @@ const FydpAdvisorIdeas = () => {
         // Fetch stages
         const stagesResponse = await getMyStages();
         // getMyStages returns { user_id, stages: { stage1_completed, ... } }
-        setStages(stagesResponse.stages || { stage1_completed: false });
+        setStages(stagesResponse.stages || { stage1_completed: false, stage2_completed: false });
         
         // Fetch existing interests if stage 1 is completed
         if (stagesResponse.stages?.stage1_completed) {
@@ -271,6 +272,10 @@ const FydpAdvisorIdeas = () => {
         setError("You must complete Stage 1 before marking interest in projects.");
         return;
       }
+      if (stages.stage2_completed) {
+        setError("You have already completed Stage 2 and cannot mark interest in new projects.");
+        return;
+      }
 
       if (interestedIdeas.has(ideaId)) {
         setError("You have already marked interest in this project.");
@@ -473,211 +478,200 @@ const FydpAdvisorIdeas = () => {
                   return (
                     <Card
                       key={idea.idea_id}
-                      className={`border-primary/20 transition-all duration-300 ${
-                        isExpanded
-                          ? "bg-accent/50 shadow-md"
-                          : "hover:bg-accent/30 hover:shadow-sm"
-                      }`}
+                      className="cursor-pointer transition-all duration-200 border-primary/10 hover:border-primary/30"
+                      onClick={() => handleCardClick(idea.idea_id)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div
-                            className="flex-1 min-w-0 cursor-pointer"
-                            onClick={() => handleCardClick(idea.idea_id)}
-                          >
-                            <div className="flex items-start gap-3 mb-2">
-                              <h3 className="font-semibold text-foreground text-base flex-1">
-                                {idea.title || "Untitled Idea"}
-                              </h3>
-                              {isExpanded ? (
-                                <ChevronUp className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 relative">
+                          <div className="flex-1 min-w-0 pr-8">
+                            <h3 className="text-lg font-semibold text-foreground mb-1 leading-tight">
+                              {idea.title || "Untitled Idea"}
+                            </h3>
+                            <div className="flex items-center text-sm text-muted-foreground mb-2">
+                              <User className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+                              <span className="truncate">{idea.advisor_name || "Unknown Advisor"}</span>
+                            </div>
+                            <p
+                              className={`text-sm text-muted-foreground mt-2 ${
+                                !isExpanded && "line-clamp-2"
+                              }`}
+                            >
+                              {idea.description || "No description available."}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-col sm:items-end gap-2 shrink-0 self-start">
+                            <Badge
+                              variant="secondary"
+                              className={
+                                isInterested
+                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800"
+                                  : "bg-primary/10 text-primary hover:bg-primary/20"
+                              }
+                            >
+                              {isInterested ? (
+                                <>
+                                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                                  Interested
+                                </>
                               ) : (
-                                <ChevronDown className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                                "Available"
                               )}
-                            </div>
-                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                              {idea.advisor_name && (
-                                <div className="flex items-center gap-1.5">
-                                  <User className="h-4 w-4" />
-                                  <span>{idea.advisor_name}</span>
-                                </div>
+                            </Badge>
+                            
+                            <Button
+                              variant={isInterested ? "outline" : "default"}
+                              size="sm"
+                              className="w-full sm:w-auto mt-2"
+                              disabled={
+                                !stages.stage1_completed ||
+                                stages.stage2_completed ||
+                                loadingInterests ||
+                                isInterested ||
+                                markingInterest === idea.idea_id
+                              }
+                              onClick={(e) => handleMarkInterested(idea.idea_id, e)}
+                            >
+                              {markingInterest === idea.idea_id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : isInterested ? (
+                                <>
+                                  <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
+                                  Marked
+                                </>
+                              ) : (
+                                <>
+                                  <Heart className="mr-2 h-4 w-4" />
+                                  Express Interest
+                                </>
                               )}
-                              {idea.domain && idea.domain.length > 0 && (
-                                <div className="flex items-center gap-1.5 flex-wrap">
-                                  <Code className="h-4 w-4" />
-                                  {idea.domain.map((domain, idx) => (
-                                    <Badge
-                                      key={idx}
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {domain}
-                                    </Badge>
-                                  ))}
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Collapsible Content */}
+                        {isExpanded && (
+                          <div className="mt-4 pt-4 border-t animate-in slide-in-from-top-2 duration-200">
+                            {/* Flow Explanation */}
+                            {idea.flow_explanation && (
+                              <div className="mb-4">
+                                <h4 className="flex items-center text-sm font-semibold mb-2">
+                                  <BookOpen className="mr-2 h-4 w-4 text-primary" />
+                                  Flow Explanation
+                                </h4>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {idea.flow_explanation}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Flowchart Image */}
+                            {imageUrl && (
+                              <div className="mb-4">
+                                <h4 className="flex items-center text-sm font-semibold mb-2">
+                                  <BookOpen className="mr-2 h-4 w-4 text-primary" />
+                                  Flowchart
+                                </h4>
+                                <div className="rounded-lg border border-border overflow-hidden bg-muted/50 max-w-md cursor-pointer hover:opacity-90 transition-opacity">
+                                  <img
+                                    src={imageUrl}
+                                    alt="Flowchart"
+                                    className="w-full h-auto object-contain max-h-96"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEnlargedImage(imageUrl);
+                                    }}
+                                    onError={(e) => {
+                                      e.target.style.display = "none";
+                                    }}
+                                  />
                                 </div>
-                              )}
-                            </div>
+                              </div>
+                            )}
 
-                            {/* Expanded Content */}
-                            {isExpanded && (
-                              <div className="mt-4 pt-4 border-t border-border space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                                {/* Description */}
-                                <div>
-                                  <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                                    <BookOpen className="h-4 w-4" />
-                                    Description
-                                  </h4>
-                                  <p className="text-sm text-muted-foreground leading-relaxed">
-                                    {idea.description || "No description available."}
-                                  </p>
-                                </div>
-
-                                {/* Flow Explanation */}
-                                {idea.flow_explanation && (
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground mb-2">
-                                      Flow Explanation
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
-                                      {idea.flow_explanation}
-                                    </p>
-                                  </div>
-                                )}
-
-                                {/* Flowchart Image */}
-                                {imageUrl && (
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground mb-2">
-                                      Flowchart
-                                    </h4>
-                                    <div className="rounded-lg border border-border overflow-hidden bg-muted/50 max-w-md cursor-pointer hover:opacity-90 transition-opacity">
-                                      <img
-                                        src={imageUrl}
-                                        alt="Flowchart"
-                                        className="w-full h-auto object-contain max-h-96"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setEnlargedImage(imageUrl);
-                                        }}
-                                        onError={(e) => {
-                                          e.target.style.display = "none";
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Domain Tags */}
-                                {idea.domain && idea.domain.length > 0 && (
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground mb-2">
-                                      Domains
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                      {idea.domain.map((domain, index) => (
-                                        <Badge
-                                          key={index}
-                                          variant="secondary"
-                                          className="text-xs"
-                                        >
-                                          {domain}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Skills Required */}
-                                {idea.skills_required &&
-                                  idea.skills_required.length > 0 && (
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-foreground mb-2">
-                                        Skills Required
-                                      </h4>
-                                      <div className="flex flex-wrap gap-2">
-                                        {idea.skills_required.map(
-                                          (skill, index) => (
-                                            <Badge
-                                              key={index}
-                                              variant="outline"
-                                              className="text-xs"
-                                            >
-                                              {skill}
-                                            </Badge>
-                                          )
-                                        )}
-                                      </div>
-                                    </div>
-                                  )}
-
-                                {/* Interested Button - Only show if stage 1 is completed */}
-                                {canMarkInterest && !loadingInterests && (
-                                  <div className="pt-2">
-                                    {isInterested ? (
-                                      <Button
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {/* Domain Tags */}
+                              <div>
+                                <h4 className="flex items-center text-sm font-semibold mb-2">
+                                  <Code className="mr-2 h-4 w-4 text-primary" />
+                                  Domains
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {idea.domain && idea.domain.length > 0 ? (
+                                    idea.domain.map((domain, index) => (
+                                      <Badge
+                                        key={index}
                                         variant="outline"
-                                        className="w-full sm:w-auto bg-primary/10 border-primary/30"
-                                        disabled
+                                        className="bg-accent"
                                       >
-                                        <CheckCircle2 className="mr-2 h-4 w-4 text-primary" />
-                                        <span className="text-primary font-medium">Interest Marked</span>
-                                      </Button>
-                                    ) : (
-                                      <Button
-                                        onClick={(e) =>
-                                          handleMarkInterested(
-                                            idea.idea_id,
-                                            e
-                                          )
-                                        }
-                                        disabled={markingInterest === idea.idea_id || isInterested}
-                                        className="w-full sm:w-auto"
+                                        {domain}
+                                      </Badge>
+                                    ))
+                                  ) : (
+                                    <span className="text-sm text-muted-foreground">
+                                      Not specified
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Skills Required */}
+                              <div>
+                                <h4 className="flex items-center text-sm font-semibold mb-2">
+                                  <Code className="mr-2 h-4 w-4 text-primary" />
+                                  Expected Skills
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {idea.skills_required && idea.skills_required.length > 0 ? (
+                                    idea.skills_required.map((skill, index) => (
+                                      <Badge
+                                        key={index}
+                                        variant="outline"
+                                        className="bg-accent"
                                       >
-                                        {markingInterest === idea.idea_id ? (
-                                          <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Marking Interest...
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Heart className="mr-2 h-4 w-4" />
-                                            Mark as Interested
-                                          </>
-                                        )}
-                                      </Button>
-                                    )}
-                                  </div>
-                                )}
+                                        {skill}
+                                      </Badge>
+                                    ))
+                                  ) : (
+                                    <span className="text-sm text-muted-foreground">
+                                      Not specified
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
 
-                                {/* Loading state for interests */}
-                                {canMarkInterest && loadingInterests && (
-                                  <div className="pt-2">
-                                    <Button
-                                      variant="outline"
-                                      className="w-full sm:w-auto"
-                                      disabled
-                                    >
-                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      Loading interests...
-                                    </Button>
-                                  </div>
-                                )}
+                            {/* Stage Notes */}
+                            {!loadingStages && !stages.stage1_completed && (
+                              <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium text-foreground">
+                                    Note:
+                                  </span>{" "}
+                                  You must complete Stage 1 (Group Formation) to mark interest in advisor projects.
+                                </p>
+                              </div>
+                            )}
 
-                                {/* Message if stage 1 not completed */}
-                                {!canMarkInterest && !loadingStages && (
-                                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-                                    <p className="text-xs text-muted-foreground">
-                                      <span className="font-medium text-foreground">
-                                        Note:
-                                      </span>{" "}
-                                      You must complete Stage 1 to mark interest
-                                      in advisor projects.
-                                    </p>
-                                  </div>
-                                )}
+                            {!loadingStages && stages.stage2_completed && (
+                              <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium text-foreground">
+                                    Note:
+                                  </span>{" "}
+                                  You have already completed Stage 2. You cannot mark interest in new projects.
+                                </p>
                               </div>
                             )}
                           </div>
+                        )}
+
+                        <div className="mt-2 flex justify-center">
+                            {isExpanded ? (
+                                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                            ) : (
+                                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                            )}
                         </div>
                       </CardContent>
                     </Card>

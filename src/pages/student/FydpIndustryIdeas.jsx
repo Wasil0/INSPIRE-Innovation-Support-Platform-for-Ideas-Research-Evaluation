@@ -44,6 +44,7 @@ const FydpIndustryIdeas = () => {
   const [displayedIdeas, setDisplayedIdeas] = useState([]);
   const [stages, setStages] = useState({
     stage1_completed: false,
+    stage2_completed: false,
   });
   const [loadingStages, setLoadingStages] = useState(true);
   const [interestedIdeas, setInterestedIdeas] = useState(new Set());
@@ -59,7 +60,7 @@ const FydpIndustryIdeas = () => {
         
         // Fetch stages
         const stagesResponse = await getMyStages();
-        setStages(stagesResponse.stages || { stage1_completed: false });
+        setStages(stagesResponse.stages || { stage1_completed: false, stage2_completed: false });
         
         // Fetch existing interests if stage 1 is completed
         if (stagesResponse.stages?.stage1_completed) {
@@ -197,6 +198,11 @@ const FydpIndustryIdeas = () => {
 
       if (!stages.stage1_completed) {
         setError("You must complete Stage 1 before marking interest in projects.");
+        return;
+      }
+      
+      if (stages.stage2_completed) {
+        setError("You have already completed Stage 2 and cannot mark interest in new projects.");
         return;
       }
 
@@ -392,6 +398,7 @@ const FydpIndustryIdeas = () => {
                               className="w-full sm:w-auto mt-2"
                               disabled={
                                 !stages.stage1_completed ||
+                                stages.stage2_completed ||
                                 loadingInterests ||
                                 isInterested ||
                                 markingInterest === idea.idea_id
@@ -472,6 +479,29 @@ const FydpIndustryIdeas = () => {
                                 <h4 className="font-semibold mb-1">About {idea.company_name} ({idea.company_type})</h4>
                                 <p className="text-muted-foreground">{idea.company_description || "No description available."}</p>
                             </div>
+
+                            {/* Stage Notes */}
+                            {!loadingStages && !stages.stage1_completed && (
+                              <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium text-foreground">
+                                    Note:
+                                  </span>{" "}
+                                  You must complete Stage 1 (Group Formation) to mark interest in industry projects.
+                                </p>
+                              </div>
+                            )}
+
+                            {!loadingStages && stages.stage2_completed && (
+                              <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium text-foreground">
+                                    Note:
+                                  </span>{" "}
+                                  You have already completed Stage 2. You cannot mark interest in new projects.
+                                </p>
+                              </div>
+                            )}
                           </div>
                         )}
                         
