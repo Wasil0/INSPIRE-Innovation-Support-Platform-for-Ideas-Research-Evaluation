@@ -58,7 +58,7 @@ export async function markInterested(projectId) {
  */
 export function getFlowchartImageUrl(imageId) {
   if (!imageId) return null;
-  return `http://127.0.0.1:8000/advisor_ideas/image/${imageId}`;
+  return `${axios.defaults.baseURL}/advisor_ideas/image/${imageId}`;
 }
 
 /**

@@ -20,9 +20,12 @@ from routers import project_proposals
 from routers import committee
 
 app = FastAPI()
+
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    # ⚠️ Add your production frontend URL here before deploying:
+    # "https://your-app.vercel.app",
 ]
 
 app.add_middleware(
@@ -32,6 +35,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health", tags=["health"])
+def health_check():
+    """Lightweight endpoint used by Render/cron-job.org to keep the server awake."""
+    return {"status": "ok"}
 
 @app.on_event("startup")
 def startup():

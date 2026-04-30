@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import { getProposalStatus, submitProposal } from "@/api/student";
+import api from "@/api/axiosConfig";
 
 const ProposalSubmission = () => {
   const navigate = useNavigate();
@@ -185,7 +186,7 @@ const ProposalSubmission = () => {
                     <CardDescription>
                       Track the approval status of your currently submitted {" "}
                       <a 
-                        href={`http://localhost:8000/project_proposals/download/${proposalData.file_id}`} 
+                        href={`${api.defaults.baseURL}/project_proposals/download/${proposalData.file_id}`} 
                         target="_blank" 
                         rel="noreferrer"
                         className="text-primary hover:underline font-medium"

@@ -49,6 +49,7 @@ import {
   getMyTeamMembers,
   updateStudentProfile
 } from "@/api/student";
+import api from "@/api/axiosConfig";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -987,7 +988,7 @@ const StudentDashboard = () => {
             {studentData.resume_pdf_id ? (
               <div className="flex-1 w-full h-full bg-muted/30 pt-12">
                 <iframe
-                  src={`http://127.0.0.1:8000/profiles/pdf/${studentData.resume_pdf_id}#toolbar=0`}
+                  src={`${api.defaults.baseURL}/profiles/pdf/${studentData.resume_pdf_id}#toolbar=0`}
                   className="w-full h-full border-0"
                   title="CV Preview"
                 />

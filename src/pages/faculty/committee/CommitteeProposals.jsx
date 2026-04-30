@@ -34,6 +34,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import { getAllCommitteeProposals, reviewCommitteeProposal } from "@/api/committee";
+import api from "@/api/axiosConfig";
 
 export default function CommitteeProposals() {
   const navigate = useNavigate();
@@ -219,7 +220,7 @@ export default function CommitteeProposals() {
             <div className="flex-1 bg-muted/30 border-r relative flex flex-col">
               {activeProposal?.file_id ? (
                 <iframe 
-                  src={`http://localhost:8000/project_proposals/download/${activeProposal.file_id}#toolbar=0`} 
+                  src={`${api.defaults.baseURL}/project_proposals/download/${activeProposal.file_id}#toolbar=0`} 
                   className="w-full h-full border-0"
                   title="PDF Document"
                 />

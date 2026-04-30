@@ -21,6 +21,7 @@ import {
   getChatHistory,
   listUserSessions,
 } from "@/api/chat";
+import api from "@/api/axiosConfig";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -190,20 +191,61 @@ const AiChat = () => {
     const aiMessageId = `ai-${Date.now()}`;
 
     try {
-      const token = localStorage.getItem("token");
-      const url = `http://127.0.0.1:8000/chat/message/stream?session_id=${encodeURIComponent(activeSessionId)}&message=${encodeURIComponent(userMessageContent)}`;
-      
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Authorization": token ? `Bearer ${token}` : "",
-          "Content-Type": "application/json"
+      const getValidToken = async () => {
+        let token = localStorage.getItem("token");
+        return token;
+      };
+
+      const doFetch = async (token) => {
+        const url = `${api.defaults.baseURL}/chat/message/stream?session_id=${encodeURIComponent(activeSessionId)}&message=${encodeURIComponent(userMessageContent)}`;
+        return fetch(url, {
+          method: "POST",
+          headers: {
+            "Authorization": token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json",
+          },
+        });
+      };
+
+      let token = await getValidToken();
+      let response = await doFetch(token);
+
+      // If 401, try refreshing once before giving up
+      if (response.status === 401) {
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (refreshToken) {
+          try {
+            const refreshRes = await fetch(`${api.defaults.baseURL}/auth/refresh/`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refresh_token: refreshToken }),
+            });
+            if (refreshRes.ok) {
+              const refreshData = await refreshRes.json();
+              localStorage.setItem("token", refreshData.access_token);
+              token = refreshData.access_token;
+              response = await doFetch(token);
+            } else {
+              localStorage.clear();
+              window.location.href = "/login";
+              return;
+            }
+          } catch {
+            localStorage.clear();
+            window.location.href = "/login";
+            return;
+          }
+        } else {
+          localStorage.clear();
+          window.location.href = "/login";
+          return;
         }
-      });
+      }
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
 
       setIsLoading(false); // Stop loading spinner since we are receiving stream
 

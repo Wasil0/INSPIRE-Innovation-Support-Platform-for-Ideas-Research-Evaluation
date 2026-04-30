@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import { getAdvisorSelectedGroups, reviewProposal } from "@/api/advisors";
+import api from "@/api/axiosConfig";
 
 const SelectedGroups = () => {
   const navigate = useNavigate();
@@ -190,7 +191,7 @@ const SelectedGroups = () => {
             <div className="flex-1 bg-muted/30 border-r relative flex flex-col">
               {activeGroup?.proposal_file_id ? (
                 <iframe 
-                  src={`http://localhost:8000/project_proposals/download/${activeGroup.proposal_file_id}#toolbar=0`} 
+                  src={`${api.defaults.baseURL}/project_proposals/download/${activeGroup.proposal_file_id}#toolbar=0`} 
                   className="w-full h-full border-0"
                   title="PDF Document"
                 />

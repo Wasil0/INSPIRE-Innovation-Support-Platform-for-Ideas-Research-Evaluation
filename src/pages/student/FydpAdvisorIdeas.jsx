@@ -289,9 +289,6 @@ const FydpAdvisorIdeas = () => {
         
         // Add to interested set
         setInterestedIdeas((prev) => new Set([...prev, ideaId]));
-        
-        // Show success message (you could use a toast notification here)
-        console.log("Interest marked successfully:", response);
       } catch (error) {
         console.error("Failed to mark interest:", error);
         const errorMessage = error.message || "Failed to mark interest. Please try again.";

@@ -2,9 +2,17 @@ from fastapi import APIRouter, HTTPException
 from schemas.user import SignInResponse, User
 from hashing import hash_password, verify_password
 from db.db import db
-from JWT.JWTtoken import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from JWT.JWTtoken import (
+    create_access_token,
+    create_refresh_token,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    SECRET_KEY,
+    ALGORITHM,
+)
 from datetime import timedelta
 from schemas.token import Token
+from jose import jwt, JWTError
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/auth", tags=["auth"])  
 users_col = db["users"]
@@ -46,20 +54,63 @@ async def signin(user: SignInResponse):
     if not verify_password(user.password, existing_user["hashed_password"]):
         raise HTTPException(status_code=400, detail="Invalid email or password")
     
-    # Return role and user info (you could also generate a JWT token here for authentication)
-    # return {"email": existing_user["email"], "role": existing_user["role"]}
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = access_token = create_access_token(
-    data={
-        "sub": str(existing_user["_id"]),  
+    token_data = {
+        "sub": str(existing_user["_id"]),
         "role": existing_user["role"]
-    },
-    expires_delta=access_token_expires
-)
+    }
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data=token_data, expires_delta=access_token_expires)
+    refresh_token = create_refresh_token(data=token_data)
+
     return {
-    "access_token": access_token,
-    "token_type": "bearer",
-    "role": existing_user["role"]
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "role": existing_user["role"]
     }
 
 
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+@router.post("/refresh/")
+async def refresh_access_token(body: RefreshRequest):
+    """
+    Accepts a valid refresh token and returns a brand-new access token.
+    The frontend calls this automatically when it receives a 401 response.
+    """
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Invalid or expired refresh token. Please log in again.",
+    )
+    try:
+        payload = jwt.decode(body.refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+
+        # Verify this is actually a refresh token, not an access token
+        if payload.get("type") != "refresh":
+            raise credentials_exception
+
+        user_id: str = payload.get("sub")
+        role: str = payload.get("role")
+        if user_id is None:
+            raise credentials_exception
+
+    except JWTError:
+        raise credentials_exception
+
+    # Confirm user still exists in DB
+    from bson import ObjectId
+    user = users_col.find_one({"_id": ObjectId(user_id)})
+    if user is None:
+        raise credentials_exception
+
+    # Issue a fresh access token
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    new_access_token = create_access_token(
+        data={"sub": user_id, "role": role},
+        expires_delta=access_token_expires,
+    )
+
+    return {"access_token": new_access_token, "token_type": "bearer"}

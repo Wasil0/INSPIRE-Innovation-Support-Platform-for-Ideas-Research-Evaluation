@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import { getApplicantsForIndustryJobs } from "@/api/industry";
+import api from "@/api/axiosConfig";
 
 const InterestedStudents = () => {
   const navigate = useNavigate();
@@ -169,7 +170,7 @@ const InterestedStudents = () => {
             {selectedResume && (
               <Button asChild size="sm" className="ml-auto mr-6">
                 <a
-                  href={`http://127.0.0.1:8000/profiles/pdf/${selectedResume}`}
+                  href={`${api.defaults.baseURL}/profiles/pdf/${selectedResume}`}
                   download="Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -181,7 +182,7 @@ const InterestedStudents = () => {
           </DialogHeader>
           <div className="flex-1 w-full bg-muted/10 rounded-md overflow-hidden relative border min-h-0">
             <iframe
-              src={`http://127.0.0.1:8000/profiles/pdf/${selectedResume}#toolbar=0`}
+              src={`${api.defaults.baseURL}/profiles/pdf/${selectedResume}#toolbar=0`}
               className="w-full h-full border-0"
               title="Resume Preview"
             />

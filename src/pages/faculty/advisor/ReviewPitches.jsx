@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import { getAdvisorPitches, updatePitchStatus } from "@/api/advisors";
+import api from "@/api/axiosConfig";
 
 const ReviewPitches = () => {
   const navigate = useNavigate();
@@ -257,7 +258,7 @@ const ReviewPitches = () => {
                   </h4>
                   <div className="rounded-lg border overflow-hidden bg-muted/10 p-2 flex justify-center">
                     <img 
-                      src={`http://localhost:8000/student_pitches/image/${selectedPitch.flowchart_id}`} 
+                      src={`${api.defaults.baseURL}/student_pitches/image/${selectedPitch.flowchart_id}`} 
                       alt="Project Flowchart" 
                       className="max-w-full h-auto max-h-[400px] object-contain rounded"
                       onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class="text-sm text-muted-foreground p-4">Image failed to load.</span>'; }}

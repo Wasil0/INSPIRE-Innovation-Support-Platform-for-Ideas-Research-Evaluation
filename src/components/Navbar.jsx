@@ -48,8 +48,7 @@ const Navbar = () => {
   }, [role]);
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.clear(); // Clears token, refresh_token, role — all in one go
     navigate("/");
   };
 

@@ -52,7 +52,6 @@ const AdvisorDashboard = () => {
       try {
         setLoadingProfile(true);
         const profile = await getAdvisorInfo();
-        console.log("Advisor profile fetched:", profile); // Debug log
         setAdvisorData({
           name: profile.name || "",
           gsuite_id: profile.gsuite_id || "",
