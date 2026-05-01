@@ -448,10 +448,12 @@ const StudentDashboard = () => {
                   <div className="text-center py-8">
                     <p className="text-muted-foreground">Loading group members...</p>
                   </div>
-                ) : groupMembers.length > 0 ? (
+                ) : groupMembers.filter(m => stages.stage1_completed || m.name !== studentData.name).length > 0 ? (
                   <>
                     <div className="flex flex-wrap gap-3">
-                      {groupMembers.map((member) => (
+                      {groupMembers
+                        .filter(m => stages.stage1_completed || m.name !== studentData.name)
+                        .map((member) => (
                         <div
                           key={member.id}
                           className="flex items-center gap-2 rounded-lg border bg-card p-3 transition-colors hover:bg-accent"
