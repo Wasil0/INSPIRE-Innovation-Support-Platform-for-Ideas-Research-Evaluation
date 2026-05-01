@@ -34,7 +34,13 @@ def get_projects(
     query = {}
 
     if q:
-        query["$text"] = {"$search": q}
+        query["$or"] = [
+            {"title": {"$regex": q, "$options": "i"}},
+            {"description": {"$regex": q, "$options": "i"}},
+            {"advisor": {"$regex": q, "$options": "i"}},
+            {"team_members": {"$regex": q, "$options": "i"}},
+            {"batch": {"$regex": q, "$options": "i"}}
+        ]
 
     if batch:
         query["batch"] = batch
@@ -44,13 +50,10 @@ def get_projects(
 
     skip = (page - 1) * limit
 
-    cursor = projects_col.find(
-        query,
-        {"score": {"$meta": "textScore"}} if q else {}
-    )
+    cursor = projects_col.find(query)
 
-    if q:
-        cursor = cursor.sort([("score", {"$meta": "textScore"})])
+    # Default sort by batch (latest first)
+    cursor = cursor.sort([("batch", -1)])
 
     cursor = cursor.skip(skip).limit(limit)
 
