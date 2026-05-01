@@ -220,91 +220,69 @@ async def respond_to_invite(
         if locked_team:
             raise HTTPException(400, "You are already in a locked team")
         
-        # Check if user is already in any accepted group
-        user_accepted_invites = list(invite_col.find({
+        sender_id = invite["sender_id"]
+        
+        # Check if SENDER is already in an accepted group (they might have joined one after sending this invite)
+        sender_accepted_invites = list(invite_col.find({
+            "$or": [
+                {"sender_id": sender_id, "status": "accepted"},
+                {"receiver_id": sender_id, "status": "accepted"}
+            ]
+        }))
+        
+        if sender_accepted_invites:
+            target_group_id = sender_accepted_invites[0]["group_id"]
+        else:
+            target_group_id = invite["group_id"]
+        
+        # Get sender's current group members
+        sender_invites = list(invite_col.find({
+            "group_id": target_group_id,
+            "status": "accepted"
+        }))
+        sender_group_members = set([sender_id])
+        for inv in sender_invites:
+            sender_group_members.add(inv["sender_id"])
+            sender_group_members.add(inv["receiver_id"])
+            
+        # Get receiver's current group members
+        receiver_accepted_invites = list(invite_col.find({
             "$or": [
                 {"sender_id": user_id, "status": "accepted"},
                 {"receiver_id": user_id, "status": "accepted"}
             ]
         }))
         
-        # Determine which group to use
-        target_group_id = invite["group_id"]  # Default: sender's group
-        
-        # If user is already in a group
-        if user_accepted_invites:
-            existing_group_id = user_accepted_invites[0]["group_id"]
-            
-            # Check if user's current group has space
-            user_group_invites = list(invite_col.find({
-                "group_id": existing_group_id,
+        receiver_group_members = set([user_id])
+        receiver_group_id = None
+        if receiver_accepted_invites:
+            receiver_group_id = receiver_accepted_invites[0]["group_id"]
+            # Get all invites from receiver's group
+            receiver_group_all_invites = list(invite_col.find({
+                "group_id": receiver_group_id,
                 "status": "accepted"
             }))
+            for inv in receiver_group_all_invites:
+                receiver_group_members.add(inv["sender_id"])
+                receiver_group_members.add(inv["receiver_id"])
+                
+        # Check combined capacity
+        combined_members = sender_group_members.union(receiver_group_members)
+        if len(combined_members) > 4:
+            raise HTTPException(400, f"Merging groups would exceed 4 members (Total would be {len(combined_members)}).")
             
-            # Count unique members in user's current group
-            user_group_members = set()
-            for inv in user_group_invites:
-                user_group_members.add(inv["sender_id"])
-                user_group_members.add(inv["receiver_id"])
+        # Update receiver's entire old group to new group_id
+        if receiver_group_id and receiver_group_id != target_group_id:
+            invite_col.update_many(
+                {"group_id": receiver_group_id, "status": "accepted"},
+                {"$set": {"group_id": target_group_id}}
+            )
             
-            if len(user_group_members) < 4:
-                # User's group has space, use their group
-                target_group_id = existing_group_id
-            else:
-                raise HTTPException(400, "Your current group is full (4 members)")
-        
-        # Now check target group's capacity
-        target_group_invites = list(invite_col.find({
-            "group_id": target_group_id,
-            "status": "accepted"
-        }))
-        
-        # Count unique members in target group
-        target_group_members = set()
-        for inv in target_group_invites:
-            target_group_members.add(inv["sender_id"])
-            target_group_members.add(inv["receiver_id"])
-        
-        # Check if adding this user would exceed capacity
-        # Note: user might already be counted if they're in the group
-        future_members = target_group_members.copy()
-        future_members.add(user_id)
-        
-        if len(future_members) > 4:
-            raise HTTPException(400, "Group would exceed 4 members")
-        
-        # Update the invite with correct group_id
-        update_data = {
-            "status": "accepted",
-            "group_id": target_group_id
-        }
-        
-        # Update in database
+        # Update this invite
         invite_col.update_one(
             {"_id": invite_id},
-            {"$set": update_data}
+            {"$set": {"status": "accepted", "group_id": target_group_id}}
         )
-        
-        # If user was joining sender's group (not their own), update other user_accepted_invites
-        if user_accepted_invites and target_group_id != user_accepted_invites[0]["group_id"]:
-            # User is moving from one group to another
-            # Update all their accepted invites to new group
-            old_group_id = user_accepted_invites[0]["group_id"]
-            
-            for user_inv in user_accepted_invites:
-                invite_col.update_one(
-                    {"_id": user_inv["_id"]},
-                    {"$set": {"group_id": target_group_id}}
-                )
-            
-            # Clean up any "orphaned" invites in old group
-            # Delete any invites that now connect only to the moved user
-            old_group_invites = list(invite_col.find({
-                "group_id": old_group_id,
-                "status": "accepted"
-            }))
-            
-            # If old group has no invites left, it's empty (handled by leave logic)
     
     else:  # "rejected" action
         # Just update status
@@ -362,9 +340,9 @@ async def leave_temporary_group(current_user: dict = Depends(get_current_user)):
         # SAFELY remove the leaving user
         original_members.discard(user_id)  # Use discard instead of remove
         
-        # If at least 2 members remain, create new group for them
+        # If at least 2 members remain, reconstruct group for them
         if len(original_members) >= 2:
-            new_group_id = str(ObjectId())
+            new_group_id = original_group_id  # KEEP original_group_id so pending invites aren't broken
             remaining_members = list(original_members)
             
             # Delete ALL old invites between remaining members (from original group)
