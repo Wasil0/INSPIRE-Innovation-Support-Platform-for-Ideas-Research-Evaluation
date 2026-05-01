@@ -65,6 +65,7 @@ const GroupFormation = () => {
   const [loadingPendingInvites, setLoadingPendingInvites] = useState(false);
   const [respondingInvites, setRespondingInvites] = useState(new Set()); // Set of invite_ids being responded to
   const [showLeaveGroupModal, setShowLeaveGroupModal] = useState(false);
+  const [hasRequestedLock, setHasRequestedLock] = useState(false); // true when user sent lock request but others haven't locked yet
 
   // Get invited students (pending invites - status is "pending")
   const invitedStudents = useMemo(() => {
@@ -176,6 +177,11 @@ const GroupFormation = () => {
         // Check if group is locked
         if (groupMembersResponse.is_locked) {
           setIsFinalized(true);
+        }
+
+        // Restore pending lock state across refreshes
+        if (groupMembersResponse.user_has_requested_lock && !groupMembersResponse.is_locked) {
+          setHasRequestedLock(true);
         }
 
         setStudents(mappedStudents);
@@ -516,6 +522,9 @@ const GroupFormation = () => {
         setSentInvitesMap(newInvitesMap);
         setGroupMembersSet(membersSet);
         setIsFinalized(groupMembersResponse.is_locked || false);
+        setHasRequestedLock(
+          (groupMembersResponse.user_has_requested_lock && !groupMembersResponse.is_locked) || false
+        );
       }
     } catch (err) {
       setError(err.message || "Failed to leave group");
@@ -541,6 +550,7 @@ const GroupFormation = () => {
 
       if (response.team_locked) {
         setIsFinalized(true);
+        setHasRequestedLock(false);
         // Refresh group members to get updated status
         const groupMembers = await getGroupMembers();
         const membersSet = new Set(groupMembers.members.map((m) => m.user_id));
@@ -556,7 +566,8 @@ const GroupFormation = () => {
         );
       } else {
         // Lock request recorded but not all members have locked yet
-        setError("Lock request recorded. All group members must lock the group to finalize.");
+        setHasRequestedLock(true);
+        setError(null); // clear old error — the UI card now shows this state
       }
     } catch (err) {
       setError(err.message || "Failed to finalize group");
@@ -901,6 +912,18 @@ const GroupFormation = () => {
                     <p className="text-sm text-foreground">
                       Your group has {totalGroupMembers} member{totalGroupMembers !== 1 ? "s" : ""}
                     </p>
+                  ) : hasRequestedLock ? (
+                    <div className="flex items-start gap-2">
+                      <Loader2 className="h-4 w-4 text-primary mt-0.5 shrink-0 animate-spin" />
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          Lock request submitted — waiting for all members
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-0.5">
+                          All {totalGroupMembers} group members must click "Finalize Group" to complete the lock.
+                        </p>
+                      </div>
+                    </div>
                   ) : (
                     <>
                       {groupMembers.length > 0 && (
@@ -964,6 +987,7 @@ const GroupFormation = () => {
                   disabled={
                     totalGroupMembers < MIN_MEMBERS ||
                     isFinalized ||
+                    hasRequestedLock ||
                     finalizeLoading ||
                     leaveLoading
                   }
@@ -978,6 +1002,11 @@ const GroupFormation = () => {
                     <>
                       <CheckCircle2 className="mr-2 h-4 w-4" />
                       Group Finalized
+                    </>
+                  ) : hasRequestedLock ? (
+                    <>
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Lock Requested
                     </>
                   ) : (
                     <>

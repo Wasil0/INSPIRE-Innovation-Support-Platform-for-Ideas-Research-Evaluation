@@ -594,10 +594,13 @@ async def get_group_members(current_user: dict = Depends(get_current_user)):
     # Check if group is locked
     team_data = teams_col.find_one({"team_id": group_id})
     is_locked = team_data.get("is_locked", False) if team_data else False
+    locked_by = team_data.get("locked_by", []) if team_data else []
+    user_has_requested_lock = user_id in locked_by
     
     return {
         "group_id": group_id,
         "is_locked": is_locked,
+        "user_has_requested_lock": user_has_requested_lock,
         "members": members,
         "total_members": len(members)
     }

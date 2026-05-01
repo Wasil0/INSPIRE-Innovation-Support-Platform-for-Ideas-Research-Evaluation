@@ -1,0 +1,30 @@
+# Virtual environment — never commit this
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Secrets — set these in HuggingFace Space settings instead
+.env
+
+# Development/editor files
+.vscode/
+.idea/
+*.suo
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# AI cache files (large binary files)
+*.faiss
+*.pkl

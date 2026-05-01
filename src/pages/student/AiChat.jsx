@@ -119,7 +119,7 @@ const AiChat = () => {
           id: `${activeSessionId}-${index}`,
           role: msg.role,
           content: msg.content,
-          timestamp: new Date(), // Backend doesn't return timestamp, use current time
+          timestamp: msg.created_at ? new Date(msg.created_at) : new Date(),
         }));
         
         setMessages(transformedMessages);

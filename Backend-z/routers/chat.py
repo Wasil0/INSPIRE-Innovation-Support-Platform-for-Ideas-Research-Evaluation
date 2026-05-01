@@ -147,7 +147,7 @@ def create_or_resume_session(
 
         all_msgs = list(messages_col.find(
             {"session_id": ObjectId(session_id)},
-            {"_id": 0, "role": 1, "content": 1}
+            {"_id": 0, "role": 1, "content": 1, "created_at": 1}
         ).sort("created_at", 1))
 
         return {"session_id": session_id, "history": all_msgs}
@@ -273,7 +273,7 @@ def get_chat_history(
 
     history = list(messages_col.find(
         {"session_id": sid},
-        {"_id": 0, "role": 1, "content": 1}
+        {"_id": 0, "role": 1, "content": 1, "created_at": 1}
     ).sort("created_at", 1))
 
     return {"history": history}
