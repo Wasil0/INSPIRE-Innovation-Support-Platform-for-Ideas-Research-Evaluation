@@ -296,7 +296,14 @@ const AiChat = () => {
                  break;
               }
               
-              fullResponse += dataText;
+              let decodedChunk = dataText;
+              try {
+                decodedChunk = JSON.parse(dataText);
+              } catch (e) {
+                // Not valid JSON, just use the raw text
+              }
+
+              fullResponse += decodedChunk;
               setMessages((prev) =>
                 prev.map((m) =>
                   m.id === aiMessageId ? { ...m, content: fullResponse } : m

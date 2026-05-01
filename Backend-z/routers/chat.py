@@ -237,11 +237,13 @@ async def chat_message_stream(
             yield f"data: ERROR: {e}\n\n"
             return
 
+        import json
         # Stream word-by-word so the frontend can render progressively
         words = reply.split(" ")
         for i, word in enumerate(words):
             chunk = word + (" " if i < len(words) - 1 else "")
-            yield f"data: {chunk}\n\n"
+            # JSON encode the chunk so that internal newlines are escaped and don't break SSE
+            yield f"data: {json.dumps(chunk)}\n\n"
             await asyncio.sleep(0.01)
 
         # Final event carries the response type for the frontend to act on
