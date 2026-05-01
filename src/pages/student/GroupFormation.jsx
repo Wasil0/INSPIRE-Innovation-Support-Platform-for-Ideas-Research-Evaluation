@@ -41,6 +41,7 @@ import {
 
 // Configuration
 const MIN_MEMBERS = 3; // Minimum members required to finalize group
+const MAX_MEMBERS = 4; // Maximum members allowed in a group
 const ITEMS_PER_PAGE = 20;
 
 const GroupFormation = () => {
@@ -90,6 +91,11 @@ const GroupFormation = () => {
     const needed = MIN_MEMBERS - totalGroupMembers;
     return needed > 0 ? needed : 0;
   }, [totalGroupMembers]);
+
+  // Check if group is full or max pending invites reached
+  const isGroupFull = totalGroupMembers >= MAX_MEMBERS;
+  const availableSlots = MAX_MEMBERS - totalGroupMembers;
+  const hasMaxPending = invitedStudents.length >= availableSlots;
 
   // Reserve scrollbar space to prevent layout shift (only for this page)
   React.useEffect(() => {
@@ -787,6 +793,8 @@ const GroupFormation = () => {
                         !isFinalized;
                       const canCancel = isInvited && !isFinalized && !isInGroup;
 
+                      const isInviteDisabled = isPending || isFinalized || isGroupFull || hasMaxPending;
+
                       return (
                         <tr
                           key={student.id}
@@ -821,8 +829,9 @@ const GroupFormation = () => {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleInvite(student.id)}
-                                  disabled={isPending || isFinalized}
+                                  disabled={isInviteDisabled}
                                   className="transition-all duration-150"
+                                  title={isGroupFull ? "Group is full" : hasMaxPending ? "Max pending invites reached" : ""}
                                 >
                                   {isPending ? (
                                     <>
