@@ -87,7 +87,7 @@ const SelectedGroups = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <Button
           variant="ghost"
-          onClick={() => navigate("/faculty/advisor/dashboard")}
+          onClick={() => navigate("/advisor/dashboard")}
           className="mb-6 -ml-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
