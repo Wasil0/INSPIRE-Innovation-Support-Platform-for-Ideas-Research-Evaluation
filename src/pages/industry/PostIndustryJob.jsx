@@ -118,11 +118,11 @@ const PostIndustryJob = () => {
       return;
     }
     if (selectedDomains.length === 0) {
-      setError("At least one technology stack item must be selected.");
+      setError("At least one expected skill must be selected.");
       return;
     }
     if (selectedSkills.length === 0) {
-      setError("At least one expected skill must be selected.");
+      setError("At least one technology stack item must be selected.");
       return;
     }
 
@@ -136,8 +136,8 @@ const PostIndustryJob = () => {
         job_type: formData.job_type,
         amount: formData.amount.trim() || null,
         duration: formData.duration.trim() || null,
-        technology_stack: selectedDomains,
-        expected_skills: selectedSkills,
+        technology_stack: selectedSkills,
+        expected_skills: selectedDomains,
       };
 
       // Submit to API
@@ -330,10 +330,10 @@ const PostIndustryJob = () => {
                 />
               </div>
 
-              {/* Technology Stack Selection */}
+              {/* Expected Skills Selection */}
               <div className="space-y-2">
                 <Label>
-                  Technology Stack <span className="text-red-500">*</span>
+                  Expected Skills <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative" ref={domainDropdownRef}>
                   <div
@@ -367,7 +367,7 @@ const PostIndustryJob = () => {
                         ))
                       ) : (
                         <span className="text-muted-foreground">
-                          Select technology stack...
+                          Select expected skills...
                         </span>
                       )}
                     </div>
@@ -378,7 +378,7 @@ const PostIndustryJob = () => {
                     <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
                       <div className="p-2">
                         <Input
-                          placeholder="Search technology stack..."
+                          placeholder="Search expected skills..."
                           value={domainSearch}
                           onChange={(e) => setDomainSearch(e.target.value)}
                           className="mb-2"
@@ -417,10 +417,10 @@ const PostIndustryJob = () => {
                 </div>
               </div>
 
-              {/* Expected Skills Selection */}
+              {/* Technology Stack Selection */}
               <div className="space-y-2">
                 <Label>
-                  Expected Skills <span className="text-red-500">*</span>
+                  Technology Stack <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative" ref={skillsDropdownRef}>
                   <div
@@ -453,7 +453,7 @@ const PostIndustryJob = () => {
                         ))
                       ) : (
                         <span className="text-muted-foreground">
-                          Select expected skills...
+                          Select technology stack...
                         </span>
                       )}
                     </div>
@@ -464,7 +464,7 @@ const PostIndustryJob = () => {
                     <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
                       <div className="p-2">
                         <Input
-                          placeholder="Search skills..."
+                          placeholder="Search technology stack..."
                           value={skillsSearch}
                           onChange={(e) => setSkillsSearch(e.target.value)}
                           className="mb-2"
