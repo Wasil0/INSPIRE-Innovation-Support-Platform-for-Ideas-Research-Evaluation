@@ -4,17 +4,18 @@ from bson.errors import InvalidId
 from fastapi.responses import StreamingResponse
 from typing import Optional
 from schemas.profiles import ProfileCreate, ProfileResponse, ProfileSummaryResponse
-from database import users_col, profiles_col, fs
-
-router = APIRouter()
-
+from db.db import users_col, profiles_col, fs
+from fastapi import Depends
+from dependencies.auth import get_current_user
 # -------------------
 # CREATE PROFILE
 # -------------------
+router = APIRouter(prefix="/profiles", tags=["Profiles"])
 
-@router.post("/profiles", response_model=ProfileCreate)
+
+@router.post("/", response_model=ProfileCreate)
 async def create_profile(
-    user_id: str = Form(...),
+    current_user: dict = Depends(get_current_user),
     name: str = Form(...),
     section: str = Form(...),
     roll_number: str = Form(...),
@@ -25,32 +26,42 @@ async def create_profile(
     bio: str = Form(...),
     github_link: str = Form(...),
     skills: Optional[str] = Form(None),
-    resume_pdf: Optional[UploadFile] = File(None)
+    resume_pdf: Optional[UploadFile] = File(None),
+    stage1_completed: Optional[bool] = Form(False),
+    stage2_completed: Optional[bool] = Form(False),
+    stage3_completed: Optional[bool] = Form(False),
+    stage4_completed: Optional[bool] = Form(False)
 ):
-    # Validate user_id
-    try:
-        user_obj_id = ObjectId(user_id)
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid user_id format")
+    # 🔐 user_id from JWT
+    user_obj_id = current_user["_id"]
 
+    # Ensure user exists (same check as before)
     user = users_col.find_one({"_id": user_obj_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     existing_profile = profiles_col.find_one({"user_id": user_obj_id})
     if existing_profile:
-        raise HTTPException(status_code=400, detail="Profile for this user_id already exists")
+        raise HTTPException(status_code=400, detail="Profile already exists")
 
-    # Handle resume upload
+    # Resume upload (unchanged)
     pdf_id = None
     if resume_pdf:
         if resume_pdf.content_type != "application/pdf":
             raise HTTPException(status_code=400, detail="Only PDF files allowed")
-        pdf_bytes = await resume_pdf.read()
-        pdf_id = fs.put(pdf_bytes, filename=resume_pdf.filename, contentType=resume_pdf.content_type)
 
-    # Clean skills list
-    skills_list = list(set(s.strip() for s in skills.split(",") if s.strip())) if skills else []
+        pdf_bytes = await resume_pdf.read()
+        pdf_id = fs.put(
+            pdf_bytes,
+            filename=resume_pdf.filename,
+            contentType=resume_pdf.content_type
+        )
+
+    # Skills cleaning (unchanged)
+    skills_list = (
+        list(set(s.strip() for s in skills.split(",") if s.strip()))
+        if skills else []
+    )
 
     profile_doc = {
         "user_id": user_obj_id,
@@ -64,13 +75,19 @@ async def create_profile(
         "bio": bio,
         "github_link": github_link,
         "resume_pdf_id": pdf_id,
-        "skills": skills_list
+        "skills": skills_list,
+         "stages": {
+            "stage1_completed": stage1_completed,
+            "stage2_completed": stage2_completed,
+            "stage3_completed": stage3_completed,
+            "stage4_completed": stage4_completed
+        },
     }
 
     profiles_col.insert_one(profile_doc)
 
     return {
-        "user_id": user_id,
+        "user_id": str(user_obj_id),
         "name": name,
         "section": section,
         "roll_number": roll_number,
@@ -81,14 +98,19 @@ async def create_profile(
         "bio": bio,
         "github_link": github_link,
         "resume_pdf_id": str(pdf_id) if pdf_id else None,
-        "skills": skills_list
+        "skills": skills_list,
+        "stages": {
+            "stage1_completed": stage1_completed,
+            "stage2_completed": stage2_completed,
+            "stage3_completed": stage3_completed,
+            "stage4_completed": stage4_completed
+        },
     }
-
 # -------------------
 # GET PROFILE
 # -------------------
 
-@router.get("/profiles/{user_id}", response_model=ProfileResponse)
+@router.get("/{user_id}", response_model=ProfileResponse)
 def get_profile(user_id: str):
     try:
         user_obj_id = ObjectId(user_id)
@@ -101,6 +123,14 @@ def get_profile(user_id: str):
 
     user_doc = users_col.find_one({"_id": user_obj_id})
     gsuite_id = user_doc.get("gsuite_id") if user_doc else None
+
+    # Get stage data or use default if not exists
+    stage_data = profile.get("stages", {
+        "stage1_completed": False,
+        "stage2_completed": False,
+        "stage3_completed": False,
+        "stage4_completed": False
+    })
 
     return {
         "user_id": str(profile["user_id"]),
@@ -116,13 +146,16 @@ def get_profile(user_id: str):
         "github_link": profile.get("github_link"),
         "resume_pdf_id": str(profile.get("resume_pdf_id")) if profile.get("resume_pdf_id") else None,
         "skills": profile.get("skills", []),
+        # Add stage data
+        "stages": stage_data,
     }
-
+    
+    
 # -------------------
 # DOWNLOAD PDF
 # -------------------
 
-@router.get("/profiles/pdf/{pdf_id}")
+@router.get("/pdf/{pdf_id}")
 def preview_pdf(pdf_id: str):
     try:
         grid_out = fs.get(ObjectId(pdf_id))

@@ -1,6 +1,9 @@
+fastapi
 uvicorn
 pymongo
-fastapi
-pydantic
-passlib[bcrypt]
-python-jose
+python-jose[cryptography]>=3.3.0
+python-multipart
+dnspython>=2.2.0
+pydantic>=1.10
+gridfs
+email-validator

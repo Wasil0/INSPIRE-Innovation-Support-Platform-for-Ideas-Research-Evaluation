@@ -1,25 +1,17 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, profiles, advisors, fydp_ideas_by_advisor
-
+from routers import invites, profiles, advisors, fydp_ideas_by_advisor, auth, industry_idea, industry_job, team_members, stages_status
+from routers import industry_profile
 
 app = FastAPI()
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.include_router(auth.router)
+# Include Routers
 app.include_router(profiles.router)
 app.include_router(advisors.router)
 app.include_router(fydp_ideas_by_advisor.router)
-
-
-
+app.include_router(invites.router)
+app.include_router(auth.router)  
+app.include_router(industry_idea.router)
+app.include_router(industry_job.router)
+app.include_router(team_members.router)
+app.include_router(stages_status.router)
+app.include_router(industry_profile.router)

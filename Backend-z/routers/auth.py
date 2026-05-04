@@ -49,9 +49,13 @@ async def signin(user: SignInResponse):
     # Return role and user info (you could also generate a JWT token here for authentication)
     # return {"email": existing_user["email"], "role": existing_user["role"]}
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-    data={"sub": user.gsuite_id, "role": existing_user["role"]},
-    expires_delta=access_token_expires)
+    access_token = access_token = create_access_token(
+    data={
+        "sub": str(existing_user["_id"]),  
+        "role": existing_user["role"]
+    },
+    expires_delta=access_token_expires
+)
     return {
     "access_token": access_token,
     "token_type": "bearer",
