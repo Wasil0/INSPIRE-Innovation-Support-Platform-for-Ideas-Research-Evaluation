@@ -35,7 +35,6 @@ import {
 import Navbar from "@/components/Navbar";
 import { getApprovedStudentProjects } from "@/api/industry";
 import axios from "@/api/axiosConfig";
-import { toast } from "sonner";
 
 const ApprovedProjects = () => {
   const navigate = useNavigate();
@@ -94,7 +93,7 @@ const ApprovedProjects = () => {
       setSelectedStudent(response.data);
     } catch (error) {
       console.error("Error fetching profile:", error);
-      toast.error("Failed to load student profile");
+      alert("Failed to load student profile");
       setProfileModalOpen(false);
     } finally {
       setLoadingProfile(false);
@@ -103,7 +102,7 @@ const ApprovedProjects = () => {
   
   const openProposalModal = (fileId) => {
       if (!fileId) {
-          toast.error("No proposal file available for this project");
+          alert("No proposal file available for this project");
           return;
       }
       setSelectedProposalId(fileId);
@@ -111,7 +110,7 @@ const ApprovedProjects = () => {
   };
 
   const handleCollaborate = () => {
-    toast.info("Collaboration feature coming soon!");
+    alert("Collaboration feature coming soon!");
   };
 
   return (
