@@ -186,3 +186,175 @@ def review_proposal(proposal_id: str, payload: CommitteeReviewPayload, current_u
                 )
                 
     return {"message": f"Proposal committee {payload.action} successfully."}
+
+# ---------------------------------------------------------
+# Committee Overrides: Search Students, Create Group, Edit Group
+# ---------------------------------------------------------
+
+@router.get("/students/search")
+def search_free_students(query: str = Query(..., min_length=2), current_user: dict = Depends(get_current_user)):
+    """
+    Search for students who are NOT in any group (stage1_completed = False or no team_id).
+    Search by name or roll number.
+    """
+    advisor = db["advisors"].find_one({"advisor_id": current_user["_id"]})
+    if not advisor or not advisor.get("committee_member"):
+        raise HTTPException(status_code=403, detail="Access denied.")
+    
+    # regex search for name or roll_number
+    # must not have completed stage 1
+    db_query = {
+        "$and": [
+            {
+                "$or": [
+                    {"name": {"$regex": query, "$options": "i"}},
+                    {"roll_number": {"$regex": query, "$options": "i"}}
+                ]
+            },
+            {
+                "$or": [
+                    {"stages.stage1_completed": False},
+                    {"stages.stage1_completed": {"$exists": False}},
+                    {"team_id": None},
+                    {"team_id": ""}
+                ]
+            }
+        ]
+    }
+    
+    students_cursor = db["profiles"].find(db_query).limit(10)
+    results = []
+    for s in students_cursor:
+        results.append({
+            "user_id": str(s.get("user_id")),
+            "name": s.get("name", "Unknown"),
+            "roll_number": s.get("roll_number", "N/A"),
+            "email": s.get("gsuite_id", "N/A")
+        })
+        
+    return results
+
+class CommitteeCreateGroupPayload(BaseModel):
+    member_ids: list[str]
+
+@router.post("/groups/create")
+def committee_create_group(payload: CommitteeCreateGroupPayload, current_user: dict = Depends(get_current_user)):
+    """
+    Forcefully create a new locked group with the provided members.
+    Automatically sets stage1_completed = True for all members.
+    """
+    advisor = db["advisors"].find_one({"advisor_id": current_user["_id"]})
+    if not advisor or not advisor.get("committee_member"):
+        raise HTTPException(status_code=403, detail="Access denied.")
+        
+    if not payload.member_ids:
+        raise HTTPException(status_code=400, detail="Must provide at least one member.")
+        
+    # Generate final team ID
+    final_team_id = f"team_{ObjectId()}"
+    team_doc_id = str(ObjectId())
+    
+    new_team = {
+        "team_id": team_doc_id, # Base ID
+        "final_team_id": final_team_id,
+        "is_locked": True,
+        "locked_at": datetime.utcnow(),
+        "locked_by": payload.member_ids,
+        "members": payload.member_ids,
+        "created_at": datetime.utcnow()
+    }
+    
+    db["teams"].insert_one(new_team)
+    
+    # Update profiles
+    member_object_ids = [ObjectId(uid) for uid in payload.member_ids]
+    db["profiles"].update_many(
+        {"user_id": {"$in": member_object_ids}},
+        {
+            "$set": {
+                "team_id": final_team_id,
+                "stages.stage1_completed": True
+            }
+        }
+    )
+    
+    return {"message": "Group created successfully.", "final_team_id": final_team_id}
+
+class CommitteeEditGroupPayload(BaseModel):
+    action: str # "add" or "remove"
+    user_id: str
+
+@router.put("/groups/{team_id}/edit-members")
+def committee_edit_group(team_id: str, payload: CommitteeEditGroupPayload, current_user: dict = Depends(get_current_user)):
+    """
+    Add or remove a member from an existing locked group.
+    """
+    advisor = db["advisors"].find_one({"advisor_id": current_user["_id"]})
+    if not advisor or not advisor.get("committee_member"):
+        raise HTTPException(status_code=403, detail="Access denied.")
+        
+    if payload.action not in ["add", "remove"]:
+        raise HTTPException(status_code=400, detail="Invalid action. Must be 'add' or 'remove'.")
+        
+    # Find team by team_id or final_team_id
+    team = db["teams"].find_one({"$or": [{"final_team_id": team_id}, {"team_id": team_id}]})
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found.")
+        
+    target_final_team_id = team.get("final_team_id") or team.get("team_id")
+    
+    if payload.action == "add":
+        # Check if student is already in a team
+        student_profile = db["profiles"].find_one({"user_id": ObjectId(payload.user_id)})
+        if not student_profile:
+            raise HTTPException(status_code=404, detail="Student profile not found.")
+            
+        if student_profile.get("stages", {}).get("stage1_completed", False) or student_profile.get("team_id"):
+            raise HTTPException(status_code=400, detail="Student is already in a locked group.")
+            
+        # Add to team
+        db["teams"].update_one(
+            {"_id": team["_id"]},
+            {
+                "$addToSet": {
+                    "members": payload.user_id,
+                    "locked_by": payload.user_id
+                }
+            }
+        )
+        
+        # Update profile
+        db["profiles"].update_one(
+            {"user_id": ObjectId(payload.user_id)},
+            {
+                "$set": {
+                    "team_id": target_final_team_id,
+                    "stages.stage1_completed": True
+                }
+            }
+        )
+        
+    elif payload.action == "remove":
+        # Remove from team
+        db["teams"].update_one(
+            {"_id": team["_id"]},
+            {
+                "$pull": {
+                    "members": payload.user_id,
+                    "locked_by": payload.user_id
+                }
+            }
+        )
+        
+        # Unset profile team and stage1
+        db["profiles"].update_one(
+            {"user_id": ObjectId(payload.user_id)},
+            {
+                "$set": {
+                    "team_id": "",
+                    "stages.stage1_completed": False
+                }
+            }
+        )
+        
+    return {"message": f"Member {payload.action}ed successfully."}

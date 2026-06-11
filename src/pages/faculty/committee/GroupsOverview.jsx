@@ -7,6 +7,11 @@ import {
   Users,
   GraduationCap,
   UserCheck,
+  Edit,
+  Plus,
+  Trash2,
+  X,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +24,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose
+} from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
-import { getAllLockedGroups } from "@/api/committee";
+import { 
+  getAllLockedGroups, 
+  searchStudentsForCommittee, 
+  committeeCreateGroup, 
+  committeeEditGroupMember 
+} from "@/api/committee";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -36,6 +55,94 @@ const GroupsOverview = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalGroups, setTotalGroups] = useState(0);
+
+  // Committee Override Modals
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  
+  // Search State
+  const [studentSearchQuery, setStudentSearchQuery] = useState("");
+  const [studentSearchResults, setStudentSearchResults] = useState([]);
+  const [isSearchingStudents, setIsSearchingStudents] = useState(false);
+  
+  // Staging for Create
+  const [stagedMembers, setStagedMembers] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Search logic for free students
+  const handleSearchFreeStudents = async (query) => {
+    setStudentSearchQuery(query);
+    if (!query || query.length < 2) {
+      setStudentSearchResults([]);
+      return;
+    }
+    try {
+      setIsSearchingStudents(true);
+      const results = await searchStudentsForCommittee(query);
+      setStudentSearchResults(results || []);
+    } catch (err) {
+      console.error(err);
+      setStudentSearchResults([]);
+    } finally {
+      setIsSearchingStudents(false);
+    }
+  };
+
+  const handleCreateGroup = async () => {
+    if (stagedMembers.length === 0) return;
+    try {
+      setIsSubmitting(true);
+      await committeeCreateGroup(stagedMembers.map(m => m.user_id));
+      setIsCreateModalOpen(false);
+      setStagedMembers([]);
+      setStudentSearchQuery("");
+      setStudentSearchResults([]);
+      fetchGroups(); // refresh list
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to create group");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAddMemberToGroup = async (user_id) => {
+    if (!selectedGroup) return;
+    try {
+      setIsSubmitting(true);
+      const targetTeamId = selectedGroup.final_team_id || selectedGroup.team_id;
+      await committeeEditGroupMember(targetTeamId, "add", user_id);
+      setStudentSearchQuery("");
+      setStudentSearchResults([]);
+      fetchGroups();
+      setSelectedGroup(prev => ({
+        ...prev, 
+        members: [...(prev.members || []), studentSearchResults.find(s => s.user_id === user_id)]
+      }));
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to add member");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRemoveMemberFromGroup = async (user_id) => {
+    if (!selectedGroup) return;
+    try {
+      setIsSubmitting(true);
+      const targetTeamId = selectedGroup.final_team_id || selectedGroup.team_id;
+      await committeeEditGroupMember(targetTeamId, "remove", user_id);
+      fetchGroups();
+      setSelectedGroup(prev => ({
+        ...prev, 
+        members: prev.members.filter(m => m.user_id !== user_id)
+      }));
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to remove member");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Debounced search
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -140,13 +247,18 @@ const GroupsOverview = () => {
           Back to Dashboard
         </Button>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            FYDP Groups Overview
-          </h1>
-          <p className="text-muted-foreground">
-            View and manage all locked FYDP groups with their members, stage status, and advisor information.
-          </p>
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              FYDP Groups Overview
+            </h1>
+            <p className="text-muted-foreground">
+              View and manage all locked FYDP groups with their members, stage status, and advisor information.
+            </p>
+          </div>
+          <Button onClick={() => setIsCreateModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" /> Form a Group
+          </Button>
         </div>
 
         {/* Error Message */}
@@ -262,6 +374,9 @@ const GroupsOverview = () => {
                       <th className="text-left px-4 py-3 text-sm font-semibold text-foreground">
                         Advisor
                       </th>
+                      <th className="text-right px-4 py-3 text-sm font-semibold text-foreground">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -291,6 +406,9 @@ const GroupsOverview = () => {
                       </th>
                       <th className="text-left px-4 py-3 text-sm font-semibold text-foreground">
                         Advisor
+                      </th>
+                      <th className="text-right px-4 py-3 text-sm font-semibold text-foreground">
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -335,6 +453,16 @@ const GroupsOverview = () => {
                             </span>
                           )}
                         </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => { setSelectedGroup(group); setIsEditModalOpen(true); }}
+                            className="hover:bg-primary/10 hover:text-primary transition-colors"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -373,6 +501,188 @@ const GroupsOverview = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Create Group Modal */}
+      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+        <DialogContent className="max-w-xl max-h-[85vh] flex flex-col p-6">
+          <DialogHeader className="border-b pb-4">
+            <DialogTitle>Form a New FYDP Group</DialogTitle>
+            <DialogDescription>
+              Search for free students to form a new group. Stage 1 will automatically be marked complete.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto space-y-6 py-4">
+            {/* Search */}
+            <div className="space-y-2">
+              <Label>Search Students</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Type name or roll number..."
+                  value={studentSearchQuery}
+                  onChange={(e) => handleSearchFreeStudents(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              {/* Search Results */}
+              {isSearchingStudents ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2"><Loader2 className="h-4 w-4 animate-spin"/> Searching...</div>
+              ) : studentSearchResults.length > 0 ? (
+                <div className="mt-2 border rounded-md divide-y max-h-48 overflow-y-auto">
+                  {studentSearchResults.map(student => {
+                    const isStaged = stagedMembers.some(m => m.user_id === student.user_id);
+                    return (
+                      <div key={student.user_id} className="flex items-center justify-between p-3 bg-background hover:bg-muted/50 transition-colors">
+                        <div>
+                          <p className="font-medium text-sm">{student.name}</p>
+                          <p className="text-xs text-muted-foreground">{student.roll_number}</p>
+                        </div>
+                        <Button
+                          variant={isStaged ? "secondary" : "outline"}
+                          size="sm"
+                          disabled={isStaged}
+                          onClick={() => setStagedMembers(prev => [...prev, student])}
+                        >
+                          {isStaged ? "Added" : "Add"}
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : studentSearchQuery.length >= 2 ? (
+                <div className="text-sm text-muted-foreground mt-2">No free students found matching "{studentSearchQuery}".</div>
+              ) : null}
+            </div>
+
+            {/* Staging Area */}
+            {stagedMembers.length > 0 && (
+              <div className="space-y-2">
+                <Label>Selected Members ({stagedMembers.length})</Label>
+                <div className="space-y-2">
+                  {stagedMembers.map(member => (
+                    <div key={member.user_id} className="flex items-center justify-between p-3 bg-muted/20 border rounded-md">
+                      <div>
+                        <p className="font-medium text-sm">{member.name}</p>
+                        <p className="text-xs text-muted-foreground">{member.roll_number}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => setStagedMembers(prev => prev.filter(m => m.user_id !== member.user_id))}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="border-t pt-4">
+            <DialogClose asChild>
+              <Button variant="outline" onClick={() => { setStagedMembers([]); setStudentSearchQuery(""); setStudentSearchResults([]); }}>Cancel</Button>
+            </DialogClose>
+            <Button onClick={handleCreateGroup} disabled={stagedMembers.length === 0 || isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Group
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Group Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-xl max-h-[85vh] flex flex-col p-6">
+          <DialogHeader className="border-b pb-4">
+            <DialogTitle>Edit Group Members</DialogTitle>
+            <DialogDescription>
+              Add or remove members from this group bypassing normal constraints.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto space-y-6 py-4">
+            {/* Current Members */}
+            {selectedGroup && (
+              <div className="space-y-2">
+                <Label>Current Members ({selectedGroup.members?.length || 0})</Label>
+                <div className="space-y-2">
+                  {selectedGroup.members?.map(member => (
+                    <div key={member.user_id} className="flex items-center justify-between p-3 bg-muted/20 border rounded-md">
+                      <div>
+                        <p className="font-medium text-sm">{member.name}</p>
+                        <p className="text-xs text-muted-foreground">{member.roll_number}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        disabled={isSubmitting}
+                        onClick={() => handleRemoveMemberFromGroup(member.user_id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  {(!selectedGroup.members || selectedGroup.members.length === 0) && (
+                    <div className="text-sm text-muted-foreground p-3 text-center border rounded-md bg-muted/10">No members in this group.</div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Add New Member */}
+            <div className="space-y-2 border-t pt-4">
+              <Label>Add Free Student</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name or roll number..."
+                  value={studentSearchQuery}
+                  onChange={(e) => handleSearchFreeStudents(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              {/* Search Results */}
+              {isSearchingStudents ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2"><Loader2 className="h-4 w-4 animate-spin"/> Searching...</div>
+              ) : studentSearchResults.length > 0 ? (
+                <div className="mt-2 border rounded-md divide-y max-h-48 overflow-y-auto">
+                  {studentSearchResults.map(student => {
+                    const isAlreadyInGroup = selectedGroup?.members?.some(m => m.user_id === student.user_id);
+                    return (
+                      <div key={student.user_id} className="flex items-center justify-between p-3 bg-background hover:bg-muted/50 transition-colors">
+                        <div>
+                          <p className="font-medium text-sm">{student.name}</p>
+                          <p className="text-xs text-muted-foreground">{student.roll_number}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={isAlreadyInGroup || isSubmitting}
+                          onClick={() => handleAddMemberToGroup(student.user_id)}
+                        >
+                          {isAlreadyInGroup ? "In Group" : "Add to Group"}
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : studentSearchQuery.length >= 2 ? (
+                <div className="text-sm text-muted-foreground mt-2">No free students found matching "{studentSearchQuery}".</div>
+              ) : null}
+            </div>
+          </div>
+
+          <DialogFooter className="border-t pt-4">
+            <DialogClose asChild>
+              <Button variant="secondary" onClick={() => { setStudentSearchQuery(""); setStudentSearchResults([]); }}>Close</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

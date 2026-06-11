@@ -224,3 +224,50 @@ export async function reviewCommitteeProposal(proposalId, payload) {
     throw error;
   }
 }
+
+/**
+ * Search for students not currently in a locked group
+ * @param {string} query Search query (name or roll number)
+ */
+export async function searchStudentsForCommittee(query) {
+  try {
+    const response = await axios.get(`/committee/students/search?query=${encodeURIComponent(query)}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error searching free students:", error);
+    throw error;
+  }
+}
+
+/**
+ * Forcefully create a new group
+ * @param {Array<string>} memberIds List of user IDs
+ */
+export async function committeeCreateGroup(memberIds) {
+  try {
+    const response = await axios.post("/committee/groups/create", { member_ids: memberIds });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating committee group:", error);
+    throw error;
+  }
+}
+
+/**
+ * Edit an existing locked group by adding or removing a member
+ * @param {string} teamId The final team ID
+ * @param {string} action "add" or "remove"
+ * @param {string} userId The user ID to add/remove
+ */
+export async function committeeEditGroupMember(teamId, action, userId) {
+  try {
+    const response = await axios.put(`/committee/groups/${teamId}/edit-members`, {
+      action,
+      user_id: userId
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error editing committee group:", error);
+    throw error;
+  }
+}
