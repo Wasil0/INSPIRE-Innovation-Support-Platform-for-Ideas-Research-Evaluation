@@ -285,9 +285,10 @@ const IndustryDashboard = () => {
             </Card>
           </div>
 
-          {/* Profile Card */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-24 transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu">
+          {/* Right Column */}
+          <div className="lg:col-span-1 space-y-6 sticky top-24">
+            {/* Profile Card */}
+            <Card className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 will-change-transform origin-center transform-gpu">
               <CardHeader className="text-center pb-3 pt-4">
                 <div className="flex justify-center mb-3">
                   <Avatar className="h-20 w-20 border-2 border-primary/30 shadow-sm">
@@ -454,22 +455,24 @@ const IndustryDashboard = () => {
 
             {/* Explore Approved Projects Card */}
             <Card 
-              className="mt-6 transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 cursor-pointer will-change-transform origin-center transform-gpu group"
+              className="transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 cursor-pointer will-change-transform origin-center transform-gpu group"
               onClick={() => navigate("/industry/approved-projects")}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary transition-colors duration-300">
-                    <Globe className="h-6 w-6 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">Explore Projects</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Browse approved student final year projects for collaboration.
-                    </p>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary transition-colors duration-300">
+                      <Globe className="h-6 w-6 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg group-hover:text-primary transition-colors">Explore Projects</CardTitle>
+                      <CardDescription>
+                        Browse approved student final year projects for collaboration.
+                      </CardDescription>
+                    </div>
                   </div>
                 </div>
-              </CardContent>
+              </CardHeader>
             </Card>
           </div>
         </div>

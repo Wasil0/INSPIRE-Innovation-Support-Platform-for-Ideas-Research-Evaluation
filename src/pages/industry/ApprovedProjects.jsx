@@ -36,6 +36,8 @@ import Navbar from "@/components/Navbar";
 import { getApprovedStudentProjects } from "@/api/industry";
 import axios from "@/api/axiosConfig";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 const ApprovedProjects = () => {
   const navigate = useNavigate();
 
@@ -283,7 +285,7 @@ const ApprovedProjects = () => {
                 <div className="w-full md:w-3/5 h-1/2 md:h-full border-b md:border-b-0 md:border-r bg-muted/10 relative">
                   {selectedStudent.resume_pdf_id ? (
                     <iframe
-                      src={`http://localhost:8000/profiles/pdf/${selectedStudent.resume_pdf_id}`}
+                      src={`${API_BASE_URL}/profiles/pdf/${selectedStudent.resume_pdf_id}`}
                       className="w-full h-full rounded-bl-lg"
                       title="Resume PDF"
                       loading="lazy"
@@ -403,13 +405,6 @@ const ApprovedProjects = () => {
               </div>
             )}
           </div>
-          <DialogFooter className="px-6 py-4 border-t bg-muted/30 sm:justify-end">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
       
@@ -426,7 +421,7 @@ const ApprovedProjects = () => {
           <div className="flex-1 overflow-hidden bg-background">
             {selectedProposalId ? (
                 <iframe
-                    src={`http://localhost:8000/project_proposals/download/${selectedProposalId}`}
+                    src={`${API_BASE_URL}/project_proposals/download/${selectedProposalId}`}
                     className="w-full h-full"
                     title="Project Proposal"
                     loading="lazy"
@@ -438,13 +433,6 @@ const ApprovedProjects = () => {
                 </div>
             )}
           </div>
-          <DialogFooter className="px-6 py-4 border-t bg-muted/30 sm:justify-end">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
