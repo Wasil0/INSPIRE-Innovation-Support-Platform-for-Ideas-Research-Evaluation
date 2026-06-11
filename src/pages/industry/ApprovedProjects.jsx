@@ -12,7 +12,8 @@ import {
   Users,
   Eye,
   Github,
-  BookOpen
+  BookOpen,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -281,15 +282,30 @@ const ApprovedProjects = () => {
               </div>
             ) : selectedStudent ? (
               <>
-                {/* Left side - Resume PDF */}
-                <div className="w-full md:w-3/5 h-1/2 md:h-full border-b md:border-b-0 md:border-r bg-muted/10 relative">
+                <div className="w-full md:w-3/5 h-1/2 md:h-full border-b md:border-b-0 md:border-r bg-muted/10 relative flex flex-col p-4">
                   {selectedStudent.resume_pdf_id ? (
-                    <iframe
-                      src={`${API_BASE_URL}/profiles/pdf/${selectedStudent.resume_pdf_id}`}
-                      className="w-full h-full rounded-bl-lg"
-                      title="Resume PDF"
-                      loading="lazy"
-                    />
+                    <>
+                      <div className="flex justify-end mb-3">
+                        <Button asChild size="sm">
+                          <a
+                            href={`${API_BASE_URL}/profiles/pdf/${selectedStudent.resume_pdf_id}`}
+                            download="Resume.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Download className="mr-2 h-4 w-4" /> Download PDF
+                          </a>
+                        </Button>
+                      </div>
+                      <div className="flex-1 w-full bg-muted/10 rounded-md overflow-hidden relative border min-h-0">
+                        <iframe
+                          src={`${API_BASE_URL}/profiles/pdf/${selectedStudent.resume_pdf_id}#toolbar=0`}
+                          className="w-full h-full border-0"
+                          title="Resume PDF"
+                          loading="lazy"
+                        />
+                      </div>
+                    </>
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-8 text-center bg-muted/5">
                       <FileText className="h-16 w-16 mb-4 opacity-20" />
@@ -410,19 +426,31 @@ const ApprovedProjects = () => {
       
       {/* Proposal Modal */}
       <Dialog open={proposalModalOpen} onOpenChange={setProposalModalOpen}>
-        <DialogContent className="max-w-4xl h-[85vh] p-0 overflow-hidden flex flex-col gap-0 bg-background border-border/50 shadow-2xl">
-          <DialogHeader className="px-6 py-4 border-b bg-muted/30">
+        <DialogContent className="max-w-4xl w-full h-[80vh] flex flex-col p-6">
+          <DialogHeader className="flex flex-row justify-between items-center mb-4 border-b pb-4">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <FileText className="h-5 w-5 text-primary" />
               Approved Proposal Document
             </DialogTitle>
+            {selectedProposalId && (
+              <Button asChild size="sm" className="ml-auto mr-6">
+                <a
+                  href={`${API_BASE_URL}/project_proposals/download/${selectedProposalId}`}
+                  download="Proposal.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Download className="mr-2 h-4 w-4" /> Download PDF
+                </a>
+              </Button>
+            )}
           </DialogHeader>
 
-          <div className="flex-1 overflow-hidden bg-background">
+          <div className="flex-1 w-full bg-muted/10 rounded-md overflow-hidden relative border min-h-0">
             {selectedProposalId ? (
                 <iframe
-                    src={`${API_BASE_URL}/project_proposals/download/${selectedProposalId}`}
-                    className="w-full h-full"
+                    src={`${API_BASE_URL}/project_proposals/download/${selectedProposalId}#toolbar=0`}
+                    className="w-full h-full border-0"
                     title="Project Proposal"
                     loading="lazy"
                 />
