@@ -129,6 +129,51 @@ def get_approved_industry_jobs():
     return jobs
 
 
+@router.get("/industry/jobs/rejected", response_model=List[IndustryJobResponse])
+def get_rejected_industry_jobs():
+    """
+    Get ALL rejected industry jobs from ALL industries with their company profiles.
+    """
+    jobs = []
+    
+    cursor = industry_jobs_col.find({"status": "rejected"})
+    
+    for doc in cursor:
+        industry_profile = db["industry_profiles"].find_one({
+            "industry_id": doc["industry_id"]
+        })
+        
+        if not industry_profile:
+            continue
+        
+        industry_gsuite_id = None
+        if doc.get("industry_id"):
+            industry = db["users"].find_one({
+                "_id": ObjectId(doc["industry_id"])
+            })
+            if industry and industry.get("gsuite_id"):
+                industry_gsuite_id = industry["gsuite_id"]
+        
+        jobs.append(IndustryJobResponse(
+            job_id=str(doc["_id"]),
+            title=doc["title"],
+            description=doc["description"],
+            job_type=doc["job_type"],
+            amount=doc.get("amount"),
+            duration=doc.get("duration"),
+            technology_stack=doc.get("technology_stack", []),
+            expected_skills=doc.get("expected_skills", []),
+            company_name=industry_profile["company_name"],
+            gmail=industry_gsuite_id,
+            company_type=industry_profile["company_type"],
+            industry_domain=industry_profile["industry_domain"],
+            company_description=industry_profile["company_description"],
+            founded_year=industry_profile["founded_year"],
+            location=industry_profile["location"]
+        ))
+    
+    return jobs
+
 @router.get("/industry/jobs/pending", response_model=List[IndustryJobResponse])
 def get_pending_industry_jobs():
     """

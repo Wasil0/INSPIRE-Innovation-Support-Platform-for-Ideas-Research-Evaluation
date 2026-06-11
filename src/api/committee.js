@@ -31,6 +31,21 @@ export async function getApprovedIndustryIdeas() {
 }
 
 /**
+ * Get all rejected industry ideas
+ * 
+ * @returns {Promise<Array>} Array of rejected industry ideas
+ */
+export async function getRejectedIndustryIdeas() {
+  try {
+    const response = await axios.get("/industry/ideas/rejected");
+    return response.data; // Returns array of rejected ideas
+  } catch (error) {
+    console.error("Error fetching rejected industry ideas:", error);
+    throw error;
+  }
+}
+
+/**
  * Get all pending industry jobs
  * 
  * @returns {Promise<Array>} Array of pending industry jobs with company profile
@@ -56,6 +71,21 @@ export async function getApprovedIndustryJobs() {
     return response.data || []; // Returns array directly
   } catch (error) {
     console.error("Error fetching approved industry jobs:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get all rejected industry jobs
+ * 
+ * @returns {Promise<Array>} Array of rejected industry jobs with company profile
+ */
+export async function getRejectedIndustryJobs() {
+  try {
+    const response = await axios.get("/industry/jobs/rejected");
+    return response.data || []; // Returns array directly
+  } catch (error) {
+    console.error("Error fetching rejected industry jobs:", error);
     throw error;
   }
 }

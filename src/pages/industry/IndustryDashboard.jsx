@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Users,
   UserCheck,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -448,6 +449,26 @@ const IndustryDashboard = () => {
                     )}
                   </>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* Explore Approved Projects Card */}
+            <Card 
+              className="mt-6 transition-all duration-300 hover:shadow-md hover:scale-[1.02] border-primary/20 cursor-pointer will-change-transform origin-center transform-gpu group"
+              onClick={() => navigate("/industry/approved-projects")}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary transition-colors duration-300">
+                    <Globe className="h-6 w-6 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">Explore Projects</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Browse approved student final year projects for collaboration.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>

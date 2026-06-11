@@ -41,8 +41,10 @@ import Navbar from "@/components/Navbar";
 import {
   getPendingIndustryIdeas,
   getApprovedIndustryIdeas,
+  getRejectedIndustryIdeas,
   getPendingIndustryJobs,
   getApprovedIndustryJobs,
+  getRejectedIndustryJobs,
   updateIndustryIdeaStatus,
   updateIndustryJobStatus,
 } from "@/api/committee";
@@ -54,6 +56,7 @@ const IndustryManagement = () => {
   // Ideas state
   const [pendingIdeas, setPendingIdeas] = useState([]);
   const [approvedIdeas, setApprovedIdeas] = useState([]);
+  const [rejectedIdeas, setRejectedIdeas] = useState([]);
   const [loadingIdeas, setLoadingIdeas] = useState(false);
   const [ideaSearchQuery, setIdeaSearchQuery] = useState("");
   const [ideaCompanyTypeFilter, setIdeaCompanyTypeFilter] = useState("");
@@ -62,6 +65,7 @@ const IndustryManagement = () => {
   // Jobs state
   const [pendingJobs, setPendingJobs] = useState([]);
   const [approvedJobs, setApprovedJobs] = useState([]);
+  const [rejectedJobs, setRejectedJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [jobSearchQuery, setJobSearchQuery] = useState("");
   const [jobCompanyTypeFilter, setJobCompanyTypeFilter] = useState("");
@@ -79,12 +83,14 @@ const IndustryManagement = () => {
   const fetchIdeas = async () => {
     try {
       setLoadingIdeas(true);
-      const [pending, approved] = await Promise.all([
+      const [pending, approved, rejected] = await Promise.all([
         getPendingIndustryIdeas(),
         getApprovedIndustryIdeas(),
+        getRejectedIndustryIdeas(),
       ]);
       setPendingIdeas(pending || []);
       setApprovedIdeas(approved || []);
+      setRejectedIdeas(rejected || []);
     } catch (error) {
       console.error("Failed to fetch ideas:", error);
     } finally {
@@ -95,12 +101,14 @@ const IndustryManagement = () => {
   const fetchJobs = async () => {
     try {
       setLoadingJobs(true);
-      const [pending, approved] = await Promise.all([
+      const [pending, approved, rejected] = await Promise.all([
         getPendingIndustryJobs(),
         getApprovedIndustryJobs(),
+        getRejectedIndustryJobs(),
       ]);
       setPendingJobs(pending || []);
       setApprovedJobs(approved || []);
+      setRejectedJobs(rejected || []);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
     } finally {
@@ -176,26 +184,35 @@ const IndustryManagement = () => {
 
   const filteredPendingIdeas = applyFilter(pendingIdeas, ideaSearchQuery, ideaCompanyTypeFilter, ideaIndustryDomainFilter);
   const filteredApprovedIdeas = applyFilter(approvedIdeas, ideaSearchQuery, ideaCompanyTypeFilter, ideaIndustryDomainFilter);
+  const filteredRejectedIdeas = applyFilter(rejectedIdeas, ideaSearchQuery, ideaCompanyTypeFilter, ideaIndustryDomainFilter);
   const filteredPendingJobs = applyFilter(pendingJobs, jobSearchQuery, jobCompanyTypeFilter, jobIndustryDomainFilter);
   const filteredApprovedJobs = applyFilter(approvedJobs, jobSearchQuery, jobCompanyTypeFilter, jobIndustryDomainFilter);
+  const filteredRejectedJobs = applyFilter(rejectedJobs, jobSearchQuery, jobCompanyTypeFilter, jobIndustryDomainFilter);
 
   // --- Reusable summary card ---
-  const SummaryCard = ({ item, type, isPending }) => {
+  const SummaryCard = ({ item, type, status }) => {
     const itemId = type === "idea" ? item.idea_id : item.job_id;
+    const isPending = status === "pending";
     return (
       <Card
         className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-md border-primary/20 cursor-pointer"
-        onClick={() => setActiveItem({ data: item, type, isPending })}
+        onClick={() => setActiveItem({ data: item, type, status })}
       >
         <CardHeader className="pb-4">
           <div className="flex justify-between items-start mb-2">
-            {isPending ? (
+            {status === "pending" && (
               <Badge variant="secondary">
                 <Clock className="w-3 h-3 mr-1" /> Pending
               </Badge>
-            ) : (
+            )}
+            {status === "approved" && (
               <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
                 <CheckCircle2 className="w-3 h-3 mr-1" /> Approved
+              </Badge>
+            )}
+            {status === "rejected" && (
+              <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+                <XCircle className="w-3 h-3 mr-1" /> Rejected
               </Badge>
             )}
           </div>
@@ -249,7 +266,7 @@ const IndustryManagement = () => {
               variant={isPending ? "default" : "outline"}
               onClick={(e) => {
                 e.stopPropagation();
-                setActiveItem({ data: item, type, isPending });
+                setActiveItem({ data: item, type, status });
               }}
             >
               <FileText className="w-4 h-4 mr-2" />
@@ -396,7 +413,7 @@ const IndustryManagement = () => {
               setCompanyTypeFilter={setIdeaCompanyTypeFilter}
               industryDomainFilter={ideaIndustryDomainFilter}
               setIndustryDomainFilter={setIdeaIndustryDomainFilter}
-              allItems={[...pendingIdeas, ...approvedIdeas]}
+              allItems={[...pendingIdeas, ...approvedIdeas, ...rejectedIdeas]}
             />
 
             {loadingIdeas ? (
@@ -412,7 +429,7 @@ const IndustryManagement = () => {
                   {filteredPendingIdeas.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredPendingIdeas.map((idea) => (
-                        <SummaryCard key={idea.idea_id} item={idea} type="idea" isPending={true} />
+                        <SummaryCard key={idea.idea_id} item={idea} type="idea" status="pending" />
                       ))}
                     </div>
                   ) : (
@@ -426,11 +443,25 @@ const IndustryManagement = () => {
                   {filteredApprovedIdeas.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredApprovedIdeas.map((idea) => (
-                        <SummaryCard key={idea.idea_id} item={idea} type="idea" isPending={false} />
+                        <SummaryCard key={idea.idea_id} item={idea} type="idea" status="approved" />
                       ))}
                     </div>
                   ) : (
                     <EmptyState icon={CheckCircle2} message="No approved ideas yet." />
+                  )}
+                </div>
+              
+                {/* Rejected Ideas */}
+                <div>
+                  <SectionHeader icon={XCircle} title="Rejected Ideas" count={filteredRejectedIdeas.length} />
+                  {filteredRejectedIdeas.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredRejectedIdeas.map((idea) => (
+                        <SummaryCard key={idea.idea_id} item={idea} type="idea" status="rejected" />
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState icon={XCircle} message="No rejected ideas." />
                   )}
                 </div>
               </>
@@ -446,7 +477,7 @@ const IndustryManagement = () => {
               setCompanyTypeFilter={setJobCompanyTypeFilter}
               industryDomainFilter={jobIndustryDomainFilter}
               setIndustryDomainFilter={setJobIndustryDomainFilter}
-              allItems={[...pendingJobs, ...approvedJobs]}
+              allItems={[...pendingJobs, ...approvedJobs, ...rejectedJobs]}
             />
 
             {loadingJobs ? (
@@ -462,7 +493,7 @@ const IndustryManagement = () => {
                   {filteredPendingJobs.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredPendingJobs.map((job) => (
-                        <SummaryCard key={job.job_id} item={job} type="job" isPending={true} />
+                        <SummaryCard key={job.job_id} item={job} type="job" status="pending" />
                       ))}
                     </div>
                   ) : (
@@ -476,11 +507,25 @@ const IndustryManagement = () => {
                   {filteredApprovedJobs.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredApprovedJobs.map((job) => (
-                        <SummaryCard key={job.job_id} item={job} type="job" isPending={false} />
+                        <SummaryCard key={job.job_id} item={job} type="job" status="approved" />
                       ))}
                     </div>
                   ) : (
                     <EmptyState icon={CheckCircle2} message="No approved jobs yet." />
+                  )}
+                </div>
+              
+                {/* Rejected Jobs */}
+                <div>
+                  <SectionHeader icon={XCircle} title="Rejected Jobs" count={filteredRejectedJobs.length} />
+                  {filteredRejectedJobs.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredRejectedJobs.map((job) => (
+                        <SummaryCard key={job.job_id} item={job} type="job" status="rejected" />
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState icon={XCircle} message="No rejected jobs." />
                   )}
                 </div>
               </>
@@ -511,13 +556,19 @@ const IndustryManagement = () => {
           <div className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0">
             {/* Status */}
             <div>
-              {activeItem?.isPending ? (
+              {activeItem?.status === "pending" && (
                 <Badge variant="secondary" className="text-sm px-3 py-1">
                   <Clock className="w-3 h-3 mr-1.5" /> Pending Review
                 </Badge>
-              ) : (
+              )}
+              {activeItem?.status === "approved" && (
                 <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 text-sm px-3 py-1">
                   <CheckCircle2 className="w-3 h-3 mr-1.5" /> Approved
+                </Badge>
+              )}
+              {activeItem?.status === "rejected" && (
+                <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-sm px-3 py-1">
+                  <XCircle className="w-3 h-3 mr-1.5" /> Rejected
                 </Badge>
               )}
             </div>
@@ -590,7 +641,7 @@ const IndustryManagement = () => {
           </div>
 
           {/* Action Buttons — only for pending items */}
-          {activeItem?.isPending && (
+          {activeItem?.status === "pending" && (
             <div className="p-6 border-t bg-card/50 shadow-sm shrink-0 flex gap-3">
               <Button
                 className="flex-1"

@@ -29,6 +29,7 @@ import IndustryInterestedStudents from "./pages/industry/InterestedStudents";
 import PostIndustryIdea from "./pages/industry/PostIndustryIdea";
 import PostIndustryJob from "./pages/industry/PostIndustryJob";
 import MyPostings from "./pages/industry/MyPostings";
+import ApprovedProjects from "./pages/industry/ApprovedProjects";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
@@ -262,6 +263,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["industry"]}>
             <MyPostings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/industry/approved-projects"
+        element={
+          <ProtectedRoute allowedRoles={["industry"]}>
+            <ApprovedProjects />
           </ProtectedRoute>
         }
       />

@@ -115,3 +115,24 @@ export async function getApplicantsForIndustryJobs() {
     throw error;
   }
 }
+
+/**
+ * Get all currently approved student projects (committee accepted)
+ * 
+ * @param {number} page - Page number
+ * @param {number} limit - Items per page
+ * @returns {Promise<Object>} Object with projects data and pagination info
+ */
+export async function getApprovedStudentProjects(page = 1, limit = 20) {
+  try {
+    const params = new URLSearchParams();
+    if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
+    
+    const response = await axios.get(`/projects/current-approved?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching approved student projects:", error);
+    throw error;
+  }
+}
